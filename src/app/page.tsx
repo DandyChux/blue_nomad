@@ -111,8 +111,8 @@ export default function Home() {
         <p className='text-lg lg:text-xl'>Custom Skincare Tailored for You</p>
 
         {/* TODO: Refactor into separate server component */}
-        <div className='flex flex-col lg:flex-row gap-4 py-8'>
-          <Card className='rounded-none flex-1'>
+        <div className='grid md:grid-cols-2 lg:grid-cols-3 mx-auto gap-4 py-8 px-8'>
+          <Card className='rounded-none flex flex-col motion-safe:hover:scale-105 duration-500 bg-secondary text-black'>
             <CardHeader>
               <CardTitle className='font-normal text-xl lg:text-3xl tracking-wide'>
                 Facial ST 60min.
@@ -125,12 +125,22 @@ export default function Home() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Image src={TreatmentShot1} alt='' className='w-auto' />
+              <Image src={TreatmentShot1} alt='' className='w-full h-auto' />
             </CardContent>
           </Card>
 
-          <Card className='rounded-none flex-1 bg-primary text-white'>
-            <CardHeader className='order-2'>
+          <Card className='rounded-none flex flex-col motion-safe:hover:scale-105 duration-500 text-white'>
+            <CardContent className='pt-4'>
+              <Image
+                src={`${TreatmentShot2.src}`}
+                width={0}
+                height={0}
+                sizes='100vw'
+                alt=''
+                className='w-full h-auto'
+              />
+            </CardContent>
+            <CardHeader>
               <CardTitle className='font-normal text-xl lg:text-3xl tracking-wide'>
                 Facial ST 60min.
               </CardTitle>
@@ -139,12 +149,9 @@ export default function Home() {
               </CardDescription>
               <CardDescription className='text-white'>$215</CardDescription>
             </CardHeader>
-            <CardContent className='order-1'>
-              <Image src={TreatmentShot2} alt='' className='w-auto' />
-            </CardContent>
           </Card>
 
-          <Card className='rounded-none flex-1'>
+          <Card className='rounded-none flex flex-col motion-safe:hover:scale-105 duration-500 bg-secondary text-black'>
             <CardHeader>
               <CardTitle className='font-normal text-xl lg:text-3xl tracking-wide'>
                 Chemical Peel 45min.
