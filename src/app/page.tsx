@@ -45,7 +45,7 @@ export default function Home() {
             variant='outline'
             size={'lg'}
           >
-            Discover our first offering
+            Discover our <br /> first offering
           </Button>
         </div>
 
