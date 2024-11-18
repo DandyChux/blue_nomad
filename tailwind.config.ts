@@ -60,8 +60,9 @@ const config: Config = {
 				sm: "calc(var(--radius) - 4px)",
 			},
 			fontFamily: {
-				"source-code-pro": ["Source Code Pro", "monospace"],
-				"david-libre": ["David Libre", "serif"],
+				"source-code-pro": ['var(--font-source-code-pro)'],
+				"david-libre": ['var(--font-david-libre)'],
+				"harmony": ['var(--font-harmony)'],
 			},
 			backgroundImage: {
 				"footer-gradient": "url(/footer_gradient.png)",

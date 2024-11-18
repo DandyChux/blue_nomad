@@ -1,5 +1,3 @@
-'use client';
-
 import { MenuIcon as Menu } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
@@ -19,7 +17,7 @@ type NavItem = {
 export const navLinks: NavItem[] = [
   {
     label: 'Our Story',
-    href: '/',
+    href: '/about',
   },
   {
     label: 'Book a Treatment',
@@ -32,34 +30,16 @@ export const navLinks: NavItem[] = [
 ];
 
 export const Navbar: React.FC = () => {
-  // const [isExpanded, setIsExpanded] = useState(false);
-
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     if (window.scrollY > 0) {
-  //       setIsExpanded(true);
-  //     } else {
-  //       setIsExpanded(false);
-  //     }
-  //   };
-
-  //   window.addEventListener("scroll", handleScroll);
-
-  //   return () => {
-  //     window.removeEventListener("scroll", handleScroll);
-  //   };
-  // }, []);
-
   return (
     <header
       className={
-        'flex items-center justify-end fixed top-0 w-full bg-transparent py-4 px-2'
+        'flex items-center justify-start fixed top-0 w-full bg-transparent py-4 px-2'
       }
     >
       <div className='flex items-center group'>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant={'ghost'} className='order-2 ml-4 w-fit h-fit'>
+            <Button variant={'ghost'} className='ml-4 w-fit h-fit'>
               <Menu
                 className='!size-6 lg:!size-8 xl:!size-10'
                 strokeWidth={2.5}
@@ -74,7 +54,7 @@ export const Navbar: React.FC = () => {
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
-        <nav className='hidden md:group-hover:flex order-1'>
+        <nav className='hidden md:group-hover:flex'>
           <ul className='flex gap-8 *:uppercase'>
             {navLinks.map((item) => (
               <li key={item.label}>

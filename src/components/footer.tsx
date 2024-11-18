@@ -31,24 +31,28 @@ export const Footer: React.FC = () => {
 
   return (
     <footer className='flex flex-col px-2 bg-footer-gradient bg-no-repeat bg-center space-y-6'>
-      <div className='flex flex-col lg:flex-row items-center lg:items-start space-y-8 lg:space-y-0 px-8 md:px-12 lg:px-20 py-4 md:py-8 lg:py-16 min-h-fit h-full'>
+      <div className='flex flex-col lg:flex-row items-center lg:items-start space-y-8 lg:space-y-0 px-8 md:px-12 lg:px-20 py-4 md:py-8 lg:py-16 h-auto'>
         <div className='flex-1 flex flex-col space-y-4'>
           <h2 className='uppercase text-xl'>Our Studio</h2>
-          <address className='uppercase not-italic font-semibold'>
+          <address className='uppercase not-italic font-semibold font-source-code-pro'>
             Blue Nomad Labs LLC, <br />
             1123 Broadway, 1014, <br />
             New York, NY 10010.
           </address>
-          <p className='uppercase font-semibold'>M-F 11AM to 8PM.</p>
+          <p className='uppercase font-semibold font-source-code-pro'>
+            M-F 11AM to 8PM.
+          </p>
 
           <div className='mt-auto'>
             <h2 className='uppercase text-xl'>Contact Us</h2>
-            <p className='uppercase'>Front Desk - 917-000-0002</p>
+            <p className='uppercase font-source-code-pro font-semibold text-lg'>
+              917-000-0002 / info@bluenomad.nyc
+            </p>
           </div>
         </div>
 
-        <div className='flex flex-col flex-1 justify-between h-full'>
-          <nav className='inline-flex flex-col space-y-4 tracking-wide'>
+        <div className='flex flex-col flex-1 h-full'>
+          <nav className='inline-flex flex-col gap-4 tracking-wide'>
             {navLinks.map((link) => (
               <Link
                 key={link.label}
@@ -63,18 +67,17 @@ export const Footer: React.FC = () => {
           </nav>
 
           <Link
-            // href="https://www.instagram.com/bluenomadworld/"
-            href='/'
+            href='https://www.instagram.com/bluenomadworld'
             // target="_blank"
             // rel="noopener noreferrer"
-            className='font-semibold uppercase'
+            className='font-semibold uppercase font-source-code-pro mt-auto'
           >
             Instagram
           </Link>
         </div>
 
         <div className='flex flex-col flex-1 space-y-2'>
-          <span className='uppercase font-semibold text-2xl lg:text-[2.5rem] tracking-wide'>
+          <span className='uppercase font-semibold text-xl lg:text-4xl tracking-wide'>
             Subscribe for 10% off your first treatment!
           </span>
 
@@ -91,7 +94,7 @@ export const Footer: React.FC = () => {
                     <FormControl>
                       <Input
                         placeholder='E-MAIL'
-                        className='placeholder:font-semibold placeholder:text-black placeholder:opacity-85'
+                        className='placeholder:font-semibold placeholder:text-black placeholder:opacity-85 shadow-none border-t-0 border-l-0 border-r-0 rounded-none'
                         {...field}
                       />
                     </FormControl>
@@ -113,20 +116,17 @@ export const Footer: React.FC = () => {
       </div>
 
       <div className='flex flex-col lg:flex-row w-full items-center'>
-        <Image
-          src='/logo.svg'
-          alt=''
-          style={{
-            width: '100%',
-            height: 'auto',
-          }}
-          width={800}
-          height={100}
-          sizes={
-            '(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 85vw, 800px'
-          }
-        />
-        <span className='text-sm uppercase font-bold place-self-end lg:px-20'>
+        <div className='relative w-full md:w-[60%]'>
+          <Image
+            src='/logo.svg'
+            alt='Blue Nomad Logo'
+            width={0}
+            height={0}
+            sizes='100vw'
+            className='w-full h-auto'
+          />
+        </div>
+        <span className='text-sm uppercase font-bold place-self-end lg:px-20 grow'>
           &#169;{year} &#169; BlueNomadWorld. All Right Reserved
         </span>
       </div>
