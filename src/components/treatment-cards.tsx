@@ -33,7 +33,7 @@ type TreatmentCardProps = TreatmentProps & {
 
 const treatments: TreatmentProps[] = [
 	{
-		title: 'Facial ST 60min.',
+		title: 'Facial ST 60min',
 		description:
 			'Personalized face-to-neck skin therapy blending advanced modalities with ancient massage techniques. From well-aging to acne care, each treatment is customized to guide your skin to optimal health.',
 		price: 275,
@@ -41,7 +41,7 @@ const treatments: TreatmentProps[] = [
 		hoverImage: HoverShot1.src,
 	},
 	{
-		title: 'Refresh Peel 45min.',
+		title: 'Refresh Peel 45min',
 		description:
 			"A customized blend of acids and vitamins that transforms texture and tone while protecting your skin's barrier and revealing its natural lumniosity. Most beneficial during colder months.",
 		price: 250,
@@ -50,7 +50,7 @@ const treatments: TreatmentProps[] = [
 		// membersOnly: true,
 	},
 	{
-		title: 'Chemical Peel 45min.',
+		title: 'Facial ST 60 Membership',
 		description:
 			'Our signature Facial ST 60 monthly, with access to anytime skincare guidance and first experience at new brands and treatments.',
 		price: 230,
@@ -138,7 +138,7 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 						</CardTitle>
 						{membersOnly && (
 							<CardTitle className='font-normal text-xl lg:text-3xl tracking-wide'>
-								Membership - ${price}
+								${price}
 							</CardTitle>
 						)}
 						<CardDescription className='text-inherit uppercase font-source-code-pro font-semibold'>
