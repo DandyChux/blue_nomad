@@ -35,18 +35,21 @@ export const Footer: React.FC = () => {
 				<div className='flex-1 flex flex-col space-y-4'>
 					<h2 className='uppercase text-xl'>Our Studio</h2>
 					<address className='uppercase not-italic font-semibold font-source-code-pro'>
-						Blue Nomad Labs LLC, <br />
-						1123 Broadway, 1014, <br />
-						New York, NY 10010.
+						Blue Nomad Labs LLC. <br />
+						1123 Broadway, 1014 <br />
+						New York, NY 10010
 					</address>
 					<p className='uppercase font-semibold font-source-code-pro'>
-						M-F 11AM to 8PM.
+						M-F 11AM to 8PM
 					</p>
 
 					<div className='mt-auto'>
 						<h2 className='uppercase text-xl'>Contact Us</h2>
 						<p className='uppercase font-source-code-pro font-semibold text-lg'>
-							917-000-0002 / info@bluenomad.nyc
+							917-000-0002
+						</p>
+						<p className='uppercase font-source-code-pro font-semibold text-lg'>
+							hello@bluenomad.nyc
 						</p>
 					</div>
 				</div>
@@ -74,11 +77,19 @@ export const Footer: React.FC = () => {
 					>
 						Instagram
 					</Link>
+					<Link
+						href='https://open.spotify.com/playlist/4XgNSZMlb2nPYlgjRyJphW?si=MfZFdSygTEWVGPij1nHwBQ&pi=u-MDOmpmukRmuB'
+						target='_blank'
+						rel='noopener noreferrer nofollow'
+						className='font-semibold uppercase font-source-code-pro'
+					>
+						Spotify
+					</Link>
 				</div>
 
 				<div className='flex flex-col flex-1 space-y-2'>
 					<span className='uppercase font-semibold text-xl lg:text-4xl tracking-wide'>
-						Subscribe for 10% off your first treatment!
+						Subscribe for 10% off your first treatment.
 					</span>
 
 					<Form {...form}>
@@ -129,7 +140,7 @@ export const Footer: React.FC = () => {
 					</Link>
 				</div>
 				<span className='text-sm uppercase font-bold place-self-end lg:px-20 grow'>
-					&#169;{year} &#169; BlueNomadWorld. All Right Reserved
+					&#169;{year} Blue Nomad Labs LLC. All rights reserved.
 				</span>
 			</div>
 		</footer>

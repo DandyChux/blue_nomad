@@ -29,7 +29,7 @@ export const navLinks: NavItem[] = [
 	},
 	{
 		label: 'Gift Card',
-		href: '/',
+		href: 'https://app.squareup.com/gift/ML665NPQYDHTJ/order',
 	},
 ];
 
@@ -37,7 +37,7 @@ export const Navbar: React.FC = () => {
 	return (
 		<header
 			className={
-				'flex items-center justify-start fixed top-0 w-full bg-transparent p-4 md:p-6 lg:px-10'
+				'flex items-center justify-end fixed top-0 w-full bg-transparent p-4 md:p-6 lg:px-10'
 			}
 		>
 			<div className='flex items-center group'>

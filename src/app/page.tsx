@@ -87,7 +87,7 @@ const testimonials: TestimonialProps[] = [
 	{
 		name: 'Mawatle',
 		profession: 'thespian',
-		description: 'Embrace my authentic self.',
+		description: 'Embrace my authentic self',
 		image: MawatleImage.src,
 	},
 	{
@@ -99,7 +99,7 @@ const testimonials: TestimonialProps[] = [
 	{
 		name: 'Gohar',
 		profession: 'artist',
-		description: 'Feel Inspired.',
+		description: 'Feel inspired',
 		image: GoharImage.src,
 	},
 	{
@@ -207,7 +207,7 @@ export default function Home() {
 						alcoves to distant escapes.
 					</p>
 
-					<h1 className='uppercase text-center text-3xl font-normal lg:text-6xl'>
+					<h1 className='uppercase text-center text-3xl font-normal lg:text-6xl max-w-[750px]'>
 						{' '}
 						For the curious & discernin
 						<span className='lowercase text-4xl lg:text-8xl font-normal'>
@@ -233,10 +233,20 @@ export default function Home() {
 					Treatme<em>n</em>ts
 				</h1>
 				<p className='text-lg lg:text-xl'>
-					Exploring timeless traditions and science for an experience that is
-					both functional and soulful
+					Exploring global traditions and science for an experience that is both
+					functional and soulful
 				</p>
 				<TreatmentCards />
+
+				<Button
+					size={'lg'}
+					// variant={'outline'}
+					className='uppercase rounded-full h-auto py-2'
+				>
+					<Link href='https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start'>
+						Book a Treatment
+					</Link>
+				</Button>
 
 				{/* Partners Section */}
 				<div className='mt-8 py-12 px-4 md:px-8 lg:px-12 w-full md:flex-col'>
@@ -338,14 +348,12 @@ export default function Home() {
 
 					<figcaption className='flex flex-col-reverse md:flex-row gap-2 place-self-end'>
 						<div className='place-self-end'>
-							<p className='text-xl lg:text-2xl text-end'>Ònyedikachi</p>
-							<small className='lg:text-lg'>
-								founder / Skin Therapist Blue Nomad
-							</small>
+							<p className='text-xl lg:text-2xl text-end'>Onyedikachi</p>
+							<small className='lg:text-lg'>Founder</small>
 						</div>
 						<Image
 							src={OnyedikaHeadshot}
-							alt='Ònyedikachi'
+							alt='Onyedikachi'
 							width={150}
 							height={200}
 							// sizes='100vw'
@@ -361,14 +369,16 @@ export default function Home() {
 							Earned <em>L</em>ove
 						</h2>
 						<p className='text-lg md:text-xl lg:text-2xl'>
-							Blue Nomad makes me feel...
+							Blue Nomad makes me...
 						</p>
 						<Button
 							variant={'outline'}
 							size={'lg'}
 							className='h-auto uppercase rounded-full py-2 px-12 mt-6'
 						>
-							Your <br /> Turn
+							<Link href='#treatments'>
+								Your <br /> Turn
+							</Link>
 						</Button>
 					</div>
 
@@ -458,7 +468,7 @@ export default function Home() {
 			<section className='lg:flex-col items-center px-2 gap-4 bg-media-section-gradient bg-cover text-white min-h-fit py-20 lg:py-32'>
 				<h1 className='uppercase pt-12'>Nomad&apos;s Land</h1>
 				<p className='text-xl lg:text-2xl'>
-					People, Places, & Vibes that Interest Us
+					People, Places, and Ideas that Interest Us
 				</p>
 				<Button
 					variant={'outline'}

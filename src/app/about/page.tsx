@@ -86,7 +86,7 @@ export default function About() {
 								With L<em>ov</em>e,
 							</span>
 							<span className='text-2xl lg:text-5xl font-bold uppercase'>
-								Ònyedikachi
+								Onyedikachi
 							</span>
 							<span className='mt-4 text-3xl lg:text-4xl'>
 								(b. Akwa Ibom, Nigeria, 1990)
@@ -110,14 +110,14 @@ export default function About() {
 
 			<div className='flex flex-col lg:flex-row'>
 				<p className='uppercase flex-1 lg:basis-[70%] text-xl lg:text-3xl italic'>
-					We are all all nomads, dancing the delicate dance between <br />{' '}
-					movement and stillness-- <br /> traversing worlds that are physical,
-					mental, and spiritual. <br /> We pick up treasures and leave behind
-					memories. <br /> Clinging to stories and dreams. <br /> Amidst the
-					motion, we seek moments of blue: moments of <br /> clarity <br /> of
-					healing, of sublime peace. <br /> This delicate dance is the journey
-					of wellness, wholly <br /> individual. <br /> How will you honor those
-					moments? <br /> It had better be worthwhile.
+					We are all all nomads, dancing the delicate dance between movement and
+					stillness–– <br /> traversing worlds that are physical, mental, and
+					spiritual. <br /> We pick up treasures and leave behind memories.{' '}
+					<br /> Clinging to stories and dreams. <br /> Amidst the motion, we
+					seek moments of blue: moments of <br /> clarity <br /> of healing, of
+					sublime peace. <br /> This delicate dance is the journey of wellness,
+					wholly <br /> individual. <br /> How will you honor those moments?{' '}
+					<br /> It had better be worthwhile.
 				</p>
 
 				<div className='lg:basis-[30%]'>
