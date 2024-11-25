@@ -69,6 +69,8 @@
     color: hsl(var(--foreground));
     font-family: var(--font-harmony);
     overflow-y: auto;
+    scroll-behavior: smooth;
+    /* transition: background-color 0.25s, color 0.25s; */
   }
 
   section {
@@ -77,16 +79,22 @@
     flex-direction: column;
     @screen lg {
       flex-direction: row;
+      /* align-content: center; */
     }
   }
 
   h1 {
-    font-size: 1.25rem /* 20px */;
-    line-height: 2.5rem /* 28px */;
+    font-size: 1.5rem /* 20px */;
+    line-height: 2rem /* 28px */;
     font-weight: 500;
     letter-spacing: 0.025rem;
+    @screen md {
+      font-size: 2.25rem;
+      line-height: 2.5rem;
+    }
     @screen lg {
-      font-size: 2.5rem;
+      font-size: 3rem;
+      line-height: 1;
     }
   }
 

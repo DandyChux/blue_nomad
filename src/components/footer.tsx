@@ -31,7 +31,7 @@ export const Footer: React.FC = () => {
 
   return (
     <footer className='flex flex-col px-2 bg-footer-gradient bg-no-repeat bg-center space-y-6'>
-      <div className='flex flex-col lg:flex-row items-center lg:items-start space-y-8 lg:space-y-0 px-8 md:px-12 lg:px-20 py-4 md:py-8 lg:py-16 h-auto'>
+      <div className='flex flex-col lg:flex-row items-center lg:items-start space-y-8 lg:space-y-0 px-8 md:px-12 lg:px-20 py-4 md:py-8 lg:py-16'>
         <div className='flex-1 flex flex-col space-y-4'>
           <h2 className='uppercase text-xl'>Our Studio</h2>
           <address className='uppercase not-italic font-semibold font-source-code-pro'>
@@ -58,8 +58,8 @@ export const Footer: React.FC = () => {
                 key={link.label}
                 href={link.href}
                 className='uppercase font-semibold text-xl'
-                target='_blank'
-                rel='noopener noreferrer'
+                target={link.href.includes('squareup') ? '_blank' : undefined}
+                rel='noopener noreferrer nofollow'
               >
                 {link.label}
               </Link>
@@ -68,9 +68,9 @@ export const Footer: React.FC = () => {
 
           <Link
             href='https://www.instagram.com/bluenomadworld'
-            // target="_blank"
-            // rel="noopener noreferrer"
-            className='font-semibold uppercase font-source-code-pro mt-auto'
+            target='_blank'
+            rel='noopener noreferrer nofollow'
+            className='font-semibold uppercase font-source-code-pro'
           >
             Instagram
           </Link>
@@ -117,14 +117,16 @@ export const Footer: React.FC = () => {
 
       <div className='flex flex-col lg:flex-row w-full items-center'>
         <div className='relative w-full md:w-[60%]'>
-          <Image
-            src='/logo.svg'
-            alt='Blue Nomad Logo'
-            width={0}
-            height={0}
-            sizes='100vw'
-            className='w-full h-auto'
-          />
+          <Link href='/'>
+            <Image
+              src='/logo.svg'
+              alt='Blue Nomad Logo'
+              width={0}
+              height={0}
+              sizes='100vw'
+              className='w-full h-auto'
+            />
+          </Link>
         </div>
         <span className='text-sm uppercase font-bold place-self-end lg:px-20 grow'>
           &#169;{year} &#169; BlueNomadWorld. All Right Reserved
