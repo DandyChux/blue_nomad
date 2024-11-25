@@ -19,6 +19,8 @@ import { Andika } from "next/font/google";
 import SocialMediaImage1 from "~/assets/Look 4 139.jpg";
 import SocialMediaImage2 from "~/assets/Look 4 1.jpg";
 
+import StudioImage from "~/assets/studio/Studio 2.png";
+
 type LogoProps = {
 	// src: StaticImageData;
 	src: string;
@@ -128,7 +130,7 @@ export default function Home() {
 				<div className="flex flex-col flex-1 items-center bg-hero-section-gradient bg-no-repeat bg-cover bg-center py-20 justify-around">
 					<div className="relative w-full lg:w-[85%]">
 						<Image
-							src="/logo.svg"
+							src="/logos/blue-nomad.png"
 							alt="hero"
 							width={0}
 							height={0}
@@ -140,11 +142,19 @@ export default function Home() {
 						A Pri<em>va</em>te Skin Health Studio in NYC
 					</h1>
 
-					{/* <Image src="/" alt="" /> */}
-					<Skeleton className="w-[30%] h-[25%]" aria-hidden="true" />
+					<div className="relative w-[30%] h-[25%]">
+						<Image
+							src={StudioImage.src}
+							alt="Image of the studio"
+							fill
+							style={{
+								objectFit: "contain",
+							}}
+						/>
+					</div>
 
 					<Button
-						className="uppercase rounded-full text-lg h-auto"
+						className="uppercase rounded-full text-lg h-auto py-2"
 						variant="outline"
 						size={"lg"}
 					>

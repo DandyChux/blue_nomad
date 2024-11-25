@@ -122,7 +122,7 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 							{description}
 						</CardDescription>
 						<CardTitle className="font-normal text-xl lg:text-3xl tracking-wide">
-							{title} - {membersOnly ? "" : `- $${price}`}
+							{title} {membersOnly ? "" : `- $${price}`}
 						</CardTitle>
 						{membersOnly && (
 							<CardTitle className="font-normal text-xl lg:text-3xl tracking-wide">
@@ -135,7 +135,7 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 				<>
 					<CardHeader>
 						<CardTitle className="font-normal text-xl lg:text-3xl tracking-wide">
-							{title} - {membersOnly ? "" : `- $${price}`}
+							{title} {membersOnly ? "" : `- $${price}`}
 						</CardTitle>
 						{membersOnly && (
 							<CardTitle className="font-normal text-xl lg:text-3xl tracking-wide">

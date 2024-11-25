@@ -42,7 +42,7 @@ export const metadata: Metadata = {
 		"Blue Nomad is a private skin health studio in the heart of New York City.",
 	keywords: ["skin", "health", "studio", "new york city"],
 	icons: {
-		icon: "/favicon.ico",
+		icon: "/icon.ico",
 	},
 	openGraph: {
 		type: "website",
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
 			"Blue Nomad is a private skin health studio in the heart of New York City.",
 		images: [
 			{
-				url: "https://bluenomad.com/favicon.ico",
+				url: "https://bluenomad.com/icon.ico",
 				width: 800,
 				height: 600,
 				alt: "Blue Nomad",
