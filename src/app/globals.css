@@ -3,120 +3,123 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 40 29% 85%;
-    --foreground: 30 6% 7%;
-    --card: 145 39% 11%;
-    --card-foreground: 20 14.3% 4.1%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 20 14.3% 4.1%;
-    --primary: 24 9.8% 10%;
-    --primary-foreground: 60 9.1% 97.8%;
-    --secondary: 42 12% 84%;
-    --secondary-foreground: 24 9.8% 10%;
-    --muted: 60 4.8% 95.9%;
-    --muted-foreground: 25 5.3% 44.7%;
-    --accent: 38 64% 73%;
-    --accent-foreground: 24 9.8% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 60 9.1% 97.8%;
-    --border: 127 26% 1%;
-    --input: 127 26% 1%;
-    --ring: 20 14.3% 4.1%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
-  }
-  .dark {
-    --background: 47 18% 10%;
-    --foreground: 243 76% 95%;
-    --card: 20 14.3% 4.1%;
-    --card-foreground: 60 9.1% 97.8%;
-    --popover: 20 14.3% 4.1%;
-    --popover-foreground: 60 9.1% 97.8%;
-    --primary: 60 9.1% 97.8%;
-    --primary-foreground: 24 9.8% 10%;
-    --secondary: 12 6.5% 15.1%;
-    --secondary-foreground: 60 9.1% 97.8%;
-    --muted: 12 6.5% 15.1%;
-    --muted-foreground: 24 5.4% 63.9%;
-    --accent: 12 6.5% 15.1%;
-    --accent-foreground: 60 9.1% 97.8%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 60 9.1% 97.8%;
-    --border: 12 6.5% 15.1%;
-    --input: 12 6.5% 15.1%;
-    --ring: 24 5.7% 82.9%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-  }
+	:root {
+		--background: 40 29% 85%;
+		--foreground: 30 6% 7%;
+		--card: 145 39% 11%;
+		--card-foreground: 20 14.3% 4.1%;
+		--popover: 0 0% 100%;
+		--popover-foreground: 20 14.3% 4.1%;
+		--primary: 24 9.8% 10%;
+		--primary-foreground: 60 9.1% 97.8%;
+		--secondary: 42 12% 84%;
+		--secondary-foreground: 24 9.8% 10%;
+		--muted: 60 4.8% 95.9%;
+		--muted-foreground: 25 5.3% 44.7%;
+		--accent: 38 64% 73%;
+		--accent-foreground: 24 9.8% 10%;
+		--destructive: 0 84.2% 60.2%;
+		--destructive-foreground: 60 9.1% 97.8%;
+		--border: 127 26% 1%;
+		--input: 127 26% 1%;
+		--ring: 20 14.3% 4.1%;
+		--chart-1: 12 76% 61%;
+		--chart-2: 173 58% 39%;
+		--chart-3: 197 37% 24%;
+		--chart-4: 43 74% 66%;
+		--chart-5: 27 87% 67%;
+		--radius: 0.5rem;
+	}
+	.dark {
+		--background: 47 18% 10%;
+		--foreground: 243 76% 95%;
+		--card: 20 14.3% 4.1%;
+		--card-foreground: 60 9.1% 97.8%;
+		--popover: 20 14.3% 4.1%;
+		--popover-foreground: 60 9.1% 97.8%;
+		--primary: 60 9.1% 97.8%;
+		--primary-foreground: 24 9.8% 10%;
+		--secondary: 12 6.5% 15.1%;
+		--secondary-foreground: 60 9.1% 97.8%;
+		--muted: 12 6.5% 15.1%;
+		--muted-foreground: 24 5.4% 63.9%;
+		--accent: 12 6.5% 15.1%;
+		--accent-foreground: 60 9.1% 97.8%;
+		--destructive: 0 62.8% 30.6%;
+		--destructive-foreground: 60 9.1% 97.8%;
+		--border: 12 6.5% 15.1%;
+		--input: 12 6.5% 15.1%;
+		--ring: 24 5.7% 82.9%;
+		--chart-1: 220 70% 50%;
+		--chart-2: 160 60% 45%;
+		--chart-3: 30 80% 55%;
+		--chart-4: 280 65% 60%;
+		--chart-5: 340 75% 55%;
+	}
 }
 
 @layer base {
-  * {
-    box-sizing: border-box;
-  }
+	* {
+		box-sizing: border-box;
+	}
 
-  body {
-    background-image: url('/background_gradient.png');
-    background-position: center bottom;
-    color: hsl(var(--foreground));
-    font-family: var(--font-harmony);
-    overflow-y: auto;
-    scroll-behavior: smooth;
-    /* transition: background-color 0.25s, color 0.25s; */
-  }
+	body {
+		background-image: url('/background_gradient.png');
+		background-position: center bottom;
+		background-repeat: repeat-y;
+		color: hsl(var(--foreground));
+		font-family: var(--font-harmony);
+		overflow-y: auto;
+		scroll-behavior: smooth;
+		/* transition: background-color 0.25s, color 0.25s; */
+	}
 
-  section {
-    min-height: 100dvh;
-    display: flex;
-    flex-direction: column;
-    @screen lg {
-      flex-direction: row;
-      /* align-content: center; */
-    }
-  }
+	section {
+		min-height: 100dvh;
+		display: flex;
+		flex-direction: column;
+		padding: 2rem;
+		@screen lg {
+			flex-direction: row;
+			padding: 4rem;
+			/* align-content: center; */
+		}
+	}
 
-  h1 {
-    font-size: 1.5rem /* 20px */;
-    line-height: 2rem /* 28px */;
-    font-weight: 500;
-    letter-spacing: 0.025rem;
-    @screen md {
-      font-size: 2.25rem;
-      line-height: 2.5rem;
-    }
-    @screen lg {
-      font-size: 3rem;
-      line-height: 1;
-    }
-  }
+	h1 {
+		font-size: 1.5rem /* 20px */;
+		line-height: 2rem /* 28px */;
+		font-weight: 500;
+		letter-spacing: 0.025rem;
+		@screen md {
+			font-size: 2.25rem;
+			line-height: 2.5rem;
+		}
+		@screen lg {
+			font-size: 3rem;
+			line-height: 1;
+		}
+	}
 
-  h2 {
-    font-size: 1.125rem /* 18px */;
-    line-height: 1.75rem /* 28px */;
-    font-weight: 400;
-    letter-spacing: 0.025rem;
-  }
+	h2 {
+		font-size: 1.125rem /* 18px */;
+		line-height: 1.75rem /* 28px */;
+		font-weight: 400;
+		letter-spacing: 0.025rem;
+	}
 
-  a {
-    text-decoration: none;
-    &:hover {
-      text-underline-offset: 0.25rem;
-    }
-  }
+	a {
+		text-decoration: none;
+		&:hover {
+			text-underline-offset: 0.25rem;
+		}
+	}
 
-  button {
-    font-family: var(--font-source-code-pro);
-  }
+	button {
+		font-family: var(--font-source-code-pro);
+	}
 
-  input {
-    font-family: var(--font-source-code-pro);
-  }
+	input {
+		font-family: var(--font-source-code-pro);
+	}
 }
