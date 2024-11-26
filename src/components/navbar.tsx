@@ -9,7 +9,7 @@ import {
 	DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 
-type NavItem = {
+export type NavItem = {
 	label: string;
 	href: string;
 };
@@ -37,7 +37,7 @@ export const Navbar: React.FC = () => {
 	return (
 		<header
 			className={
-				'flex items-center justify-end fixed top-0 w-full bg-transparent p-4 md:p-6 lg:px-10'
+				'flex items-center justify-end sticky top-0 z-10 w-full bg-background-gradient p-4 md:p-6 lg:px-10'
 			}
 		>
 			<div className='flex items-center group'>

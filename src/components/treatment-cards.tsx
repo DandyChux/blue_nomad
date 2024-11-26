@@ -43,7 +43,7 @@ const treatments: TreatmentProps[] = [
 	{
 		title: 'Refresh Peel 45min',
 		description:
-			"A customized blend of acids and vitamins that transforms texture and tone while protecting your skin's barrier and revealing its natural lumniosity. Most beneficial during colder months.",
+			"A customized blend of acids and vitamins that transforms texture and tone while protecting your skin's barrier and revealing its natural luminosity. Most beneficial during colder months.",
 		price: 250,
 		defaultImage: TreatmentShot2.src,
 		hoverImage: HoverShot2.src,

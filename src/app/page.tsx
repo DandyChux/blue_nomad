@@ -31,7 +31,7 @@ const centralLogo: LogoProps = {
 
 const surroundingLogos: LogoProps[] = [
 	{
-		src: '/logos/27-rosiers.png',
+		src: '/logos/omorovicza.png',
 		alt: '',
 	},
 	{
@@ -59,7 +59,7 @@ const surroundingLogos: LogoProps[] = [
 		alt: '',
 	},
 	{
-		src: '/logos/omorovicza.png',
+		src: '/logos/27-rosiers.png',
 		alt: '',
 	},
 ];
@@ -298,7 +298,7 @@ export default function Home() {
 					</div>
 
 					{/* Stacked layout for mobile screens */}
-					<div className='flex flex-col items-center gap-4 md:hidden'>
+					<div className='flex flex-col items-center gap-4 mt-10 md:hidden'>
 						{/* Central Image */}
 						<div>
 							<Image
@@ -315,8 +315,8 @@ export default function Home() {
 								<Image
 									src={logo.src}
 									alt={logo.alt}
-									width={70}
-									height={70}
+									width={75}
+									height={75}
 									className='w-full h-auto'
 								/>
 							</div>
@@ -419,9 +419,9 @@ export default function Home() {
 				</div>
 
 				{/* Stacked layout for mobile */}
-				<div className='flex flex-col items-center gap-4 md:hidden'>
+				<div className='flex flex-col items-center gap-4 mt-12 md:hidden relative'>
 					{/* Central text/CTA */}
-					<div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center'>
+					<div className='flex flex-col items-center'>
 						<h2 className='uppercase text-xl md:text-2xl lg:text-4xl'>
 							Earned <em>L</em>ove
 						</h2>
@@ -437,35 +437,36 @@ export default function Home() {
 						</Button>
 					</div>
 
-					{testimonials.map((testimonial, index) => (
-						<div
-							key={index}
-							className='relative w-[100px] h-[150px] flex flex-col-reverse'
-						>
-							<figure className='flex flex-col-reverse'>
-								<div className='relative w-[75px] h-[125px]'>
-									<Image
-										src={testimonial.image}
-										alt={`Picture of ${testimonial.name}`}
-										// sizes="100px"
-										fill
-										// style={{
-										// 	objectFit: "contain",
-										// }}
-									/>
-								</div>
-								<figcaption className='font-semibold uppercase'>
-									{testimonial.name}, {testimonial.profession}
-								</figcaption>
-								<figcaption>{testimonial.description}</figcaption>
-							</figure>
-						</div>
-					))}
+					<div className='grid grid-cols-2 gap-4 w-full'>
+						{testimonials.map((testimonial, index) => (
+							<div key={index} className='relative w-full h-auto'>
+								<figure className='flex flex-col items-center mx-auto'>
+									<div className='relative w-[125px] h-[150px]'>
+										<Image
+											src={testimonial.image}
+											alt={`Picture of ${testimonial.name}`}
+											// sizes="100px"
+											fill
+											style={{
+												objectFit: 'contain',
+											}}
+										/>
+									</div>
+									<figcaption className='text-center'>
+										{testimonial.description}
+									</figcaption>
+									<figcaption className='font-semibold uppercase text-center'>
+										{testimonial.name}, {testimonial.profession}
+									</figcaption>
+								</figure>
+							</div>
+						))}
+					</div>
 				</div>
 			</section>
 
 			{/* Social Section */}
-			<section className='lg:flex-col items-center px-2 gap-4 bg-media-section-gradient bg-cover text-white min-h-fit py-20 lg:py-32'>
+			<section className='lg:flex-col items-center px-2 gap-4 bg-media-section-gradient bg-cover bg-repeat text-white min-h-fit pt-0 pb-8 lg:pb-32'>
 				<h1 className='uppercase pt-12'>Nomad&apos;s Land</h1>
 				<p className='text-xl lg:text-2xl'>
 					People, Places, and Ideas that Interest Us
@@ -483,7 +484,7 @@ export default function Home() {
 					</Link>
 				</Button>
 
-				<div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:flex gap-2 w-full'>
+				<div className='grid grid-cols-2 md:grid-cols-3 lg:flex lg:flex-wrap gap-2 w-full'>
 					{Array.from({ length: 5 }).map((_, index) => (
 						// <Skeleton key={index} className={"w-[15rem] h-[20rem]"}></Skeleton>
 						<Image
