@@ -1,4 +1,5 @@
 import { MenuIcon as Menu } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import { Button } from './ui/button';
@@ -15,10 +16,6 @@ export type NavItem = {
 };
 
 export const navLinks: NavItem[] = [
-	{
-		label: 'Home',
-		href: '/',
-	},
 	{
 		label: 'Our Story',
 		href: '/about',
@@ -37,10 +34,23 @@ export const Navbar: React.FC = () => {
 	return (
 		<header
 			className={
-				'flex items-center justify-end sticky top-0 z-10 w-full bg-background-gradient p-4 md:p-6 lg:px-10'
+				'flex items-center justify-start absolute top-0 w-full bg-transparent p-4 md:p-6 lg:px-10'
 			}
 		>
 			<div className='flex items-center group'>
+				<Link
+					href='/'
+					className='relative w-[150px] mr-4 motion-safe:hover:scale-105'
+				>
+					<Image
+						src='/logos/blue-nomad.png'
+						alt='Blue Nomad Logo'
+						width={0}
+						height={0}
+						sizes='100vw'
+						className='w-auto h-auto'
+					/>
+				</Link>
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<Button variant={'ghost'} className='ml-4 w-fit h-fit md:hidden'>
@@ -57,6 +67,7 @@ export const Navbar: React.FC = () => {
 									href={item.href}
 									rel='nofollow noopener noreferrer'
 									target={item.href.includes('squareup') ? '_blank' : undefined}
+									className='font-source-code-pro'
 								>
 									{item.label}
 								</Link>
@@ -70,7 +81,7 @@ export const Navbar: React.FC = () => {
 							<li key={item.label}>
 								<Link
 									href={item.href}
-									className='font-semibold text-lg'
+									className='font-semibold text-lg font-source-code-pro no-underline'
 									rel='nofollow noopener noreferrer'
 									target={item.href.includes('squareup') ? '_blank' : undefined}
 								>

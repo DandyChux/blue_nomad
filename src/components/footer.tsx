@@ -57,16 +57,6 @@ export const Footer: React.FC = () => {
 					<p className='uppercase font-semibold font-source-code-pro'>
 						M-F 11AM to 8PM
 					</p>
-
-					<div className='mt-auto'>
-						<h2 className='uppercase text-xl'>Contact Us</h2>
-						<p className='uppercase font-source-code-pro font-semibold text-lg'>
-							917-000-0002
-						</p>
-						<p className='uppercase font-source-code-pro font-semibold text-lg'>
-							hello@bluenomad.nyc
-						</p>
-					</div>
 				</div>
 
 				<div className='flex flex-col flex-1 h-full justify-between'>
@@ -83,30 +73,25 @@ export const Footer: React.FC = () => {
 							</Link>
 						))}
 					</nav>
-
-					<nav className='flex flex-col gap-3	'>
-						<Link
-							href='https://www.instagram.com/bluenomadworld'
-							target='_blank'
-							rel='noopener noreferrer nofollow'
-							className='font-semibold uppercase font-source-code-pro'
-						>
-							Instagram
-						</Link>
-						<Link
-							href='https://open.spotify.com/playlist/4XgNSZMlb2nPYlgjRyJphW?si=MfZFdSygTEWVGPij1nHwBQ&pi=u-MDOmpmukRmuB'
-							target='_blank'
-							rel='noopener noreferrer nofollow'
-							className='font-semibold uppercase font-source-code-pro'
-						>
-							Spotify
-						</Link>
-					</nav>
 				</div>
 
+				<nav className='flex flex-col gap-2 flex-1'>
+					{accessoryLinks.map((link, index) => (
+						<Link
+							key={index}
+							href={link.href}
+							target='_blank'
+							rel='noopener noreferrer nofollow'
+							className='font-semibold uppercase font-source-code-pro no-underline'
+						>
+							{link.label}
+						</Link>
+					))}
+				</nav>
+
 				<div className='flex flex-col flex-1 space-y-2'>
-					<span className='uppercase font-semibold text-xl lg:text-4xl tracking-wide'>
-						Subscribe for 10% off your first treatment.
+					<span className='uppercase font-semibold text-xl lg:text-2xl tracking-wide'>
+						Subscribe for 10% off your first treatment!
 					</span>
 
 					<Form {...form}>
@@ -140,19 +125,33 @@ export const Footer: React.FC = () => {
 							</Button>
 						</form>
 					</Form>
+				</div>
+			</div>
 
-					<nav className='flex flex-col gap-2 mt-8'>
-						{accessoryLinks.map((link, index) => (
-							<Link
-								key={index}
-								href={link.href}
-								target='_blank'
-								rel='noopener noreferrer nofollow'
-								className='font-semibold uppercase font-source-code-pro text-end'
-							>
-								{link.label}
-							</Link>
-						))}
+			<div className='mt-auto flex flex-col w-full px-8 md:px-12 lg:px-20'>
+				<h2 className='uppercase text-xl'>Contact Us</h2>
+				<div className='flex flex-col md:flex-row items-center gap-10'>
+					<span className='uppercase font-source-code-pro font-semibold text-lg'>
+						917-000-0002 / Info@Bluenomadworld.nyc
+					</span>
+
+					<nav className='flex gap-8'>
+						<Link
+							href='https://open.spotify.com/playlist/4XgNSZMlb2nPYlgjRyJphW?si=MfZFdSygTEWVGPij1nHwBQ&pi=u-MDOmpmukRmuB'
+							target='_blank'
+							rel='noopener noreferrer nofollow'
+							className='font-semibold uppercase font-source-code-pro'
+						>
+							Spotify
+						</Link>
+						<Link
+							href='https://www.instagram.com/bluenomadworld'
+							target='_blank'
+							rel='noopener noreferrer nofollow'
+							className='font-semibold uppercase font-source-code-pro'
+						>
+							Instagram
+						</Link>
 					</nav>
 				</div>
 			</div>
