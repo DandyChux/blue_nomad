@@ -144,7 +144,7 @@ export default function Home() {
 							className='w-full h-auto'
 						/>
 					</div> */}
-					<h1 className='uppercase text-center w-full lg:w-3/5 font-normal'>
+					<h1 className='uppercase text-center w-full lg:w-3/5 font-normal text-xl lg:text-2xl'>
 						A Pri<em>va</em>te Skin Health Studio in NYC
 					</h1>
 

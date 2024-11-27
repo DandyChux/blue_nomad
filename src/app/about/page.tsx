@@ -5,7 +5,7 @@ import StudioImage from '~/assets/studio/interiors3.jpg';
 
 export default function About() {
 	return (
-		<section className='gap-4 lg:gap-32 lg:flex-col'>
+		<section className='gap-4 lg:gap-32 lg:flex-col pt-32'>
 			<div className='flex flex-col lg:flex-row'>
 				<div className='flex flex-col items-center md:items-start md:grid md:grid-cols-[repeat(3,_1fr)] md:[grid-auto-rows:auto] lg:gap-x-10 lg:gap-y-20 flex-1 px-6 lg:px-12'>
 					<p className='text-xl lg:text-2xl order-3 md:order-none md:col-span-2'>
