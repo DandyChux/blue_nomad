@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Headshot from '~/assets/Look 4 165.jpg';
 import EgoHeadshot from '~/assets/Look 5 185.jpg';
-import OnyedikaHeadshot from '~/assets/Onyedika Portraits/Nick Shoot/nick portraits2.jpg';
+import OnyedikaHeadshot from '~/assets/Onyedika Portraits/Founder.png';
 import TreatmentCards from '~/components/treatment-cards';
 import { Button } from '~/components/ui/button';
 
@@ -16,7 +16,7 @@ import SilvanaImage from '~/assets/testimonial/Tobin-162.jpg';
 import SocialMediaImage2 from '~/assets/Look 4 1.jpg';
 import SocialMediaImage1 from '~/assets/Look 4 139.jpg';
 
-import StudioImage from '~/assets/studio/interiors1.jpg';
+import StudioImage from '~/assets/studio/interiors2.jpg';
 
 type LogoProps = {
 	// src: StaticImageData;
