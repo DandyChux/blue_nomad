@@ -221,9 +221,7 @@ export default function Home() {
 						<h1 className='uppercase text-center text-3xl font-normal lg:text-6xl max-w-[750px]'>
 							{' '}
 							For the curious & discernin
-							<span className='lowercase text-4xl lg:text-8xl font-normal'>
-								g
-							</span>
+							<span className='lg:lowercase lg:text-8xl font-normal'>g</span>
 						</h1>
 
 						<Button
