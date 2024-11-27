@@ -134,7 +134,7 @@ export default function Home() {
 			{/* Hero Section */}
 			<section className='p-0'>
 				<div className='flex flex-col flex-1 items-center bg-hero-section-gradient bg-no-repeat bg-cover bg-center py-20 justify-around'>
-					<div className='relative w-full lg:w-[85%]'>
+					{/* <div className='relative w-full lg:w-[85%]'>
 						<Image
 							src='/logos/blue-nomad.png'
 							alt='hero'
@@ -143,7 +143,7 @@ export default function Home() {
 							sizes='100vw'
 							className='w-full h-auto'
 						/>
-					</div>
+					</div> */}
 					<h1 className='uppercase text-center w-full lg:w-3/5 font-normal'>
 						A Pri<em>va</em>te Skin Health Studio in NYC
 					</h1>
