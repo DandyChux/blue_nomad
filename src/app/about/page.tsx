@@ -5,10 +5,10 @@ import StudioImage from '~/assets/studio/interiors3.jpg';
 
 export default function About() {
 	return (
-		<section className='gap-4 lg:gap-32 lg:flex-col pt-32'>
+		<section className='gap-4 lg:gap-32 lg:flex-col pt-40'>
 			<div className='flex flex-col lg:flex-row'>
 				<div className='flex flex-col items-center md:items-start md:grid md:grid-cols-[repeat(3,_1fr)] md:[grid-auto-rows:auto] lg:gap-x-10 lg:gap-y-20 flex-1 px-6 lg:px-12'>
-					<p className='text-xl lg:text-2xl order-3 md:order-none md:col-span-2'>
+					<p className='text-xl lg:text-2xl order-3 pt-10 md:pt-0 md:order-none md:col-span-2'>
 						<span className='text-2xl lg:text-3xl pr-2'>Blue Nomad</span> was
 						born from the intersection of my global business career and an
 						enduring passion for beauty, wellness, and culture--a journey that
@@ -26,11 +26,11 @@ export default function About() {
 						resonate with a more diverse and global audience.
 					</p>
 
-					<h1 className='col-start-2 row-start-1 uppercase md:text-end self-center md:self-start justify-self-center text-2xl lg:text-[5rem] lg:leading-[6.5rem] order-1 md:order-none md:col-start-3'>
+					<h1 className='col-start-2 row-start-1 uppercase md:text-end self-start justify-self-center text-2xl lg:text-[5rem] lg:leading-[6.5rem] order-1 md:order-none md:col-start-3'>
 						Our <br /> Sto<em>r</em>y
 					</h1>
 
-					<div className='relative w-full h-[500px] order-3 md:order-none md:col-start-1'>
+					<div className='relative w-full h-[500px] order-3 md:order-none md:col-start-1 my-6'>
 						<Image
 							src={OnyedikaImage.src}
 							alt='Picture of Onyedikachi'
@@ -81,21 +81,21 @@ export default function About() {
 							embark on this journey with us.
 						</p>
 
-						<div className='flex flex-col text-end'>
+						<div className='flex flex-col text-end mt-4'>
 							<span className='text-2xl lg:text-3xl'>
 								With L<em>ov</em>e,
 							</span>
 							<span className='text-2xl lg:text-5xl font-bold uppercase'>
 								Onyedikachi
 							</span>
-							<span className='mt-4 text-3xl lg:text-4xl'>
+							<span className='mt-4 text-2xl lg:text-4xl'>
 								(b. Akwa Ibom, Nigeria, 1990)
 							</span>
 						</div>
 					</div>
 				</div>
 
-				<div className='lg:basis-[30%]'>
+				<div className='lg:basis-[30%] mt-10'>
 					<Image
 						src={`${InteriorImage.src}`}
 						alt='Picture of the studio'
@@ -109,18 +109,18 @@ export default function About() {
 			</div>
 
 			<div className='flex flex-col lg:flex-row'>
-				<p className='uppercase flex-1 lg:basis-[70%] text-xl lg:text-3xl italic'>
-					We are all all nomads, dancing the delicate dance between movement and
-					stillness–– <br /> traversing worlds that are physical, mental, and
-					spiritual. <br /> We pick up treasures and leave behind memories.{' '}
-					<br /> Clinging to stories and dreams. <br /> Amidst the motion, we
-					seek moments of blue: moments of <br /> clarity <br /> of healing, of
-					sublime peace. <br /> This delicate dance is the journey of wellness,
-					wholly <br /> individual. <br /> How will you honor those moments?{' '}
-					<br /> It had better be worthwhile.
+				<p className='uppercase flex-1 lg:basis-[70%] text-xl lg:text-3xl italic space-y-2'>
+					We are all all nomads, dancing the delicate dance <br /> between
+					movement and stillness— <br /> traversing worlds that are physical,
+					mental, and spiritual. <br /> We pick up treasures and leave behind
+					memories. <br /> Clinging to stories and dreams. <br /> Amidst the
+					motion, we seek moments of blue: <br /> moments of clarity <br /> of
+					healing, of sublime peace. <br /> This delicate dance is the journey
+					of wellness, <br /> wholly individual. <br /> How will you honor those
+					moments? <br /> It had better be worthwhile.
 				</p>
 
-				<div className='lg:basis-[30%]'>
+				<div className='lg:basis-[30%] mt-8'>
 					<Image
 						src={StudioImage}
 						alt='Picture of the studio'

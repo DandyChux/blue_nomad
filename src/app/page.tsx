@@ -118,10 +118,16 @@ const socialMediaImages = [SocialMediaImage1, SocialMediaImage2];
 
 export default function Home() {
 	// Define ellipse dimensions
-	const ovalWidth = 950;
-	const ovalHeight = 450;
+	const ovalWidth = 1250;
+	const ovalHeight = 600;
 	const radiusX = ovalWidth / 2;
 	const radiusY = ovalHeight / 2;
+
+	// Define separate dimensions for logos
+	const logoOvalWidth = 950;
+	const logoOvalHeight = 450;
+	const logoRadiusX = logoOvalWidth / 2;
+	const logoRadiusY = logoOvalHeight / 2;
 
 	const θ_gap_center = Math.PI / 2; // 90 degrees
 	const θ_gap_size = Math.PI / 6; // 30-degree gap
@@ -132,8 +138,8 @@ export default function Home() {
 	return (
 		<>
 			{/* Hero Section */}
-			<section className='p-0'>
-				<div className='flex flex-col flex-1 items-center bg-hero-section-gradient bg-no-repeat bg-cover bg-center py-20 justify-around'>
+			<section className='p-0 bg-hero-section-gradient bg-no-repeat bg-cover lg:bg-contain'>
+				<div className='flex flex-col flex-1 items-center pt-20 gap-12 place-self-center'>
 					{/* <div className='relative w-full lg:w-[85%]'>
 						<Image
 							src='/logos/blue-nomad.png'
@@ -144,8 +150,9 @@ export default function Home() {
 							className='w-full h-auto'
 						/>
 					</div> */}
-					<h1 className='uppercase text-center w-full lg:w-3/5 font-normal text-xl lg:text-2xl'>
-						A Pri<em>va</em>te Skin Health Studio in NYC
+					<h1 className='uppercase text-center w-full lg:w-3/5 font-normal text-2xl lg:text-3xl'>
+						A Pri<em>va</em>te Skin Health <br className='lg:hidden' /> Studio
+						in NYC
 					</h1>
 
 					<div className='relative w-[250px] h-[300px]'>
@@ -173,15 +180,14 @@ export default function Home() {
 				</div>
 
 				<div
-					className='flex flex-col lg:flex-row flex-1 place-items-center p-4'
+					className='flex flex-col lg:flex-row flex-1 place-items-center p-4 pl-12 md:pl-8 lg:pl-20 pt-20 lg:pt-32 [background-position-y:40%] lg:bg-center'
 					style={{
 						backgroundImage: `url('${EgoHeadshot.src}')`,
 						backgroundSize: 'cover',
-						backgroundPosition: 'center',
 						backgroundRepeat: 'no-repeat',
 					}}
 				>
-					<p className='uppercase text-2xl lg:text-3xl xl:text-5xl pl-4 md:pl-8 lg:pl-20 pt-32 mx-auto lg:mx-0 text-black'>
+					<p className='uppercase text-2xl lg:text-3xl xl:text-5xl mx-auto lg:mx-0 text-black'>
 						Modern <em>Wellness</em> <br />
 						Inspired <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;By{' '}
 						<em>Worlds</em> near.
@@ -191,7 +197,7 @@ export default function Home() {
 				</div>
 			</section>
 
-			<div className='bg-background-gradient bg-no-repeat bg-top'>
+			<div className='bg-background-gradient bg-no-repeat bg-cover bg-top'>
 				{/* Our Story Section */}
 				<section className='py-12 px-8 lg:items-center'>
 					<div className='flex-1'>
@@ -205,7 +211,7 @@ export default function Home() {
 						/>
 					</div>
 
-					<div className='flex-[1_1_30%] flex flex-col items-center gap-10'>
+					<div className='flex-[1_1_30%] flex flex-col items-center gap-10 mt-6'>
 						<p className='text-center text-xl lg:text-3xl'>
 							Redefines wellness by blending <br /> timesless experiences,
 							guiding curious <br /> minds on transformative journeys <br />{' '}
@@ -245,20 +251,20 @@ export default function Home() {
 
 					<Button
 						size={'lg'}
-						// variant={'outline'}
-						className='uppercase rounded-full h-auto py-2'
+						variant={'outline'}
+						className='uppercase rounded-full h-auto py-2 px-12'
 					>
 						<Link href='https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start'>
-							Book a Treatment
+							Book a <br /> Treatment
 						</Link>
 					</Button>
 
 					{/* Partners Section */}
-					<div className='mt-8 py-12 px-4 md:px-8 lg:px-12 w-full md:flex-col'>
-						<p className='text-xl lg:text-2xl uppercase text-end'>
+					<div className='mt-8 pt-12 px-4 md:px-8 lg:px-12 w-full md:flex-col'>
+						<p className='text-lg lg:text-2xl uppercase text-end'>
 							Some Favorites From Near &amp; Far:
 						</p>
-						<h1 className='uppercase text-end'>
+						<h1 className='uppercase text-lg lg:text-[3rem] text-end'>
 							O<em>ur</em> In-Studio Curation
 						</h1>
 
@@ -279,8 +285,8 @@ export default function Home() {
 							{surroundingLogos.map((logo, index) => {
 								const totalImages = surroundingLogos.length;
 								const θ = (2 * Math.PI * index) / totalImages;
-								const x = Math.cos(θ) * radiusX;
-								const y = Math.sin(θ) * radiusY;
+								const x = Math.cos(θ) * logoRadiusX;
+								const y = Math.sin(θ) * logoRadiusY;
 
 								return (
 									<div
@@ -293,7 +299,8 @@ export default function Home() {
 										<Image
 											src={logo.src}
 											alt={logo.alt}
-											width={100}
+											sizes='150px'
+											width={250}
 											height={80}
 											className='w-full h-auto'
 										/>
@@ -333,7 +340,7 @@ export default function Home() {
 				{/* Testimonial Section */}
 				<section className='lg:flex-col px-4 md:px-8 lg:px-12 py-12'>
 					<figure className='flex flex-col'>
-						<blockquote className='uppercase text-base lg:text-5xl'>
+						<blockquote className='uppercase text-base lg:text-5xl hidden md:block'>
 							<p>
 								I <em>seek</em> out brands
 							</p>{' '}
@@ -350,6 +357,23 @@ export default function Home() {
 								<span className='lowercase'>g</span>oes <em>skin</em> deep.
 							</p>
 						</blockquote>
+						<blockquote className='md:hidden uppercase text-base lg:text-5xl'>
+							<p>
+								I <em>seek</em> out brands
+							</p>{' '}
+							<p className='pl-[5%] lg:pl-[10%]'>
+								From diverse origins, curating those
+							</p>{' '}
+							<p>
+								That are efficacious, cultured, &{' '}
+								<span className='md:lowercase'>g</span>
+								enuine-each with an ethos that
+							</p>{' '}
+							<p></p>
+							<p className='pl-[40%] lg:pl-[25%]'>
+								<span className='md:lowercase'>g</span>oes <em>skin</em> deep.
+							</p>
+						</blockquote>
 
 						<figcaption className='flex flex-col-reverse md:flex-row gap-2 place-self-end'>
 							<div className='place-self-end'>
@@ -359,8 +383,8 @@ export default function Home() {
 							<Image
 								src={OnyedikaHeadshot}
 								alt='Onyedikachi'
-								width={150}
-								height={200}
+								width={250}
+								height={300}
 								// sizes='100vw'
 								// className='w-full h-auto'
 							/>
@@ -368,7 +392,7 @@ export default function Home() {
 					</figure>
 
 					{/* Testimonials */}
-					<div className='relative w-full h-[750px] self-center hidden md:block'>
+					<div className='relative w-full h-[750px] self-center hidden md:block mt-32'>
 						<div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center'>
 							<h2 className='uppercase text-xl md:text-2xl lg:text-4xl'>
 								Earned <em>L</em>ove
@@ -402,7 +426,7 @@ export default function Home() {
 									}}
 								>
 									<figure className='flex flex-col'>
-										<div className='relative w-[100px] h-[150px]'>
+										<div className='relative w-[125px] h-[200px]'>
 											<Image
 												src={testimonial.image}
 												alt={`Picture of ${testimonial.name}`}
@@ -413,10 +437,12 @@ export default function Home() {
 												}}
 											/>
 										</div>
-										<figcaption className='font-semibold uppercase mt-5'>
+										<figcaption className='font-semibold uppercase mt-5 font-source-code-pro'>
 											{testimonial.name}, {testimonial.profession}
 										</figcaption>
-										<figcaption>{testimonial.description}</figcaption>
+										<figcaption className='font-source-code-pro'>
+											{testimonial.description}
+										</figcaption>
 									</figure>
 								</div>
 							);
@@ -424,7 +450,7 @@ export default function Home() {
 					</div>
 
 					{/* Stacked layout for mobile */}
-					<div className='flex flex-col items-center gap-4 mt-12 md:hidden relative'>
+					<div className='flex flex-col items-center gap-4 mt-16 md:hidden relative'>
 						{/* Central text/CTA */}
 						<div className='flex flex-col items-center'>
 							<h2 className='uppercase text-xl md:text-2xl lg:text-4xl'>
@@ -471,7 +497,7 @@ export default function Home() {
 				</section>
 
 				{/* Social Section */}
-				<section className='lg:flex-col items-center px-2 gap-4 bg-media-section-gradient bg-cover bg-top bg-no-repeat text-white min-h-fit pt-0 pb-8 lg:pb-32'>
+				<section className='lg:flex-col items-center px-2 gap-4 bg-media-section-gradient bg-cover lg:bg-top bg-no-repeat text-white min-h-fit pt-0 pb-8 lg:pb-32'>
 					<h1 className='uppercase pt-12'>Nomad&apos;s Land</h1>
 					<p className='text-xl lg:text-2xl'>
 						People, Places, and Ideas that Interest Us
@@ -479,7 +505,7 @@ export default function Home() {
 					<Button
 						variant={'outline'}
 						size={'lg'}
-						className='mx-auto rounded-full border-white'
+						className='mx-auto rounded-full border-white py-6'
 					>
 						<Link
 							href='https://www.instagram.com/bluenomadworld'
@@ -492,7 +518,7 @@ export default function Home() {
 					<div className='grid grid-cols-2 md:grid-cols-3 lg:flex lg:flex-wrap lg:justify-center gap-2 w-full'>
 						{Array.from({ length: 5 }).map((_, index) => (
 							// <Skeleton key={index} className={"w-[15rem] h-[20rem]"}></Skeleton>
-							<div key={index} className='relative w-[300px] h-[500px]'>
+							<div key={index} className='relative w-full h-[350px]'>
 								<Image
 									src={socialMediaImages[index % socialMediaImages.length]} // Alternat ebetween image1 and image2
 									alt={`Image ${index + 1}`}

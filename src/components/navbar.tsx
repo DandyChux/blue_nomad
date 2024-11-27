@@ -37,10 +37,10 @@ export const Navbar: React.FC = () => {
 				'flex items-center justify-start absolute top-0 w-full bg-transparent p-4 md:p-6 lg:px-10'
 			}
 		>
-			<div className='flex items-center group'>
+			<div className='flex items-center group w-full'>
 				<Link
 					href='/'
-					className='relative w-[150px] mr-4 motion-safe:hover:scale-105'
+					className='relative w-[200px] lg:mr-8 motion-safe:hover:scale-105 no-underline'
 				>
 					<Image
 						src='/logos/blue-nomad.png'
@@ -53,14 +53,17 @@ export const Navbar: React.FC = () => {
 				</Link>
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
-						<Button variant={'ghost'} className='ml-4 w-fit h-fit md:hidden'>
+						<Button
+							variant={'ghost'}
+							className='ml-auto w-auto h-fit md:hidden'
+						>
 							<Menu
 								className='!size-6 lg:!size-8 xl:!size-10'
 								strokeWidth={2.5}
 							/>
 						</Button>
 					</DropdownMenuTrigger>
-					<DropdownMenuContent sideOffset={4} className='md:hidden'>
+					<DropdownMenuContent sideOffset={4} className='md:hidden shadow-none'>
 						{navLinks.map((item) => (
 							<DropdownMenuItem key={item.label} asChild>
 								<Link
@@ -78,7 +81,10 @@ export const Navbar: React.FC = () => {
 				<nav className='hidden md:flex'>
 					<ul className='flex gap-8 *:uppercase'>
 						{navLinks.map((item) => (
-							<li key={item.label}>
+							<li
+								key={item.label}
+								className='motion-safe:hover:scale-105 duration-300 ease-in-out'
+							>
 								<Link
 									href={item.href}
 									className='font-semibold text-lg font-source-code-pro no-underline'

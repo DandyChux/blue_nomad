@@ -96,7 +96,7 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 			onMouseEnter={() => setIsHovered(true)}
 			onMouseLeave={() => setIsHovered(false)}
 			className={cn(
-				'rounded-none motion-safe:hover:scale-105 transition-all ease-in-out transform duration-500 p-4',
+				'rounded-none motion-safe:hover:scale-105 transition-all ease-in-out transform duration-500 p-4 border-none',
 				{
 					'bg-secondary text-secondary-foreground': index % 2 !== 0,
 					'text-white': index % 2 === 0,

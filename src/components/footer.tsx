@@ -45,8 +45,8 @@ export const Footer: React.FC = () => {
 	}
 
 	return (
-		<footer className='flex flex-col px-2 bg-footer-gradient bg-repeat lg:bg-no-repeat bg-top lg:bg-center space-y-6'>
-			<div className='flex flex-col lg:flex-row items-center lg:items-start space-y-8 lg:space-y-0 px-8 md:px-12 lg:px-20 py-4 md:py-8 lg:py-16'>
+		<footer className='flex flex-col px-2 bg-footer-gradient bg-cover bg-no-repeat bg-top lg:bg-center space-y-6'>
+			<div className='flex flex-col lg:flex-row space-y-14 lg:space-y-0 px-8 md:px-12 lg:px-20 py-4 md:py-8 lg:py-16'>
 				<div className='flex-1 flex flex-col space-y-4'>
 					<h2 className='uppercase text-xl'>Our Studio</h2>
 					<address className='uppercase not-italic font-semibold font-source-code-pro'>
@@ -89,7 +89,7 @@ export const Footer: React.FC = () => {
 					))}
 				</nav>
 
-				<div className='flex flex-col flex-1 space-y-2'>
+				<div className='flex flex-col flex-1 space-y-2 mt-10 md:mt-0'>
 					<span className='uppercase font-semibold text-xl lg:text-2xl tracking-wide'>
 						Subscribe for 10% off your first treatment!
 					</span>
@@ -130,7 +130,7 @@ export const Footer: React.FC = () => {
 
 			<div className='mt-auto flex flex-col w-full px-8 md:px-12 lg:px-20'>
 				<h2 className='uppercase text-xl'>Contact Us</h2>
-				<div className='flex flex-col md:flex-row items-center gap-10'>
+				<div className='flex flex-col md:flex-row gap-10'>
 					<span className='uppercase font-source-code-pro font-semibold text-lg'>
 						917-000-0002 / Info@Bluenomadworld.nyc
 					</span>
@@ -169,9 +169,9 @@ export const Footer: React.FC = () => {
 						/>
 					</Link>
 				</div>
-				<span className='text-sm uppercase font-bold place-self-end lg:px-20 grow'>
+				<small className='text-xs lg:text-sm mt-4 lg:mt-0 uppercase font-bold place-self-center lg:place-self-end lg:px-20 grow'>
 					&#169;{year} Blue Nomad Labs LLC. All rights reserved.
-				</span>
+				</small>
 			</div>
 		</footer>
 	);
