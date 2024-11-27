@@ -169,7 +169,7 @@ export default function Home() {
 					</div>
 
 					<Button
-						className='uppercase rounded-full text-lg h-auto py-2'
+						className='uppercase rounded-full h-auto py-2 px-12'
 						variant='outline'
 						size={'lg'}
 					>
