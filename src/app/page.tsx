@@ -83,14 +83,26 @@ const testimonials: TestimonialProps[] = [
 		image: AndieImage.src,
 	},
 	{
+		name: 'Gohar',
+		profession: 'artist',
+		description: 'Feel inspired',
+		image: GoharImage.src,
+	},
+	{
 		name: 'Kevin',
 		profession: 'model',
 		description: 'Refresh from within',
 		image: KevinImage.src,
 	},
 	{
+		name: 'Silvana',
+		profession: 'architect + interior designer',
+		description: 'Relax and unwind',
+		image: SilvanaImage.src,
+	},
+	{
 		name: 'Mawatle',
-		profession: 'thespian',
+		profession: 'marketer',
 		description: 'Embrace my authentic self',
 		image: MawatleImage.src,
 	},
@@ -99,18 +111,6 @@ const testimonials: TestimonialProps[] = [
 		profession: 'founder',
 		description: 'Feel energized!',
 		image: RonImage.src,
-	},
-	{
-		name: 'Gohar',
-		profession: 'artist',
-		description: 'Feel inspired',
-		image: GoharImage.src,
-	},
-	{
-		name: 'Silvana',
-		profession: 'architect + interior designer',
-		description: 'Relax and unwind',
-		image: SilvanaImage.src,
 	},
 ];
 
@@ -262,7 +262,7 @@ export default function Home() {
 						<p className='text-lg lg:text-2xl uppercase text-end'>
 							Some Favorites From Near &amp; Far:
 						</p>
-						<h1 className='uppercase text-lg lg:text-[3rem] text-end'>
+						<h1 className='uppercase text-lg lg:text-[3rem] text-end my-2 lg:my-6'>
 							O<em>ur</em> In-Studio Curation
 						</h1>
 
@@ -470,7 +470,7 @@ export default function Home() {
 							{testimonials.map((testimonial, index) => (
 								<div key={index} className='relative w-full h-auto'>
 									<figure className='flex flex-col items-center mx-auto'>
-										<div className='relative w-[125px] h-[150px]'>
+										<div className='relative w-[125px] h-[150px] my-2'>
 											<Image
 												src={testimonial.image}
 												alt={`Picture of ${testimonial.name}`}
@@ -481,11 +481,11 @@ export default function Home() {
 												}}
 											/>
 										</div>
-										<figcaption className='text-center mt-5'>
-											{testimonial.description}
-										</figcaption>
 										<figcaption className='font-semibold uppercase text-center'>
 											{testimonial.name}, {testimonial.profession}
+										</figcaption>
+										<figcaption className='text-center'>
+											{testimonial.description}
 										</figcaption>
 									</figure>
 								</div>
