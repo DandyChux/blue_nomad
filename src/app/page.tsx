@@ -138,7 +138,7 @@ export default function Home() {
 	return (
 		<>
 			{/* Hero Section */}
-			<section className='p-0 bg-hero-section-gradient bg-no-repeat bg-cover lg:bg-contain'>
+			<section className='p-0 bg-hero-section-gradient bg-no-repeat'>
 				<div className='flex flex-col flex-1 items-center pt-20 gap-12 place-self-center'>
 					{/* <div className='relative w-full lg:w-[85%]'>
 						<Image
@@ -180,7 +180,7 @@ export default function Home() {
 				</div>
 
 				<div
-					className='flex flex-col lg:flex-row flex-1 place-items-center p-4 pl-12 md:pl-8 lg:pl-20 pt-20 lg:pt-32 [background-position-y:40%] lg:bg-center'
+					className='flex flex-col lg:flex-row flex-1 place-items-center p-4 pl-12 md:pl-8 lg:pl-20 [background-position-y:40%] lg:bg-center'
 					style={{
 						backgroundImage: `url('${EgoHeadshot.src}')`,
 						backgroundSize: 'cover',
@@ -495,7 +495,7 @@ export default function Home() {
 				</section>
 
 				{/* Social Section */}
-				<section className='lg:flex-col items-center px-2 gap-4 bg-media-section-gradient bg-cover lg:bg-top bg-no-repeat text-white min-h-fit pt-0 pb-8 lg:pb-32'>
+				{/* <section className='lg:flex-col items-center px-2 gap-4 bg-media-section-gradient bg-cover lg:bg-top bg-no-repeat text-white min-h-fit pt-0 pb-8 lg:pb-32'>
 					<h1 className='uppercase pt-12'>Nomad&apos;s Land</h1>
 					<p className='text-xl lg:text-2xl'>
 						People, Places, and Ideas that Interest Us
@@ -530,7 +530,7 @@ export default function Home() {
 							</div>
 						))}
 					</div>
-				</section>
+				</section> */}
 			</div>
 		</>
 	);
