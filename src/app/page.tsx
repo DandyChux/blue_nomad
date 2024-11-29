@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import Headshot from '~/assets/Look 4 165.jpg';
+import Headshot from '~/assets/Look 4 139.jpg';
 import EgoHeadshot from '~/assets/Look 5 185.jpg';
 import OnyedikaHeadshot from '~/assets/Onyedika Portraits/Founder.png';
 import TreatmentCards from '~/components/treatment-cards';
@@ -250,8 +250,8 @@ export default function Home() {
 					<TreatmentCards />
 
 					{/* Partners Section */}
-					<div className='mt-8 pt-12 px-4 md:px-8 lg:px-12 w-full md:flex-col'>
-						<p className='text-lg lg:text-2xl uppercase text-end'>
+					<div className='mt-8 pt-12 md:px-4 lg:px-8 w-full md:flex-col'>
+						<p className='lg:text-2xl uppercase text-end'>
 							Some Favorites From Near &amp; Far:
 						</p>
 						<h1 className='uppercase text-lg lg:text-[3rem] text-end my-2 lg:my-6'>

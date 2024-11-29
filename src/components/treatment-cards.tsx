@@ -1,5 +1,6 @@
 'use client';
 
+import { ArrowUpRightIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState } from 'react';
@@ -39,8 +40,8 @@ const treatments: TreatmentProps[] = [
 		description:
 			'Personalized face-to-neck skin therapy blending advanced modalities with ancient massage techniques. From well-aging to acne care, each treatment is customized to guide your skin to optimal health.',
 		price: 235,
-		defaultImage: TreatmentShot1.src,
-		hoverImage: HoverShot1.src,
+		defaultImage: TreatmentShot3.src,
+		hoverImage: HoverShot3.src,
 		link: 'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start',
 	},
 	{
@@ -48,8 +49,8 @@ const treatments: TreatmentProps[] = [
 		description:
 			"A customized blend of acids and vitamins that transforms texture and tone while protecting your skin's barrier and revealing its natural luminosity. Most beneficial during colder months.",
 		price: 225,
-		defaultImage: TreatmentShot2.src,
-		hoverImage: HoverShot2.src,
+		defaultImage: TreatmentShot1.src,
+		hoverImage: HoverShot1.src,
 		link: 'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start',
 		// membersOnly: true,
 	},
@@ -58,8 +59,8 @@ const treatments: TreatmentProps[] = [
 		description:
 			'Our signature Facial ST 60 monthly, with access to anytime skincare guidance and first experience at new brands and treatments.',
 		price: 185,
-		defaultImage: TreatmentShot3.src,
-		hoverImage: HoverShot3.src,
+		defaultImage: TreatmentShot2.src,
+		hoverImage: HoverShot2.src,
 		membersOnly: true,
 		link: 'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start',
 	},
@@ -67,7 +68,7 @@ const treatments: TreatmentProps[] = [
 
 export default function TreatmentCards() {
 	return (
-		<div className='grid md:grid-cols-2 lg:grid-cols-3 mx-auto gap-4 p-8'>
+		<div className='grid md:grid-cols-2 lg:grid-cols-3 mx-auto gap-4 p-2 md:p-8'>
 			{treatments.map((treatment, index) => (
 				<TreatmentCard
 					key={index}
@@ -103,7 +104,7 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 			onMouseEnter={() => setIsHovered(true)}
 			onMouseLeave={() => setIsHovered(false)}
 			className={cn(
-				'rounded-none motion-safe:hover:scale-105 transition-all ease-in-out transform duration-500 p-4 border-none',
+				'relative group rounded-none motion-safe:hover:scale-105 transition-all ease-in-out transform duration-500 p-4 border-none',
 				{
 					'bg-secondary text-secondary-foreground': index % 2 !== 0,
 					'text-white': index % 2 === 0,
@@ -111,6 +112,15 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 				className
 			)}
 		>
+			<ArrowUpRightIcon className='w-4 h-4 ml-auto mb-2 group-hover:scale-105 transition-all duration-500' />
+			<Link
+				className='text-sm underline decoration-dotted underline-offset-2'
+				href={link}
+				target='_blank'
+				rel='noreferrer'
+			>
+				<span className='absolute inset-0'></span>
+			</Link>
 			{index % 2 === 0 ? (
 				<>
 					<CardContent className='p-0'>
@@ -128,20 +138,18 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 					</CardContent>
 					<CardHeader>
 						<CardDescription className='text-inherit uppercase font-source-code-pro font-semibold'>
-							{description}
+							{description}{' '}
+							{membersOnly
+								? 'May be canceled anytime after the first (3) months.'
+								: ''}
 						</CardDescription>
 						<CardTitle className='font-normal text-xl lg:text-3xl tracking-wide'>
 							{title} {membersOnly ? '' : `- $${price}`}
 						</CardTitle>
 						{membersOnly && (
-							<>
-								<CardTitle className='font-normal text-xl lg:text-3xl tracking-wide'>
-									Membership - ${price}
-								</CardTitle>
-								<small className='font-semibold'>
-									May be canceled anytime after the first (3) months.
-								</small>
-							</>
+							<CardTitle className='font-normal text-xl lg:text-3xl tracking-wide'>
+								Membership - ${price}
+							</CardTitle>
 						)}
 					</CardHeader>
 				</>
@@ -152,17 +160,15 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 							{title} {membersOnly ? '' : `- $${price}`}
 						</CardTitle>
 						{membersOnly && (
-							<>
-								<CardTitle className='font-normal text-xl lg:text-3xl tracking-wide'>
-									${price}
-								</CardTitle>
-								<small className='font-semibold'>
-									* May be canceled anytime after the first (3) months.
-								</small>
-							</>
+							<CardTitle className='font-normal text-xl lg:text-3xl tracking-wide'>
+								${price}
+							</CardTitle>
 						)}
 						<CardDescription className='text-inherit uppercase font-source-code-pro font-semibold'>
-							{description}
+							{description}{' '}
+							{membersOnly
+								? 'May be canceled anytime after the first (3) months.'
+								: ''}
 						</CardDescription>
 					</CardHeader>
 					<CardContent className='p-0'>

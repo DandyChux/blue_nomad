@@ -77,7 +77,7 @@ const config: Config = {
 				"media-section-gradient": "url(/media_section_gradient.png)",
 				"background-gradient": "url(/background_gradient.png)",
 			},
-		},
+		}
 	},
 	// eslint-disable-next-line @typescript-eslint/no-require-imports
 	plugins: [require("tailwindcss-animate")],

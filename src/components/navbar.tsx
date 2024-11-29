@@ -83,7 +83,7 @@ export const Navbar: React.FC = () => {
 						{navLinks.map((item) => (
 							<li
 								key={item.label}
-								className='motion-safe:hover:scale-105 duration-300 ease-in-out'
+								className='motion-safe:hover:underline motion-safe:hover:underline-offset-2 duration-300 ease-in-out'
 							>
 								<Link
 									href={item.href}

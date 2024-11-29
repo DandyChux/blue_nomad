@@ -156,7 +156,7 @@ export const Footer: React.FC = () => {
 				</div>
 			</div>
 
-			<div className='flex flex-col lg:flex-row w-full items-center'>
+			<div className='flex flex-col lg:flex-row w-full items-center px-8'>
 				<div className='relative w-full md:w-[60%]'>
 					<Link href='/'>
 						<Image
@@ -169,7 +169,7 @@ export const Footer: React.FC = () => {
 						/>
 					</Link>
 				</div>
-				<small className='text-xs lg:text-sm mt-4 lg:mt-0 uppercase font-bold place-self-center lg:place-self-end lg:px-20 grow'>
+				<small className='text-[0.5rem] lg:text-sm mt-2 lg:mt-0 uppercase font-bold place-self-center lg:place-self-end lg:px-20 grow'>
 					&#169;{year} Blue Nomad Labs LLC. All rights reserved.
 				</small>
 			</div>
