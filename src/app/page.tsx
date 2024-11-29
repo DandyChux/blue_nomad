@@ -118,7 +118,7 @@ const socialMediaImages = [SocialMediaImage1, SocialMediaImage2];
 
 export default function Home() {
 	// Define ellipse dimensions
-	const ovalWidth = 1250;
+	const ovalWidth = 1050;
 	const ovalHeight = 600;
 	const radiusX = ovalWidth / 2;
 	const radiusY = ovalHeight / 2;
@@ -164,6 +164,7 @@ export default function Home() {
 							// style={{
 							// 	objectFit: 'cover',
 							// }}
+							placeholder='empty'
 							priority
 						/>
 					</div>
@@ -187,10 +188,10 @@ export default function Home() {
 						backgroundRepeat: 'no-repeat',
 					}}
 				>
-					<p className='uppercase text-2xl lg:text-3xl xl:text-5xl mx-auto lg:mx-0 text-black'>
+					<p className='uppercase text-2xl lg:text-3xl xl:text-4xl mx-auto lg:mx-0 text-black'>
 						Modern <em>Wellness</em> <br />
 						Inspired <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;By{' '}
-						<em>Worlds</em> near.
+						<em>Worlds</em> near <br />
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Far{' '}
 						<em>&</em> Within
 					</p>
@@ -208,6 +209,7 @@ export default function Home() {
 							height={0}
 							sizes='100vw'
 							className='w-full h-auto'
+							priority
 						/>
 					</div>
 
@@ -246,16 +248,6 @@ export default function Home() {
 						both functional and soulful
 					</p>
 					<TreatmentCards />
-
-					<Button
-						size={'lg'}
-						variant={'outline'}
-						className='uppercase rounded-full h-auto py-2 px-12'
-					>
-						<Link href='https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start'>
-							Book a <br /> Treatment
-						</Link>
-					</Button>
 
 					{/* Partners Section */}
 					<div className='mt-8 pt-12 px-4 md:px-8 lg:px-12 w-full md:flex-col'>
@@ -336,7 +328,7 @@ export default function Home() {
 				</section>
 
 				{/* Testimonial Section */}
-				<section className='lg:flex-col px-4 md:px-8 lg:px-12 py-12'>
+				<section className='lg:flex-col px-4 md:px-8 lg:px-12 pb-20'>
 					<figure className='flex flex-col'>
 						<blockquote className='uppercase text-base lg:text-5xl hidden md:block'>
 							<p>
@@ -345,14 +337,10 @@ export default function Home() {
 							<p className='pl-[5%] lg:pl-[10%]'>
 								From diverse origins, curating those
 							</p>{' '}
-							<p>
-								That are efficacious, cultured, &{' '}
-								<span className='lowercase'>g</span>
-								enuine-each
-							</p>{' '}
+							<p>That are efficacious, cultured, & genuine-each</p>{' '}
 							<p>with an ethos that</p>
 							<p className='pl-[40%] lg:pl-[25%]'>
-								<span className='lowercase'>g</span>oes <em>skin</em> deep.
+								goes <em>skin</em> deep.
 							</p>
 						</blockquote>
 						<blockquote className='md:hidden uppercase text-base lg:text-5xl'>
@@ -363,26 +351,27 @@ export default function Home() {
 								From diverse origins, curating those
 							</p>{' '}
 							<p>
-								That are efficacious, cultured, &{' '}
-								<span className='md:lowercase'>g</span>
-								enuine-each with an ethos that
+								That are efficacious, cultured, & genuine-each with an ethos
+								that
 							</p>{' '}
 							<p></p>
 							<p className='pl-[40%] lg:pl-[25%]'>
-								<span className='md:lowercase'>g</span>oes <em>skin</em> deep.
+								goes <em>skin</em> deep.
 							</p>
 						</blockquote>
 
 						<figcaption className='flex flex-col-reverse md:flex-row gap-2 place-self-end'>
-							<div className='place-self-end'>
-								<p className='text-xl lg:text-2xl text-end'>Onyedikachi</p>
-								<small className='lg:text-lg'>Founder</small>
+							<div className='place-self-end flex flex-col'>
+								<p className='text-xl lg:text-2xl self-end'>Onyedikachi</p>
+								<small className='lg:text-lg self-end'>Founder</small>
 							</div>
 							<Image
 								src={OnyedikaHeadshot}
 								alt='Onyedikachi'
 								width={250}
 								height={300}
+								placeholder='empty'
+								priority
 								// sizes='100vw'
 								// className='w-full h-auto'
 							/>
@@ -401,7 +390,7 @@ export default function Home() {
 							<Button
 								variant={'outline'}
 								size={'lg'}
-								className='h-auto uppercase rounded-full py-2 px-12 mt-6'
+								className='h-auto uppercase rounded-full py-2 px-12 mt-6 hidden md:block'
 							>
 								<Link href='#treatments'>
 									Your <br /> Turn
@@ -457,13 +446,6 @@ export default function Home() {
 							<p className='text-lg md:text-xl lg:text-2xl'>
 								Blue Nomad makes me feel...
 							</p>
-							<Button
-								variant={'outline'}
-								size={'lg'}
-								className='h-auto uppercase rounded-full py-2 px-12 mt-6'
-							>
-								Your <br /> Turn
-							</Button>
 						</div>
 
 						<div className='grid grid-cols-2 gap-4 w-full'>
@@ -491,6 +473,16 @@ export default function Home() {
 								</div>
 							))}
 						</div>
+
+						<Button
+							variant={'outline'}
+							size={'lg'}
+							className='h-auto uppercase rounded-full py-2 px-12 mt-6'
+						>
+							<Link href='#treatments'>
+								Your <br /> Turn
+							</Link>
+						</Button>
 					</div>
 				</section>
 

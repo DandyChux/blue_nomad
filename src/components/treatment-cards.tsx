@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import React, { useState } from 'react';
 import TreatmentShot2 from '~/assets/treatment-section/Artboard 2-1.png';
 import TreatmentShot3 from '~/assets/treatment-section/Artboard 2-2.png';
@@ -23,6 +24,7 @@ type TreatmentProps = {
 	price: number;
 	defaultImage: string;
 	hoverImage: string;
+	link: string;
 	membersOnly?: boolean;
 };
 
@@ -36,27 +38,30 @@ const treatments: TreatmentProps[] = [
 		title: 'Facial ST 60min',
 		description:
 			'Personalized face-to-neck skin therapy blending advanced modalities with ancient massage techniques. From well-aging to acne care, each treatment is customized to guide your skin to optimal health.',
-		price: 275,
+		price: 235,
 		defaultImage: TreatmentShot1.src,
 		hoverImage: HoverShot1.src,
+		link: 'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start',
 	},
 	{
 		title: 'Refresh Peel 45min',
 		description:
 			"A customized blend of acids and vitamins that transforms texture and tone while protecting your skin's barrier and revealing its natural luminosity. Most beneficial during colder months.",
-		price: 250,
+		price: 225,
 		defaultImage: TreatmentShot2.src,
 		hoverImage: HoverShot2.src,
+		link: 'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start',
 		// membersOnly: true,
 	},
 	{
 		title: 'Facial ST 60 Membership',
 		description:
 			'Our signature Facial ST 60 monthly, with access to anytime skincare guidance and first experience at new brands and treatments.',
-		price: 230,
+		price: 185,
 		defaultImage: TreatmentShot3.src,
 		hoverImage: HoverShot3.src,
 		membersOnly: true,
+		link: 'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start',
 	},
 ];
 
@@ -72,6 +77,7 @@ export default function TreatmentCards() {
 					defaultImage={treatment.defaultImage}
 					hoverImage={treatment.hoverImage}
 					membersOnly={treatment.membersOnly}
+					link={treatment.link}
 					index={index + 1} // index is 0-based so we add 1
 				/>
 			))}
@@ -88,6 +94,7 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 	membersOnly,
 	className,
 	index,
+	link,
 }) => {
 	const [isHovered, setIsHovered] = useState(false);
 
@@ -107,14 +114,17 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 			{index % 2 === 0 ? (
 				<>
 					<CardContent className='p-0'>
-						<Image
-							src={isHovered ? hoverImage : defaultImage}
-							alt={title}
-							width={550}
-							height={420}
-							sizes='100vw'
-							className='w-full h-auto'
-						/>
+						<Link href={link} target='_blank' rel='noopener noreferrer'>
+							<Image
+								src={isHovered ? hoverImage : defaultImage}
+								alt={title}
+								width={550}
+								height={420}
+								sizes='100vw'
+								className='w-full h-auto'
+								placeholder='empty'
+							/>
+						</Link>
 					</CardContent>
 					<CardHeader>
 						<CardDescription className='text-inherit uppercase font-source-code-pro font-semibold'>
@@ -124,9 +134,14 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 							{title} {membersOnly ? '' : `- $${price}`}
 						</CardTitle>
 						{membersOnly && (
-							<CardTitle className='font-normal text-xl lg:text-3xl tracking-wide'>
-								Membership - ${price}
-							</CardTitle>
+							<>
+								<CardTitle className='font-normal text-xl lg:text-3xl tracking-wide'>
+									Membership - ${price}
+								</CardTitle>
+								<small className='font-semibold'>
+									May be canceled anytime after the first (3) months.
+								</small>
+							</>
 						)}
 					</CardHeader>
 				</>
@@ -137,23 +152,31 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 							{title} {membersOnly ? '' : `- $${price}`}
 						</CardTitle>
 						{membersOnly && (
-							<CardTitle className='font-normal text-xl lg:text-3xl tracking-wide'>
-								${price}
-							</CardTitle>
+							<>
+								<CardTitle className='font-normal text-xl lg:text-3xl tracking-wide'>
+									${price}
+								</CardTitle>
+								<small className='font-semibold'>
+									* May be canceled anytime after the first (3) months.
+								</small>
+							</>
 						)}
 						<CardDescription className='text-inherit uppercase font-source-code-pro font-semibold'>
 							{description}
 						</CardDescription>
 					</CardHeader>
 					<CardContent className='p-0'>
-						<Image
-							src={isHovered ? hoverImage : defaultImage}
-							alt={title}
-							width={550}
-							height={420}
-							sizes='100vw'
-							className='w-full h-auto'
-						/>
+						<Link href={link} target='_blank' rel='noopener noreferrer'>
+							<Image
+								src={isHovered ? hoverImage : defaultImage}
+								alt={title}
+								width={550}
+								height={420}
+								sizes='100vw'
+								className='w-full h-auto'
+								placeholder='empty'
+							/>
+						</Link>
 					</CardContent>
 				</>
 			)}
