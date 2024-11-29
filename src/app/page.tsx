@@ -244,8 +244,8 @@ export default function Home() {
 						Treatme<em>n</em>ts
 					</h1>
 					<p className='text-lg lg:text-xl'>
-						Exploring global traditions and science for an experience that is
-						both functional and soulful
+						Exploring tradition and science for an experience that is both
+						functional and soulful
 					</p>
 					<TreatmentCards />
 
