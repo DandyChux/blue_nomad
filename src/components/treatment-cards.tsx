@@ -1,6 +1,5 @@
 'use client';
 
-import { ArrowUpRightIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState } from 'react';
@@ -112,7 +111,6 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 				className
 			)}
 		>
-			<ArrowUpRightIcon className='w-4 h-4 ml-auto mb-2 group-hover:scale-105 transition-all duration-500' />
 			<Link
 				className='text-sm underline decoration-dotted underline-offset-2'
 				href={link}
