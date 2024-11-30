@@ -37,7 +37,7 @@ const treatments: TreatmentProps[] = [
 	{
 		title: 'Facial ST 60min',
 		description:
-			'Personalized face-to-neck skin therapy blending advanced modalities with ancient massage techniques. From well-aging to acne care, each treatment is customized to guide your skin to optimal health.',
+			'Face-to-neck skin therapy blending advanced modalities and time-honored massage techniques to guide your skin to optimal health, from well-aging to acne care, each treatment is fully customized.',
 		price: 235,
 		defaultImage: TreatmentShot3.src,
 		hoverImage: HoverShot3.src,
@@ -78,7 +78,7 @@ export default function TreatmentCards() {
 					hoverImage={treatment.hoverImage}
 					membersOnly={treatment.membersOnly}
 					link={treatment.link}
-					index={index + 1} // index is 0-based so we add 1
+					index={index}
 				/>
 			))}
 		</div>
@@ -103,10 +103,10 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 			onMouseEnter={() => setIsHovered(true)}
 			onMouseLeave={() => setIsHovered(false)}
 			className={cn(
-				'relative group rounded-none motion-safe:hover:scale-105 transition-all ease-in-out transform duration-500 p-4 border-none',
+				'relative group rounded-none motion-safe:hover:scale-105 transition-all ease-in-out transform duration-500 p-4 border-none flex flex-col',
 				{
-					'bg-secondary text-secondary-foreground': index % 2 !== 0,
-					'text-white': index % 2 === 0,
+					'bg-secondary text-secondary-foreground': index % 2 === 0,
+					'text-white': index % 2 !== 0,
 				},
 				className
 			)}
@@ -119,71 +119,53 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 			>
 				<span className='absolute inset-0'></span>
 			</Link>
-			{index % 2 === 0 ? (
-				<>
-					<CardContent className='p-0'>
-						<Link href={link} target='_blank' rel='noopener noreferrer'>
-							<Image
-								src={isHovered ? hoverImage : defaultImage}
-								alt={title}
-								width={550}
-								height={420}
-								sizes='100vw'
-								className='w-full h-auto'
-								placeholder='empty'
-							/>
-						</Link>
-					</CardContent>
-					<CardHeader>
-						<CardDescription className='text-inherit uppercase font-source-code-pro font-semibold'>
-							{description}{' '}
-							{membersOnly
-								? 'May be canceled anytime after the first (3) months.'
-								: ''}
-						</CardDescription>
-						<CardTitle className='font-normal text-xl lg:text-3xl tracking-wide'>
-							{title} {membersOnly ? '' : `- $${price}`}
-						</CardTitle>
-						{membersOnly && (
-							<CardTitle className='font-normal text-xl lg:text-3xl tracking-wide'>
-								Membership - ${price}
-							</CardTitle>
-						)}
-					</CardHeader>
-				</>
-			) : (
-				<>
-					<CardHeader>
-						<CardTitle className='font-normal text-xl lg:text-3xl tracking-wide'>
-							{title} {membersOnly ? '' : `- $${price}`}
-						</CardTitle>
-						{membersOnly && (
-							<CardTitle className='font-normal text-xl lg:text-3xl tracking-wide'>
-								${price}
-							</CardTitle>
-						)}
-						<CardDescription className='text-inherit uppercase font-source-code-pro font-semibold'>
-							{description}{' '}
-							{membersOnly
-								? 'May be canceled anytime after the first (3) months.'
-								: ''}
-						</CardDescription>
-					</CardHeader>
-					<CardContent className='p-0'>
-						<Link href={link} target='_blank' rel='noopener noreferrer'>
-							<Image
-								src={isHovered ? hoverImage : defaultImage}
-								alt={title}
-								width={550}
-								height={420}
-								sizes='100vw'
-								className='w-full h-auto'
-								placeholder='empty'
-							/>
-						</Link>
-					</CardContent>
-				</>
-			)}
+			<CardHeader
+				className={cn('px-2 gap-2', {
+					'order-2': index % 2 !== 0,
+					'order-1': index % 2 === 0,
+				})}
+			>
+				<CardTitle
+					className={cn('font-normal text-xl lg:text-3xl tracking-wide', {
+						'order-1': index % 2 === 0,
+						'order-2': index % 2 !== 0,
+					})}
+				>
+					{title} - ${price}
+				</CardTitle>
+				<CardDescription
+					className={cn(
+						'text-inherit uppercase font-source-code-pro font-semibold',
+						{
+							'order-1': index % 2 !== 0,
+							'order-2': index % 2 === 0,
+						}
+					)}
+				>
+					{description}{' '}
+					{membersOnly
+						? 'May be canceled anytime after the first three(3) months.'
+						: ''}
+				</CardDescription>
+			</CardHeader>
+			<CardContent
+				className={cn('p-0 flex-1', {
+					'order-1': index % 2 !== 0,
+					'order-2': index % 2 === 0,
+				})}
+			>
+				<Link href={link} target='_blank' rel='noopener noreferrer'>
+					<Image
+						src={isHovered ? hoverImage : defaultImage}
+						alt={title}
+						width={550}
+						height={450}
+						sizes='100vw'
+						className='w-full h-full object-cover'
+						placeholder='empty'
+					/>
+				</Link>
+			</CardContent>
 		</Card>
 	);
 };

@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import EgoHeadshot from '~/assets/Ego with text.png';
 import Headshot from '~/assets/Look 4 139.jpg';
-import EgoHeadshot from '~/assets/Look 5 185.jpg';
 import OnyedikaHeadshot from '~/assets/Onyedika Portraits/Founder.png';
 import TreatmentCards from '~/components/treatment-cards';
 import { Button } from '~/components/ui/button';
@@ -139,8 +139,8 @@ export default function Home() {
 		<>
 			{/* Hero Section */}
 			<section className='p-0 bg-hero-section-gradient bg-no-repeat'>
-				<div className='flex flex-col flex-1 items-center pt-20 gap-12 place-self-center'>
-					{/* <div className='relative w-full lg:w-[85%]'>
+				<div className='flex flex-col flex-1 items-center px-8 pt-16 pb-8 md:pt-0 gap-8 lg:gap-12 place-self-center'>
+					<div className='relative w-full lg:w-[85%]'>
 						<Image
 							src='/logos/blue-nomad.png'
 							alt='hero'
@@ -149,11 +149,17 @@ export default function Home() {
 							sizes='100vw'
 							className='w-full h-auto'
 						/>
-					</div> */}
-					<h1 className='uppercase text-center w-full lg:w-3/5 font-normal text-2xl lg:text-3xl'>
-						A Pri<em>va</em>te Skin Health <br className='lg:hidden' /> Studio
-						in NYC
-					</h1>
+					</div>
+
+					<Button
+						className='uppercase rounded-full h-auto py-2 px-12'
+						variant='outline'
+						size={'lg'}
+					>
+						<Link href='#treatments'>
+							Discover our <br /> first offering
+						</Link>
+					</Button>
 
 					<div className='relative w-[250px] h-[300px]'>
 						<Image
@@ -169,32 +175,26 @@ export default function Home() {
 						/>
 					</div>
 
-					<Button
-						className='uppercase rounded-full h-auto py-2 px-12'
-						variant='outline'
-						size={'lg'}
-					>
-						<Link href='#treatments'>
-							Discover our <br /> first offering
-						</Link>
-					</Button>
+					<h1 className='uppercase text-center w-full lg:w-3/5 font-normal text-2xl lg:text-3xl'>
+						A Private Skin Health <br className='lg:hidden' /> Studio in NYC
+					</h1>
 				</div>
 
 				<div
-					className='flex flex-col lg:flex-row flex-1 place-items-center p-4 pl-12 md:pl-8 lg:pl-20 [background-position-y:40%] lg:bg-center'
+					className='flex flex-col lg:flex-row flex-1 place-items-center p-4 pl-12 md:pl-8 lg:pl-20 [background-position-y:40%] lg:bg-center min-h-[50dvh] lg:min-h-0'
 					style={{
 						backgroundImage: `url('${EgoHeadshot.src}')`,
 						backgroundSize: 'cover',
 						backgroundRepeat: 'no-repeat',
 					}}
 				>
-					<p className='uppercase text-2xl lg:text-3xl xl:text-4xl mx-auto lg:mx-0 text-black'>
+					{/* <p className='uppercase text-2xl lg:text-3xl xl:text-4xl mx-auto lg:mx-0 text-black'>
 						Modern <em>Wellness</em> <br />
 						Inspired <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;By{' '}
-						<em>Worlds</em> near <br />
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Far{' '}
-						<em>&</em> Within
-					</p>
+						<em>Worlds</em> near, <br />
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Far,{' '}
+						and Within
+					</p> */}
 				</div>
 			</section>
 
@@ -215,15 +215,14 @@ export default function Home() {
 
 					<div className='flex-[1_1_30%] flex flex-col items-center gap-10 mt-6'>
 						<p className='text-center text-xl lg:text-3xl'>
-							Redefines wellness by blending <br /> timesless experiences,
+							Reimagines wellness by blending <br /> timesless experiences,
 							guiding curious <br /> minds on transformative journeys <br />{' '}
 							from urban alcoves to distant escapes.
 						</p>
 
 						<h1 className='uppercase text-center text-3xl font-normal lg:text-6xl max-w-[750px]'>
 							{' '}
-							For the curious & discernin
-							<span className='lg:lowercase lg:text-8xl font-normal'>g</span>
+							For the curious & discerning
 						</h1>
 
 						<Button
@@ -240,9 +239,7 @@ export default function Home() {
 
 				{/* Treatments Section */}
 				<section className='lg:flex-col items-center' id='treatments'>
-					<h1 className='uppercase'>
-						Treatme<em>n</em>ts
-					</h1>
+					<h1 className='uppercase'>Treatments</h1>
 					<p className='text-lg lg:text-xl'>
 						Exploring tradition and science for an experience that is both
 						functional and soulful
@@ -255,7 +252,7 @@ export default function Home() {
 							Some Favorites From Near &amp; Far:
 						</p>
 						<h1 className='uppercase text-lg lg:text-[3rem] text-end my-2 lg:my-6'>
-							O<em>ur</em> In-Studio Curation
+							Our In-Studio Curation
 						</h1>
 
 						{/* Elliptical layout for medium screens and above */}
@@ -331,22 +328,16 @@ export default function Home() {
 				<section className='lg:flex-col px-4 md:px-8 lg:px-12 pb-20'>
 					<figure className='flex flex-col'>
 						<blockquote className='uppercase text-base lg:text-5xl hidden md:block'>
-							<p>
-								I <em>seek</em> out brands
-							</p>{' '}
+							<p>I seek out brands</p>{' '}
 							<p className='pl-[5%] lg:pl-[10%]'>
 								From diverse origins, curating those
 							</p>{' '}
 							<p>That are efficacious, cultured, & genuine-each</p>{' '}
 							<p>with an ethos that</p>
-							<p className='pl-[40%] lg:pl-[25%]'>
-								goes <em>skin</em> deep.
-							</p>
+							<p className='pl-[40%] lg:pl-[25%]'>goes skin deep.</p>
 						</blockquote>
 						<blockquote className='md:hidden uppercase text-base lg:text-5xl'>
-							<p>
-								I <em>seek</em> out brands
-							</p>{' '}
+							<p>I seek out brands</p>{' '}
 							<p className='pl-[5%] lg:pl-[10%]'>
 								From diverse origins, curating those
 							</p>{' '}
@@ -355,9 +346,7 @@ export default function Home() {
 								that
 							</p>{' '}
 							<p></p>
-							<p className='pl-[40%] lg:pl-[25%]'>
-								goes <em>skin</em> deep.
-							</p>
+							<p className='pl-[40%] lg:pl-[25%]'>goes skin deep.</p>
 						</blockquote>
 
 						<figcaption className='flex flex-col-reverse md:flex-row gap-2 place-self-end'>
@@ -382,7 +371,7 @@ export default function Home() {
 					<div className='relative w-full h-[750px] self-center hidden md:block mt-32'>
 						<div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center'>
 							<h2 className='uppercase text-xl md:text-2xl lg:text-4xl'>
-								Earned <em>L</em>ove
+								Earned Love
 							</h2>
 							<p className='text-lg md:text-xl lg:text-2xl'>
 								Blue Nomad makes me...
@@ -441,7 +430,7 @@ export default function Home() {
 						{/* Central text/CTA */}
 						<div className='flex flex-col items-center'>
 							<h2 className='uppercase text-xl md:text-2xl lg:text-4xl'>
-								Earned <em>L</em>ove
+								Earned Love
 							</h2>
 							<p className='text-lg md:text-xl lg:text-2xl'>
 								Blue Nomad makes me feel...

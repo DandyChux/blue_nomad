@@ -42,7 +42,7 @@ const policies: PrivacyPolicy[] = [
 
 export default function PrivacyPolicy() {
 	return (
-		<section className='lg:flex-col'>
+		<section className='lg:flex-col pt-32'>
 			<h1>Privacy Policy</h1>
 
 			<ol className='list-[decimal-leading-zero] space-y-8 my-8 px-10'>

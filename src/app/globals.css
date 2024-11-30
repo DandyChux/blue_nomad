@@ -116,7 +116,7 @@
 		&:hover {
 			text-underline-offset: 0.25rem;
 		}
-		@apply motion-safe:hover:underline motion-safe:hover:underline-offset-2 duration-300 ease-in-out;
+		@apply motion-safe:hover:scale-105 duration-300 ease-in-out;
 	}
 
 	button {

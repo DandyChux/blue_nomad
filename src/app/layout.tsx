@@ -6,6 +6,7 @@ import { PropsWithChildren } from 'react';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { Footer } from '~/components/footer';
 import { Navbar } from '~/components/navbar';
+import { Providers } from '~/components/providers';
 import './globals.css';
 
 export const david_libre = David_Libre({
@@ -80,19 +81,21 @@ export default function RootLayout({ children }: PropsWithChildren) {
 			className={`${david_libre.variable} ${source_code_pro.variable} ${harmony.variable}`}
 		>
 			<body className={`antialiased relative`}>
-				<Navbar />
-				<main className='w-full'>
-					{children}
-					<Footer />
-				</main>
-				{/* <Toaster
-					richColors
-					expand
-					closeButton
-					theme="system"
-					position="bottom-right"
-				/> */}
+				<Providers>
+					<Navbar />
+					<main className='w-full'>
+						{children}
+						<Footer />
+					</main>
+				</Providers>
 			</body>
+			{/* <Toaster
+				richColors
+				expand
+				closeButton
+				theme="system"
+				position="bottom-right"
+			/> */}
 			<GoogleAnalytics gaId={process.env.GOOGLE_MEASUREMENT_ID!} />
 		</html>
 	);

@@ -27,10 +27,10 @@ export default function About() {
 					</p>
 
 					<h1 className='col-start-2 row-start-1 uppercase md:text-end self-start justify-self-center text-2xl lg:text-[5rem] lg:leading-[6.5rem] order-1 md:order-none md:col-start-3'>
-						Our <br /> Sto<em>r</em>y
+						Our <br /> Story
 					</h1>
 
-					<div className='relative w-full h-[500px] order-3 md:order-none md:col-start-1 my-6'>
+					<div className='relative w-full h-[500px] order-3 md:order-none md:col-start-1 my-6 md:my-0'>
 						<Image
 							src={OnyedikaImage.src}
 							alt='Picture of Onyedikachi'
@@ -41,7 +41,7 @@ export default function About() {
 						/>
 					</div>
 
-					<div className='[&>p]:text-lg [&>p]:lg:text-xl order-4 md:order-none md:col-start-2 md:col-span-2'>
+					<div className='[&>p]:text-xl [&>p]:lg:text-2xl order-4 md:order-none md:col-start-2 md:col-span-2'>
 						<p>
 							In response, I founded Blue Nomad to reimagine wellness through a
 							more inclusive, globally inspired lens. Our first experience—a
@@ -82,9 +82,7 @@ export default function About() {
 						</p>
 
 						<div className='flex flex-col text-end mt-4'>
-							<span className='text-2xl lg:text-3xl'>
-								With L<em>ov</em>e,
-							</span>
+							<span className='text-2xl lg:text-3xl'>With Love,</span>
 							<span className='text-2xl lg:text-5xl font-bold uppercase'>
 								Onyedikachi
 							</span>

@@ -95,7 +95,7 @@ const conditions: Conditions[] = [
 
 export default function TermsAndConditions() {
 	return (
-		<section className='lg:flex-col'>
+		<section className='lg:flex-col pt-32'>
 			<h1>Terms and Conditions</h1>
 
 			<ol className='list-[decimal-leading-zero] space-y-8 my-8 px-10'>

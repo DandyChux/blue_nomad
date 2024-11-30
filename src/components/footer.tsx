@@ -80,7 +80,7 @@ export const Footer: React.FC = () => {
 						<Link
 							key={index}
 							href={link.href}
-							target='_blank'
+							// target='_blank'
 							rel='noopener noreferrer nofollow'
 							className='font-semibold uppercase font-source-code-pro no-underline'
 						>
@@ -91,7 +91,7 @@ export const Footer: React.FC = () => {
 
 				<div className='flex flex-col flex-1 space-y-2 mt-10 md:mt-0'>
 					<span className='uppercase font-semibold text-xl lg:text-2xl tracking-wide'>
-						Subscribe for 10% off your first treatment!
+						Subscribe for 10% off your first treatment.
 					</span>
 
 					<Form {...form}>
@@ -121,7 +121,7 @@ export const Footer: React.FC = () => {
 								variant={'outline'}
 								size={'lg'}
 							>
-								Discover
+								Sign up
 							</Button>
 						</form>
 					</Form>
@@ -132,7 +132,7 @@ export const Footer: React.FC = () => {
 				<h2 className='uppercase text-xl'>Contact Us</h2>
 				<div className='flex flex-col md:flex-row gap-10'>
 					<span className='uppercase font-source-code-pro font-semibold text-lg'>
-						917-000-0002 / Info@Bluenomadworld.nyc
+						917-000-0002 / hello@bluenomad.nyc
 					</span>
 
 					<nav className='flex gap-8'>
