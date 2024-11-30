@@ -40,7 +40,7 @@ export const Navbar: React.FC = () => {
 				'flex items-center justify-start absolute top-0 w-full bg-transparent p-4 md:p-6'
 			}
 		>
-			<div className='flex items-center group w-full'>
+			<div className='flex items-center group'>
 				{/* <Link
 					href='/'
 					className='relative w-[200px] lg:mr-8 motion-safe:hover:scale-105 no-underline'
@@ -81,7 +81,7 @@ export const Navbar: React.FC = () => {
 						))}
 					</DropdownMenuContent>
 				</DropdownMenu>
-				<nav className='hidden lg:peer-hover:flex'>
+				<nav className='hidden group-hover:flex'>
 					<ul className='flex gap-8 *:uppercase'>
 						{navLinks.map((item) => (
 							<li

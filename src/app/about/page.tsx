@@ -118,7 +118,7 @@ export default function About() {
 					moments? <br /> It had better be worthwhile.
 				</p>
 
-				<div className='lg:basis-[30%] mt-8'>
+				<div className='lg:basis-[30%] mt-8 lg:mt-0'>
 					<Image
 						src={StudioImage}
 						alt='Picture of the studio'

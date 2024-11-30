@@ -74,17 +74,16 @@
 		overflow-y: auto;
 		scroll-behavior: smooth;
 		/* transition: background-color 0.25s, color 0.25s; */
-	}
-
-	section {
-		min-height: 100dvh;
-		display: flex;
-		flex-direction: column;
-		padding: 2rem;
-		@screen lg {
-			flex-direction: row;
-			padding: 4rem;
-			/* align-content: center; */
+		section {
+			min-height: 100dvh;
+			display: flex;
+			flex-direction: column;
+			padding: 2rem;
+			@screen lg {
+				flex-direction: row;
+				padding: 4rem;
+				/* align-content: center; */
+			}
 		}
 	}
 
