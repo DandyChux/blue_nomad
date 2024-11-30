@@ -63,7 +63,10 @@ export const Navbar: React.FC = () => {
 							/>
 						</Button>
 					</DropdownMenuTrigger>
-					<DropdownMenuContent sideOffset={4} className='md:hidden shadow-none'>
+					<DropdownMenuContent
+						sideOffset={4}
+						className='md:hidden shadow-none bg-black text-white'
+					>
 						{navLinks.map((item) => (
 							<DropdownMenuItem key={item.label} asChild>
 								<Link
