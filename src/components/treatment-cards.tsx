@@ -48,8 +48,8 @@ const treatments: TreatmentProps[] = [
 		description:
 			"A customized blend of acids and vitamins that transforms texture and tone while protecting your skin's barrier and revealing its natural luminosity. Most beneficial during colder months.",
 		price: 225,
-		defaultImage: TreatmentShot1.src,
-		hoverImage: HoverShot1.src,
+		defaultImage: HoverShot1.src,
+		hoverImage: TreatmentShot1.src,
 		link: 'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start',
 		// membersOnly: true,
 	},

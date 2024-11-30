@@ -93,7 +93,7 @@ export default function About() {
 					</div>
 				</div>
 
-				<div className='lg:basis-[30%] mt-10'>
+				<div className='lg:basis-[30%] mt-10 lg:mt-0'>
 					<Image
 						src={`${InteriorImage.src}`}
 						alt='Picture of the studio'
