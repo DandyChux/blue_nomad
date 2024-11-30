@@ -215,7 +215,7 @@ export default function Home() {
 
 					<div className='flex-[1_1_30%] flex flex-col items-center gap-10 mt-6'>
 						<p className='text-center text-xl lg:text-3xl'>
-							Reimagines wellness by blending <br /> timesless experiences,
+							Reimagines wellness by creating <br /> timesless experiences,
 							guiding curious <br /> minds on transformative journeys <br />{' '}
 							from urban alcoves to distant escapes.
 						</p>
