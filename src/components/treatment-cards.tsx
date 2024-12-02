@@ -92,7 +92,7 @@ export default function TreatmentCards() {
 					}
 				>
 					Book a <br />
-					Treament
+					Treatment
 				</Link>
 			</Button>
 		</div>
