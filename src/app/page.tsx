@@ -151,11 +151,7 @@ export default function Home() {
 						/>
 					</div>
 
-					<Button
-						className='uppercase rounded-full h-auto py-2 px-12'
-						variant='outline'
-						size={'lg'}
-					>
+					<Button className='uppercase' variant='outline' size={'xl'}>
 						<Link href='#treatments'>
 							Discover our <br /> first offering
 						</Link>
@@ -215,21 +211,18 @@ export default function Home() {
 
 					<div className='flex-[1_1_30%] flex flex-col items-center gap-10 mt-6'>
 						<p className='text-center text-xl lg:text-3xl'>
-							Reimagines wellness by creating <br /> timesless experiences,
+							Reimagining wellness by creating <br /> timesless experiences,
 							guiding curious <br /> minds on transformative journeys <br />{' '}
 							from urban alcoves to distant escapes.
 						</p>
 
 						<h1 className='uppercase text-center text-3xl font-normal lg:text-6xl max-w-[750px]'>
 							{' '}
-							For the curious & discerning
+							For the curious & discernin
+							<span className='lowercase text-4xl lg:text-8xl'>g</span>
 						</h1>
 
-						<Button
-							className='uppercase rounded-full h-auto py-2 px-12'
-							variant={'outline'}
-							size={'lg'}
-						>
+						<Button className='uppercase' variant={'outline'} size={'xl'}>
 							<Link href='/about'>
 								Our <br /> story
 							</Link>
@@ -240,7 +233,7 @@ export default function Home() {
 				{/* Treatments Section */}
 				<section className='lg:flex-col items-center' id='treatments'>
 					<h1 className='uppercase'>Treatments</h1>
-					<p className='text-lg lg:text-xl'>
+					<p className='text-lg lg:text-xl text-center'>
 						Exploring tradition and science for an experience that is both
 						functional and soulful
 					</p>
@@ -332,9 +325,16 @@ export default function Home() {
 							<p className='pl-[5%] lg:pl-[10%]'>
 								From diverse origins, curating those
 							</p>{' '}
-							<p>That are efficacious, cultured, & genuine-each</p>{' '}
+							<p>
+								That are efficacious, cultured, and{' '}
+								<span className='lowercase text-lg lg:text-6xl'>g</span>
+								enuine-each
+							</p>{' '}
 							<p>with an ethos that</p>
-							<p className='pl-[40%] lg:pl-[25%]'>goes skin deep.</p>
+							<p className='pl-[40%] lg:pl-[25%]'>
+								<span className='lowercase text-lg lg:text-6xl'>g</span>oes skin
+								deep.
+							</p>
 						</blockquote>
 						<blockquote className='md:hidden uppercase text-base lg:text-5xl'>
 							<p>I seek out brands</p>{' '}
@@ -342,14 +342,18 @@ export default function Home() {
 								From diverse origins, curating those
 							</p>{' '}
 							<p>
-								That are efficacious, cultured, & genuine-each with an ethos
-								that
+								That are efficacious, cultured, and{' '}
+								<span className='lowercase text-lg lg:text-6xl'>g</span>
+								enuine-each with an ethos that
 							</p>{' '}
 							<p></p>
-							<p className='pl-[40%] lg:pl-[25%]'>goes skin deep.</p>
+							<p className='pl-[40%] lg:pl-[25%]'>
+								<span className='lowercase text-lg lg:text-6xl'>g</span>oes skin
+								deep.
+							</p>
 						</blockquote>
 
-						<figcaption className='flex flex-col-reverse md:flex-row gap-2 place-self-end'>
+						<figcaption className='flex flex-col-reverse md:flex-row gap-2 place-self-end mt-4'>
 							<div className='place-self-end flex flex-col'>
 								<p className='text-xl lg:text-2xl self-end'>Onyedikachi</p>
 								<small className='lg:text-lg self-end'>Founder</small>
@@ -378,7 +382,7 @@ export default function Home() {
 							</p>
 							<Button
 								variant={'outline'}
-								size={'lg'}
+								size={'xl'}
 								className='h-auto uppercase rounded-full py-2 px-12 mt-6 hidden md:block'
 							>
 								<Link href='#treatments'>
@@ -465,7 +469,7 @@ export default function Home() {
 
 						<Button
 							variant={'outline'}
-							size={'lg'}
+							size={'xl'}
 							className='h-auto uppercase rounded-full py-2 px-12 mt-6'
 						>
 							<Link href='#treatments'>
@@ -483,7 +487,7 @@ export default function Home() {
 					</p>
 					<Button
 						variant={'outline'}
-						size={'lg'}
+						size={'xl'}
 						className='mx-auto rounded-full border-white py-6'
 					>
 						<Link

@@ -7,22 +7,22 @@ export default function About() {
 	return (
 		<section className='gap-4 lg:gap-32 lg:flex-col pt-40'>
 			<div className='flex flex-col lg:flex-row'>
-				<div className='flex flex-col items-center md:items-start md:grid md:grid-cols-[repeat(3,_1fr)] md:[grid-auto-rows:auto] lg:gap-x-10 lg:gap-y-20 flex-1 px-6 lg:px-12'>
+				<div className='flex flex-col items-center md:items-start md:grid md:grid-cols-[repeat(3,_1fr)] md:[grid-auto-rows:auto] lg:gap-x-10 lg:gap-y-20 flex-1 lg:px-12'>
 					<p className='text-xl lg:text-2xl order-3 pt-10 md:pt-0 md:order-none md:col-span-2'>
 						<span className='text-2xl lg:text-3xl pr-2'>Blue Nomad</span> was
 						born from the intersection of my global business career and an
-						enduring passion for beauty, wellness, and culture--a journey that
+						enduring passion for beauty, wellness, and culture—a journey that
 						has taken me across continents and industries. My path has been
 						unconventional - from studying biology to working as a venture
 						capital investor in New York and Atlanta, to building startups
 						across Lagos, Johannesburg, and Paris. Alongside these ventures, I
-						immersed myself in skin health, performing over 10,000 facials as a
-						licensed therapist during residencies at Dermalogica SoHo and the
-						Four Seasons Tribeca. Through it all, one fundamental truth became
-						clear: the wellness industry, as it stands today, is missing the
-						mark. It has been confined by narrow ideas of who it is for and what
-						it looks like—tethered to familiar images of green juices, Pilates,
-						exclusive Swiss longevity clinics, and regional stories that fail to
+						immersed myself in the study of skin health, performing over 10,000
+						facials as a licensed therapist during residencies at Dermalogica
+						SoHo and the Four Seasons Tribeca. Through it all, one fundamental
+						truth became clear: the wellness industry, as it stands today, is
+						missing the mark. It has been confined by narrow ideas of who it is
+						for and what it looks like—tethered to familiar images of green
+						juices, Swiss longevity clinics, and regional stories that fail to
 						resonate with a more diverse and global audience.
 					</p>
 
@@ -50,24 +50,19 @@ export default function About() {
 							and a curated selection of local and international brands that
 							embody culture, function, and soul. This studio is not just a
 							place for treatments; it is the first step in a broader vision for
-							wellness, inviting a meaningful dialogue with our audience. In
-							collaboration with Brooklyn-based Colombian architect Silvana
-							Vergara Tobin, we created a space where artistry meets science,
-							and skin health becomes a central expression of well-being. Each
-							product is personally tested, and every protocol is masterfully
-							crafted to offer a transformative experience that transcends the
-							surface.
+							wellness. In collaboration with Brooklyn-based Colombian architect
+							Silvana Vergara Tobin, we created a space where artistry meets
+							science, and skin health becomes a central expression of
+							well-being. Each product is personally tested, and every protocol
+							is masterfully crafted to offer a transformative experience that
+							transcends the surface.
 						</p>
 
 						<br />
 
 						<p>
-							In an era where wellness has grown impersonal—dominated by large
-							corporations and restrictive niche plays—we aspire to be scaled
-							artisans, honoring the craft and care that this industry so
-							desperately needs, with a vision to reach as many people as
-							possible. Blue Nomad is an invitation to explore the dynamism of
-							wellness. For the curious and discerning who are dissatisfied with
+							Blue Nomad is an invitation to explore the dynamism of wellness.
+							For the curious and discerning who are dissatisfied with
 							derivative offerings and seek substance over trends, we offer a
 							profound alternative—a committed and inspired journey toward
 							lasting vitality.
@@ -82,7 +77,7 @@ export default function About() {
 						</p>
 
 						<div className='flex flex-col text-end mt-4'>
-							<span className='text-2xl lg:text-3xl'>With Love,</span>
+							<span className='text-2xl lg:text-3xl'>With love,</span>
 							<span className='text-2xl lg:text-5xl font-bold uppercase'>
 								Onyedikachi
 							</span>
@@ -108,14 +103,14 @@ export default function About() {
 
 			<div className='flex flex-col lg:flex-row'>
 				<p className='uppercase flex-1 lg:basis-[70%] text-xl lg:text-3xl italic space-y-2'>
-					We are all all nomads, dancing the delicate dance <br /> between
-					movement and stillness— <br /> traversing worlds that are physical,
-					mental, and spiritual. <br /> We pick up treasures and leave behind
-					memories. <br /> Clinging to stories and dreams. <br /> Amidst the
-					motion, we seek moments of blue: <br /> moments of clarity <br /> of
-					healing, of sublime peace. <br /> This delicate dance is the journey
-					of wellness, <br /> wholly individual. <br /> How will you honor those
-					moments? <br /> It had better be worthwhile.
+					We are all nomads, dancing the delicate dance <br /> between movement
+					and stillness— <br /> traversing worlds that are physical, mental, and
+					spiritual. <br /> We pick up treasures and leave behind memories.{' '}
+					<br /> Clinging to stories and dreams. <br /> Amidst the motion, we
+					seek moments of blue: <br /> moments of clarity <br /> of healing, of
+					sublime peace. <br /> This delicate dance is the journey of wellness,{' '}
+					<br /> wholly individual. <br /> How will you honor those moments?{' '}
+					<br /> It had better be worthwhile.
 				</p>
 
 				<div className='lg:basis-[30%] mt-8 lg:mt-0'>

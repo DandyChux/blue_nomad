@@ -51,7 +51,7 @@ export const Footer: React.FC = () => {
 					<h2 className='uppercase text-xl'>Our Studio</h2>
 					<address className='uppercase not-italic font-semibold font-source-code-pro'>
 						Blue Nomad Labs LLC. <br />
-						1123 Broadway, 1014 <br />
+						1123 Broadway, #1014 <br />
 						New York, NY 10010
 					</address>
 					<p className='uppercase font-semibold font-source-code-pro'>
@@ -75,7 +75,7 @@ export const Footer: React.FC = () => {
 					</nav>
 				</div>
 
-				<nav className='flex flex-col gap-2 flex-1'>
+				{/* <nav className='flex flex-col gap-2 flex-1'>
 					{accessoryLinks.map((link, index) => (
 						<Link
 							key={index}
@@ -87,7 +87,7 @@ export const Footer: React.FC = () => {
 							{link.label}
 						</Link>
 					))}
-				</nav>
+				</nav> */}
 
 				<div className='flex flex-col flex-1 space-y-2 mt-10 md:mt-0'>
 					<span className='uppercase font-semibold text-xl lg:text-2xl tracking-wide'>
@@ -119,7 +119,7 @@ export const Footer: React.FC = () => {
 							<Button
 								className='rounded-full uppercase mt-4 bg-transparent self-end'
 								variant={'outline'}
-								size={'lg'}
+								size={'xl'}
 							>
 								Sign up
 							</Button>
@@ -136,14 +136,14 @@ export const Footer: React.FC = () => {
 					</span>
 
 					<nav className='flex gap-8'>
-						<Link
+						{/* <Link
 							href='https://open.spotify.com/playlist/4XgNSZMlb2nPYlgjRyJphW?si=MfZFdSygTEWVGPij1nHwBQ&pi=u-MDOmpmukRmuB'
 							target='_blank'
 							rel='noopener noreferrer nofollow'
 							className='font-semibold uppercase font-source-code-pro'
 						>
 							Spotify
-						</Link>
+						</Link> */}
 						<Link
 							href='https://www.instagram.com/bluenomadworld'
 							target='_blank'

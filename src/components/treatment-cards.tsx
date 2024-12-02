@@ -10,6 +10,7 @@ import HoverShot1 from '~/assets/treatment-section/Artboard 3.png';
 import HoverShot2 from '~/assets/treatment-section/Artboard 4.png';
 import HoverShot3 from '~/assets/treatment-section/Artboard 5.png';
 import { cn } from '~/lib/utils';
+import { Button } from './ui/button';
 import {
 	Card,
 	CardContent,
@@ -37,7 +38,7 @@ const treatments: TreatmentProps[] = [
 	{
 		title: 'Facial ST 60min',
 		description:
-			'Face-to-neck skin therapy blending advanced modalities and time-honored massage techniques to guide your skin to optimal health, from well-aging to acne care, each treatment is fully customized.',
+			'Face-to-neck skin therapy blending cutting-edge modalities with time-honored massage techniques to guide your skin to optimal health. From acne care to well-aging, every treatment is tailored to your unique needs.',
 		price: 235,
 		defaultImage: TreatmentShot3.src,
 		hoverImage: HoverShot3.src,
@@ -56,7 +57,7 @@ const treatments: TreatmentProps[] = [
 	{
 		title: 'Facial ST 60 Membership',
 		description:
-			'Our signature Facial ST 60 monthly, with access to anytime skincare guidance and first experience at new brands and treatments.',
+			'Experience our Facial ST 60 monthly, with exclusive access to on-demand skin health guidance and early previews of new brands and treatments.',
 		price: 185,
 		defaultImage: TreatmentShot2.src,
 		hoverImage: HoverShot2.src,
@@ -67,20 +68,32 @@ const treatments: TreatmentProps[] = [
 
 export default function TreatmentCards() {
 	return (
-		<div className='grid md:grid-cols-2 lg:grid-cols-3 mx-auto gap-4 p-2 md:p-8'>
-			{treatments.map((treatment, index) => (
-				<TreatmentCard
-					key={index}
-					title={treatment.title}
-					description={treatment.description}
-					price={treatment.price}
-					defaultImage={treatment.defaultImage}
-					hoverImage={treatment.hoverImage}
-					membersOnly={treatment.membersOnly}
-					link={treatment.link}
-					index={index}
-				/>
-			))}
+		<div className='flex flex-col items-center'>
+			<div className='grid md:grid-cols-2 lg:grid-cols-3 mx-auto gap-4 p-2 md:p-8'>
+				{treatments.map((treatment, index) => (
+					<TreatmentCard
+						key={index}
+						title={treatment.title}
+						description={treatment.description}
+						price={treatment.price}
+						defaultImage={treatment.defaultImage}
+						hoverImage={treatment.hoverImage}
+						membersOnly={treatment.membersOnly}
+						link={treatment.link}
+						index={index}
+					/>
+				))}
+			</div>
+
+			<Button className='uppercase mt-6' size={'xl'} variant={'outline'}>
+				<Link
+					href={
+						'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start'
+					}
+				>
+					Book a Treament
+				</Link>
+			</Button>
 		</div>
 	);
 }
@@ -103,7 +116,7 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 			onMouseEnter={() => setIsHovered(true)}
 			onMouseLeave={() => setIsHovered(false)}
 			className={cn(
-				'relative group rounded-none motion-safe:hover:scale-105 transition-all ease-in-out transform duration-500 p-4 border-none flex flex-col',
+				'relative group rounded-none p-4 border-none flex flex-col',
 				{
 					'bg-secondary text-secondary-foreground': index % 2 === 0,
 					'text-white': index % 2 !== 0,
@@ -112,7 +125,7 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 			)}
 		>
 			<Link
-				className='text-sm underline decoration-dotted underline-offset-2'
+				// className='text-sm underline decoration-dotted underline-offset-2'
 				href={link}
 				target='_blank'
 				rel='noreferrer'
@@ -144,7 +157,7 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 				>
 					{description}{' '}
 					{membersOnly
-						? 'May be canceled anytime after the first three(3) months.'
+						? 'Cancel anytime after the first three (3) months.'
 						: ''}
 				</CardDescription>
 			</CardHeader>
@@ -154,17 +167,15 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 					'order-2': index % 2 === 0,
 				})}
 			>
-				<Link href={link} target='_blank' rel='noopener noreferrer'>
-					<Image
-						src={isHovered ? hoverImage : defaultImage}
-						alt={title}
-						width={550}
-						height={450}
-						sizes='100vw'
-						className='w-full h-full object-cover'
-						placeholder='empty'
-					/>
-				</Link>
+				<Image
+					src={isHovered ? hoverImage : defaultImage}
+					alt={title}
+					width={550}
+					height={450}
+					sizes='100vw'
+					className='w-full h-full object-cover'
+					placeholder='empty'
+				/>
 			</CardContent>
 		</Card>
 	);

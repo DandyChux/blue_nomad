@@ -14,7 +14,7 @@ const buttonVariants = cva(
 				destructive:
 					'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90',
 				outline:
-					'border-2 border-input bg-transparent shadow-sm hover:bg-transparent transform transition-transform duration-300',
+					'border-2 border-input bg-transparent shadow-sm hover:bg-black hover:text-white transform transition-transform duration-300 ease-in-out',
 				secondary:
 					'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80',
 				ghost: 'hover:bg-transparent hover:text-accent-foreground',
@@ -24,6 +24,7 @@ const buttonVariants = cva(
 				default: 'h-9 px-4 py-2',
 				sm: 'h-8 rounded-md px-3 text-xs',
 				lg: 'h-10 rounded-md px-8',
+				xl: 'h-auto rounded-full px-12 py-2',
 				icon: 'h-10 w-10',
 			},
 		},
