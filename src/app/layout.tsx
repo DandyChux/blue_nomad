@@ -1,9 +1,9 @@
+import { GoogleAnalytics } from '@next/third-parties/google';
 import type { Metadata, Viewport } from 'next';
 import { David_Libre, Source_Code_Pro } from 'next/font/google';
 import localFont from 'next/font/local';
 import { PropsWithChildren } from 'react';
-// import { Toaster } from "sonner";
-import { GoogleAnalytics } from '@next/third-parties/google';
+import { Toaster } from 'sonner';
 import { Footer } from '~/components/footer';
 import { Navbar } from '~/components/navbar';
 import { Providers } from '~/components/providers';
@@ -88,14 +88,14 @@ export default function RootLayout({ children }: PropsWithChildren) {
 						<Footer />
 					</main>
 				</Providers>
+				<Toaster
+					richColors
+					expand
+					closeButton
+					theme='system'
+					position='top-center'
+				/>
 			</body>
-			{/* <Toaster
-				richColors
-				expand
-				closeButton
-				theme="system"
-				position="bottom-right"
-			/> */}
 			<GoogleAnalytics gaId={process.env.GOOGLE_MEASUREMENT_ID!} />
 		</html>
 	);

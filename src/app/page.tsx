@@ -129,17 +129,17 @@ export default function Home() {
 	const logoRadiusX = logoOvalWidth / 2;
 	const logoRadiusY = logoOvalHeight / 2;
 
-	const θ_gap_center = Math.PI / 2; // 90 degrees
-	const θ_gap_size = Math.PI / 6; // 30-degree gap
-	const θ_gap_start = θ_gap_center - θ_gap_size / 2;
-	const θ_gap_end = θ_gap_center + θ_gap_size / 2;
-	const θ_total = 2 * Math.PI - θ_gap_size;
+	// const θ_gap_center = Math.PI / 2; // 90 degrees
+	// const θ_gap_size = Math.PI / 6; // 30-degree gap
+	// const θ_gap_start = θ_gap_center - θ_gap_size / 2;
+	// const θ_gap_end = θ_gap_center + θ_gap_size / 2;
+	// const θ_total = 2 * Math.PI - θ_gap_size;
 
 	return (
 		<>
 			{/* Hero Section */}
-			<section className='p-0 bg-hero-section-gradient bg-no-repeat'>
-				<div className='flex flex-col flex-1 items-center px-8 pt-16 pb-8 md:pt-0 gap-8 lg:gap-12 place-self-center'>
+			<section className='p-0 bg-hero-section-gradient bg-no-repeat 2xl:bg-cover'>
+				<div className='flex flex-col flex-1 items-center px-8 pt-16 pb-8 gap-8 lg:gap-12 place-self-center'>
 					<div className='relative w-full lg:w-[85%]'>
 						<Image
 							src='/logos/blue-nomad.png'
@@ -177,7 +177,7 @@ export default function Home() {
 				</div>
 
 				<div
-					className='flex flex-col lg:flex-row flex-1 place-items-center p-4 pl-12 md:pl-8 lg:pl-20 [background-position-y:40%] lg:bg-center min-h-[50dvh] lg:min-h-0'
+					className='flex flex-col lg:flex-row flex-1 place-items-center p-4 pl-12 md:pl-8 lg:pl-20 [background-position-y:40%] lg:bg-center min-h-[50dvh] md:min-h-[75dvh] lg:min-h-0'
 					style={{
 						backgroundImage: `url('${EgoHeadshot.src}')`,
 						backgroundSize: 'cover',

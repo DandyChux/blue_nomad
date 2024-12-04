@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 import { NavItem, navLinks } from './navbar';
 import { Button } from './ui/button';
@@ -39,9 +40,23 @@ export const Footer: React.FC = () => {
 		},
 	});
 
-	function onSubmit(data: z.infer<typeof contactSchema>) {
-		console.log(data);
-		// TODO: send data to server. Add to mailing list
+	async function onSubmit(data: z.infer<typeof contactSchema>) {
+		try {
+			const response = await fetch('/api/subscribe', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(data),
+			});
+
+			if (response.ok) {
+				toast.success('Thank you for subscribing!');
+			}
+		} catch (error) {
+			console.error(error);
+			toast.error('Error subscribing. Please try again.');
+		}
 	}
 
 	return (
