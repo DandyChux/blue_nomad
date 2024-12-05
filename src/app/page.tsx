@@ -14,7 +14,7 @@ export default function Home() {
 	return (
 		<>
 			{/* Hero Section */}
-			<section className='p-0 bg-hero-section-gradient bg-no-repeat 2xl:bg-cover'>
+			<section className='p-0 bg-hero-section-gradient bg-no-repeat xl:bg-cover'>
 				<div className='flex flex-col flex-1 items-center px-8 pt-16 pb-8 gap-8 lg:gap-12 place-self-center'>
 					<div className='relative w-full lg:w-[85%]'>
 						<Image
