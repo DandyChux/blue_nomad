@@ -147,7 +147,7 @@ export const Footer: React.FC = () => {
 				<h2 className='uppercase text-xl'>Contact Us</h2>
 				<div className='flex flex-col md:flex-row gap-10'>
 					<span className='uppercase font-source-code-pro font-semibold text-lg'>
-						917-000-0002 / hello@bluenomad.nyc
+						{/*917-000-0002 */}hello@bluenomad.nyc
 					</span>
 
 					<nav className='flex gap-8'>

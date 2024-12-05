@@ -53,7 +53,7 @@ const testimonials: TestimonialProps[] = [
 	},
 	{
 		name: 'Ron',
-		profession: 'founder',
+		profession: 'Tech founder',
 		description: 'Feel energized!',
 		image: RonImage.src,
 	},
