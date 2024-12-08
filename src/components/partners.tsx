@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useViewport } from '~/lib/useViewport';
 import { roundTo } from '~/lib/utils';
 
 type LogoProps = {
@@ -55,20 +56,23 @@ const surroundingLogos: LogoProps[] = [
 
 export default function Partners() {
 	// Define ellipse dimensions
-	const ovalWidth = 950;
-	const ovalHeight = 450;
+	const { width, height } = useViewport();
+	const ovalWidth = width * 0.7;
+	const ovalHeight = height * 0.5;
 	const radiusX = ovalWidth / 2;
 	const radiusY = ovalHeight / 2;
 	const totalImages = surroundingLogos.length;
 
 	return (
 		<div className='mt-8 pt-12 md:px-4 lg:px-8 w-full md:flex-col'>
-			<p className='lg:text-2xl uppercase text-end'>
-				Some Favorites From Near &amp; Far:
-			</p>
-			<h1 className='uppercase text-lg lg:text-[3rem] text-end my-2 lg:my-6'>
-				Our In-Studio Curation
-			</h1>
+			<div className='lg:mb-32'>
+				<p className='lg:text-2xl uppercase text-end'>
+					Some Favorites From Near &amp; Far:
+				</p>
+				<h1 className='uppercase text-lg lg:text-[3rem] text-end my-2 lg:my-6'>
+					Our In-Studio Curation
+				</h1>
+			</div>
 
 			{/* Elliptical layout for medium screens and above */}
 			<div className='relative w-full h-[650px] self-center hidden md:block'>
@@ -110,9 +114,9 @@ export default function Partners() {
 								<Image
 									src={logo.src}
 									alt={logo.alt}
-									width={250}
+									width={175}
 									height={75}
-									className='w-full h-auto'
+									className='w-[75%] h-auto'
 								/>
 							</div>
 						</div>
