@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import React, { useState } from 'react';
 import TreatmentShot2 from '~/assets/treatment-section/Artboard 2-1.png';
 import TreatmentShot3 from '~/assets/treatment-section/Artboard 2-2.png';
@@ -9,6 +10,7 @@ import HoverShot1 from '~/assets/treatment-section/Artboard 3.png';
 import HoverShot2 from '~/assets/treatment-section/Artboard 4.png';
 import HoverShot3 from '~/assets/treatment-section/Artboard 5.png';
 import { cn } from '~/lib/utils';
+import { Button } from './ui/button';
 import {
 	Card,
 	CardContent,
@@ -83,7 +85,7 @@ export default function TreatmentCards() {
 				))}
 			</div>
 
-			{/* <Button className='uppercase mt-6' size={'xl'} variant={'outline'}>
+			<Button className='uppercase mt-6' size={'xl'} variant={'outline'}>
 				<Link
 					href={
 						'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start'
@@ -92,7 +94,7 @@ export default function TreatmentCards() {
 					Book a <br />
 					Treatment
 				</Link>
-			</Button> */}
+			</Button>
 		</div>
 	);
 }

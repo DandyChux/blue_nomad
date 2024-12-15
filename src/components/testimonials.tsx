@@ -150,20 +150,20 @@ export default function Testimonials() {
 					{testimonials.map((testimonial, index) => (
 						<div key={index} className='relative w-full h-auto'>
 							<figure className='flex flex-col items-center mx-auto'>
-								<div className='relative w-[125px] h-[150px] my-2'>
+								<div className='relative w-[125px] h-[200px] my-2'>
 									<Image
 										src={testimonial.image}
 										alt={`Picture of ${testimonial.name}`}
 										fill
 										style={{
-											objectFit: 'contain',
+											objectFit: 'cover',
 										}}
 									/>
 								</div>
-								<figcaption className='font-semibold uppercase text-center'>
+								<figcaption className='font-semibold uppercase text-center font-source-code-pro'>
 									{testimonial.name}, {testimonial.profession}
 								</figcaption>
-								<figcaption className='text-center'>
+								<figcaption className='text-center font-source-code-pro'>
 									{testimonial.description}
 								</figcaption>
 							</figure>
