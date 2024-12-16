@@ -34,7 +34,11 @@ export async function sendMail({
 	try {
 		const isVerified = await transporter.verify()
 	} catch (error) {
-		console.error(`Error sending email: ${error.message}`)
+		if (error instanceof Error) {
+			console.error(`Error sending email: ${error.message}`)
+		} else {
+			console.error('Error sending email:', error)
+		}
 		console.error('Something went wrong', SMTP_SERVER_USERNAME)
 		return;
 	}
