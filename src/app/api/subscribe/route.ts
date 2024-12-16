@@ -4,6 +4,8 @@ import nodemailer from 'nodemailer';
 export async function POST(req: NextRequest) {
 	const { email } = await req.json();
 
+	console.log(process.env)
+
 	const transporter = nodemailer.createTransport({
 		service: 'gmail',
 		host: "smtp.gmail.com",
@@ -24,7 +26,7 @@ export async function POST(req: NextRequest) {
 
 	try {
 		await transporter.sendMail(mailOptions);
-		// res.status(200).json({ message: 'Email sent' });
+
 		return new NextResponse(
 			JSON.stringify({
 				message: "Email sent"

@@ -160,16 +160,18 @@ export default function Home() {
 								<p className='text-xl lg:text-2xl self-end'>Onyedikachi</p>
 								<small className='lg:text-lg self-end'>Founder</small>
 							</div>
-							<Image
-								src={OnyedikaHeadshot}
-								alt='Onyedikachi'
-								width={250}
-								height={300}
-								placeholder='empty'
-								priority
-								// sizes='100vw'
-								// className='w-full h-auto'
-							/>
+							<Link href='/about'>
+								<Image
+									src={OnyedikaHeadshot}
+									alt='Onyedikachi'
+									width={250}
+									height={300}
+									placeholder='empty'
+									priority
+									// sizes='100vw'
+									// className='w-full h-auto'
+								/>
+							</Link>
 						</figcaption>
 					</figure>
 

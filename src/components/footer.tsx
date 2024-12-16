@@ -7,6 +7,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import { sendMail } from '~/lib/send-mail';
 import { NavItem, navLinks } from './navbar';
 import { Button } from './ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from './ui/form';
@@ -39,23 +40,20 @@ export const Footer: React.FC = () => {
 			email: '',
 		},
 	});
+	const isSubmitting = form.formState.isSubmitting;
 
 	async function onSubmit(data: z.infer<typeof contactSchema>) {
-		try {
-			const response = await fetch('/api/subscribe', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify(data),
-			});
+		const mailText = `New subscriber: ${data.email}`;
+		const response = await sendMail({
+			email: data.email,
+			subject: 'New Subscription',
+			text: mailText,
+		});
 
-			if (response.ok) {
-				toast.success('Thank you for subscribing!');
-			}
-		} catch (error) {
-			console.error(error);
-			toast.error('Error subscribing. Please try again.');
+		if (response?.messageId) {
+			toast.success('Thank you for subscribing!');
+		} else {
+			toast.error('Failed to subscribe. Please try again.');
 		}
 	}
 
@@ -135,8 +133,9 @@ export const Footer: React.FC = () => {
 								className='rounded-full uppercase mt-4 bg-transparent self-end'
 								variant={'outline'}
 								size={'xl'}
+								disabled={isSubmitting}
 							>
-								Sign up
+								{isSubmitting ? 'Submitting...' : 'Sign Up'}
 							</Button>
 						</form>
 					</Form>

@@ -57,7 +57,7 @@ const treatments: TreatmentProps[] = [
 	{
 		title: 'Facial ST 60 Membership',
 		description:
-			'Experience our Facial ST 60 monthly, with exclusive access to on-demand skin health guidance and early previews of new brands and treatments.',
+			'Experience our signature Facial ST monthly, with exclusive access to on-demand skin health guidance and early previews of new brands and treatments.',
 		price: 185,
 		defaultImage: TreatmentShot2.src,
 		hoverImage: HoverShot2.src,
@@ -90,6 +90,8 @@ export default function TreatmentCards() {
 					href={
 						'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start'
 					}
+					target='_blank'
+					rel='noreferrer noopener'
 				>
 					Book a <br />
 					Treatment
@@ -134,13 +136,13 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 				<span className='absolute inset-0'></span>
 			</Link> */}
 			<CardHeader
-				className={cn('px-2 gap-2', {
+				className={cn('px-2 gap-0', {
 					'order-2': index % 2 !== 0,
 					'order-1': index % 2 === 0,
 				})}
 			>
 				<CardTitle
-					className={cn('font-normal text-xl lg:text-3xl tracking-wide', {
+					className={cn('font-normal text-xl lg:text-3xl tracking-wide my-2', {
 						'order-1': index % 2 === 0,
 						'order-2': index % 2 !== 0,
 					})}

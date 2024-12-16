@@ -10,20 +10,20 @@ export default function About() {
 				<div className='flex flex-col items-center md:items-start md:grid md:grid-cols-[repeat(3,_1fr)] md:[grid-auto-rows:auto] lg:gap-x-10 lg:gap-y-20 flex-1 lg:px-12 px-4'>
 					<p className='text-xl lg:text-2xl order-3 pt-10 md:pt-0 md:order-none md:col-span-2'>
 						<span className='text-2xl lg:text-3xl pr-2'>Blue Nomad</span> was
-						born from the intersection of my global business career and an
+						born at the intersection of my global business career and an
 						enduring passion for beauty, wellness, and culture—a journey that
-						has taken me across continents and industries. My path has been
-						unconventional - from studying biology to working as a venture
+						has spanned continents and industries. My path has been
+						unconventional: from studying biology to working as a venture
 						capital investor in New York and Atlanta, to building startups
 						across Lagos, Johannesburg, and Paris. Alongside these ventures, I
 						immersed myself in the study of skin health, performing over 10,000
-						facials as a licensed therapist during residencies at Dermalogica
-						SoHo and the Four Seasons Tribeca. Through it all, one fundamental
-						truth became clear: the wellness industry, as it stands today, is
-						missing the mark. It has been confined by narrow ideas of who it is
-						for and what it looks like—tethered to familiar images of green
-						juices, Swiss longevity clinics, and regional stories that fail to
-						resonate with a diverse and global audience.
+						facials as a licensed skin therapist during residencies at
+						Dermalogica SoHo and the Four Seasons Tribeca. Through it all, one
+						truth became clear: the wellness industry, as it stands, is missing
+						the mark. It remains confined by narrow ideas of who it is for and
+						what it looks like—tethered to familiar images of green juices,
+						Swiss longevity clinics, and regional stories that fail to resonate
+						with a more diverse, global audience.
 					</p>
 
 					<h1 className='col-start-2 row-start-1 uppercase md:text-end self-start justify-self-center text-2xl lg:text-[5rem] lg:leading-[6.5rem] order-1 md:order-none md:col-start-3'>
@@ -43,19 +43,26 @@ export default function About() {
 
 					<div className='[&>p]:text-xl [&>p]:lg:text-2xl order-4 md:order-none md:col-start-2 md:col-span-2'>
 						<p>
-							In response, I founded Blue Nomad to reimagine wellness through a
-							more inclusive, globally inspired lens. Our first experience—a
-							175-square-foot skin health studio in a historic Gilded Age
-							building near Madison Square Park—offers bespoke facial treatments
-							and a curated selection of local and international brands that
-							embody culture, function, and soul. This studio is not just a
-							place for treatments; it is the first step in a broader vision for
-							wellness. In collaboration with Brooklyn-based Colombian architect
-							Silvana Vergara Tobin, we created a space where artistry meets
-							science, and skin health becomes a central expression of
-							well-being. Each product is personally tested, and every protocol
-							is masterfully crafted to offer a transformative experience that
-							transcends the surface.
+							In response, I founded Blue Nomad, a conceptual approach to
+							wellness that is both inclusive and globally inspired. Recognizing
+							skin health as a key indicator of overall well-being, our journey
+							begins with a 175-square-foot skin health studio nestled in the
+							historic Gilded Age Townsend building near Madison Square Park.
+							Here, we offer bespoke, seasonally evolving facial treatments
+							paired with a curated selection of local and international brands
+							that embody culture, function, and soul.
+						</p>
+
+						<br />
+
+						<p>
+							This studio is not just a place for treatments; it is the first
+							step in a broader vision for wellness. In collaboration with
+							Brooklyn-based Colombian architect Silvana Vergara Tobin, we
+							created a space where artistry meets science, and skin health
+							becomes a central expression of well-being. Each product is
+							personally tested, and every protocol is masterfully crafted to
+							offer a transformative experience that transcends the surface.
 						</p>
 
 						<br />
