@@ -12,15 +12,15 @@ export default function About() {
 						<span className='text-2xl lg:text-3xl pr-2'>Blue Nomad</span> was
 						born at the intersection of my global business career and an
 						enduring passion for beauty, wellness, and culture—a journey that
-						has taken me across continents. My path has been unconventional:
-						from studying biology to working as a venture capital investor in
-						New York and Atlanta, to building startups across Lagos,
-						Johannesburg, and Paris. Alongside these ventures, I immersed myself
-						in the study of skin health, performing thousands of facials as a
-						licensed skin therapist during residencies at Dermalogica SoHo and
-						the Four Seasons Tribeca. Through it all, one truth became clear:
-						the wellness industry, as it stands, is missing the mark. It remains
-						confined by narrow ideas of who it is for and what it looks
+						has taken me across continents and industries. My path has been
+						unconventional: from studying biology to working as a venture
+						capital investor in New York and Atlanta, to building startups in
+						Lagos, Johannesburg, and Paris. Alongside these ventures, I immersed
+						myself in the study of skin health, performing thousands of facials
+						as a licensed skin therapist during residencies at Dermalogica SoHo
+						and the Four Seasons Tribeca. Through it all, one truth became
+						clear: the wellness industry, as it stands, is missing the mark. It
+						remains confined by narrow ideas of who it is for and what it looks
 						like—tethered to familiar images of green juices, Swiss longevity
 						clinics, and regional stories that fail to resonate with a more
 						diverse, global audience. In response, I founded Blue Nomad, a
@@ -49,7 +49,7 @@ export default function About() {
 							our journey begins with a 175-square-foot skin health studio
 							nestled in a historic gilded age building near Madison Square
 							Park. Here, we offer bespoke, seasonally evolving facial
-							treatments paired with a curated selection of local and
+							treatments paired with curated selections of local and
 							international brands that embody culture, function, and soul.
 						</p>
 
