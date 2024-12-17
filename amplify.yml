@@ -7,6 +7,8 @@ frontend:
         - pnpm install
     build:
       commands:
+        - env | grep -e EMAIL_USERNAME -e EMAIL_PASSWORD >> .env.production
+        - env | grep -e NEXT_PUBLIC_ >> .env.production
         - pnpm run build
   artifacts:
     baseDirectory: .next
@@ -16,10 +18,9 @@ frontend:
     paths:
       - node_modules/**/*
       - .next/cache/**/*
-
-backend:
-  phases:
-    build:
-      commands:
-        - export EMAIL_USERNAME=$EMAIL_USERNAME
-        - export EMAIL_PASSWORD=$EMAIL_PASSWORD
+# backend:
+#   phases:
+#     build:
+#       commands:
+#         - export EMAIL_USERNAME=$EMAIL_USERNAME
+#         - export EMAIL_PASSWORD=$EMAIL_PASSWORD
