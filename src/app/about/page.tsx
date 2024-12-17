@@ -12,18 +12,20 @@ export default function About() {
 						<span className='text-2xl lg:text-3xl pr-2'>Blue Nomad</span> was
 						born at the intersection of my global business career and an
 						enduring passion for beauty, wellness, and culture—a journey that
-						has spanned continents and industries. My path has been
-						unconventional: from studying biology to working as a venture
-						capital investor in New York and Atlanta, to building startups
-						across Lagos, Johannesburg, and Paris. Alongside these ventures, I
-						immersed myself in the study of skin health, performing over 10,000
-						facials as a licensed skin therapist during residencies at
-						Dermalogica SoHo and the Four Seasons Tribeca. Through it all, one
-						truth became clear: the wellness industry, as it stands, is missing
-						the mark. It remains confined by narrow ideas of who it is for and
-						what it looks like—tethered to familiar images of green juices,
-						Swiss longevity clinics, and regional stories that fail to resonate
-						with a more diverse, global audience.
+						has taken me across continents. My path has been unconventional:
+						from studying biology to working as a venture capital investor in
+						New York and Atlanta, to building startups across Lagos,
+						Johannesburg, and Paris. Alongside these ventures, I immersed myself
+						in the study of skin health, performing thousands of facials as a
+						licensed skin therapist during residencies at Dermalogica SoHo and
+						the Four Seasons Tribeca. Through it all, one truth became clear:
+						the wellness industry, as it stands, is missing the mark. It remains
+						confined by narrow ideas of who it is for and what it looks
+						like—tethered to familiar images of green juices, Swiss longevity
+						clinics, and regional stories that fail to resonate with a more
+						diverse, global audience. In response, I founded Blue Nomad, a
+						conceptual approach to wellness that is both inclusive and globally
+						inspired.
 					</p>
 
 					<h1 className='col-start-2 row-start-1 uppercase md:text-end self-start justify-self-center text-2xl lg:text-[5rem] lg:leading-[6.5rem] order-1 md:order-none md:col-start-3'>
@@ -43,21 +45,19 @@ export default function About() {
 
 					<div className='[&>p]:text-xl [&>p]:lg:text-2xl order-4 md:order-none md:col-start-2 md:col-span-2'>
 						<p>
-							In response, I founded Blue Nomad, a conceptual approach to
-							wellness that is both inclusive and globally inspired. Recognizing
-							skin health as a key indicator of overall well-being, our journey
-							begins with a 175-square-foot skin health studio nestled in the
-							historic Gilded Age Townsend building near Madison Square Park.
-							Here, we offer bespoke, seasonally evolving facial treatments
-							paired with a curated selection of local and international brands
-							that embody culture, function, and soul.
+							Recognizing skin health as a key indicator of overall well-being,
+							our journey begins with a 175-square-foot skin health studio
+							nestled in a historic gilded age building near Madison Square
+							Park. Here, we offer bespoke, seasonally evolving facial
+							treatments paired with a curated selection of local and
+							international brands that embody culture, function, and soul.
 						</p>
 
 						<br />
 
 						<p>
 							This studio is not just a place for treatments; it is the first
-							step in a broader vision for wellness. In collaboration with
+							step in our broader vision for wellness. In collaboration with
 							Brooklyn-based Colombian architect Silvana Vergara Tobin, we
 							created a space where artistry meets science, and skin health
 							becomes a central expression of well-being. Each product is
