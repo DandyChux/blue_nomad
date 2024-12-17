@@ -7,11 +7,6 @@ const SMTP_SERVER_PORT = 465
 const SMTP_SERVER_USERNAME = process.env.EMAIL_USERNAME
 const SMTP_SERVER_PASSWORD = process.env.EMAIL_PASSWORD
 
-if (!SMTP_SERVER_USERNAME || !SMTP_SERVER_PASSWORD) {
-	console.error('Email credentials not found')
-	throw new Error('SMTP credentials are missing.')
-}
-
 const transporter = nodemailer.createTransport({
 	service: 'gmail',
 	host: SMTP_SERVER_HOST,

@@ -16,3 +16,10 @@ frontend:
     paths:
       - node_modules/**/*
       - .next/cache/**/*
+
+backend:
+  phases:
+    build:
+      commands:
+        - export EMAIL_USERNAME=$EMAIL_USERNAME
+        - export EMAIL_PASSWORD=$EMAIL_PASSWORD
