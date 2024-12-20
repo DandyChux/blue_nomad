@@ -63,7 +63,7 @@ export const Footer: React.FC = () => {
 				<div className='flex-1 flex flex-col space-y-4'>
 					<h2 className='uppercase text-xl'>Our Studio</h2>
 					<address className='uppercase not-italic font-semibold font-source-code-pro'>
-						Blue Nomad Labs LLC. <br />
+						Blue Nomad <br />
 						1123 Broadway, #1014 <br />
 						New York, NY 10010
 					</address>
@@ -88,7 +88,7 @@ export const Footer: React.FC = () => {
 					</nav>
 				</div>
 
-				<nav className='flex flex-col gap-2 flex-1'>
+				{/* <nav className='flex flex-col gap-2 flex-1'>
 					{accessoryLinks.map((link, index) => (
 						<Link
 							key={index}
@@ -100,7 +100,7 @@ export const Footer: React.FC = () => {
 							{link.label}
 						</Link>
 					))}
-				</nav>
+				</nav> */}
 
 				<div className='flex flex-col flex-1 space-y-2 mt-10 md:mt-0'>
 					<span className='uppercase font-semibold text-xl lg:text-2xl tracking-wide'>
