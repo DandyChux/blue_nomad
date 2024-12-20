@@ -37,12 +37,21 @@ export const harmony = localFont({
 
 export const metadata: Metadata = {
 	title: {
-		default: 'Blue Nomad',
-		template: '%s | Blue Nomad',
+		default: 'BLUE NOMAD: A Private Skin Health Studio in NYC',
+		template: '%s | BLUE NOMAD: A Private Skin Health Studio in NYC',
 	},
 	description:
 		'Blue Nomad is a private skin health studio in the heart of New York City.',
-	keywords: ['skin', 'health', 'studio', 'new york city'],
+	keywords: [
+		'skin',
+		'health',
+		'studio',
+		'new york city',
+		'skincare',
+		'beauty',
+		'wellness',
+		'facials',
+	],
 	icons: {
 		icon: '/icon.ico',
 	},

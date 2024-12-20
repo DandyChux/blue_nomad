@@ -88,7 +88,7 @@ export const Footer: React.FC = () => {
 					</nav>
 				</div>
 
-				{/* <nav className='flex flex-col gap-2 flex-1'>
+				<nav className='flex flex-col gap-2 flex-1'>
 					{accessoryLinks.map((link, index) => (
 						<Link
 							key={index}
@@ -100,7 +100,7 @@ export const Footer: React.FC = () => {
 							{link.label}
 						</Link>
 					))}
-				</nav> */}
+				</nav>
 
 				<div className='flex flex-col flex-1 space-y-2 mt-10 md:mt-0'>
 					<span className='uppercase font-semibold text-xl lg:text-2xl tracking-wide'>
@@ -146,7 +146,7 @@ export const Footer: React.FC = () => {
 				<h2 className='uppercase text-xl'>Contact Us</h2>
 				<div className='flex flex-col md:flex-row gap-10'>
 					<span className='uppercase font-source-code-pro font-semibold text-lg'>
-						{/*917-000-0002 */}hello@bluenomad.nyc
+						646-566-1183 / hello@bluenomad.nyc
 					</span>
 
 					<nav className='flex gap-8'>
@@ -165,6 +165,14 @@ export const Footer: React.FC = () => {
 							className='font-semibold uppercase font-source-code-pro'
 						>
 							Instagram
+						</Link>
+						<Link
+							href='https://www.tiktok.com/@bluenomadworld?_t=8sLa1tyGeW6&_r=1'
+							target='_blank'
+							rel='noopener noreferrer nofollow'
+							className='font-semibold uppercase font-source-code-pro'
+						>
+							TikTok
 						</Link>
 					</nav>
 				</div>
