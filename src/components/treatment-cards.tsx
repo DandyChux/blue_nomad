@@ -55,7 +55,7 @@ const treatments: TreatmentProps[] = [
 		// membersOnly: true,
 	},
 	{
-		title: 'Facial ST 60 Membership',
+		title: 'Facial ST Membership',
 		description:
 			'Experience our signature 60min facial skin therapy monthly, with exclusive access to on-demand skin health guidance.',
 		price: 185,
