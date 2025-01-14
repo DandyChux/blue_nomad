@@ -45,10 +45,9 @@ export default function About() {
 
 					<div className='[&>p]:text-xl [&>p]:lg:text-2xl order-4 md:order-none md:col-start-2 md:col-span-2'>
 						<p>
-							Recognizing skin health as a key indicator of overall well-being,
-							our journey begins with a 175-square-foot skin health studio
-							nestled in a historic gilded age building near Madison Square
-							Park. Here, we offer bespoke, seasonally evolving facial
+							Recognizing the skin as a key indicator of overall well-being, our
+							journey begins in an intimate skin health studio near Madison
+							Square Park. Here, we offer bespoke, seasonally evolving facial
 							treatments paired with curated selections of local and
 							international brands that embody culture, function, and soul.
 						</p>

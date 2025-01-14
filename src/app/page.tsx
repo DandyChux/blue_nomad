@@ -95,7 +95,7 @@ export default function Home() {
 						<h1 className='uppercase text-center text-3xl font-normal lg:text-6xl max-w-[750px]'>
 							{' '}
 							For the curious & discernin
-							<span className='lowercase text-4xl lg:text-8xl'>g</span>
+							<span className='lg:lowercase lg:text-8xl'>g</span>
 						</h1>
 
 						<Button className='uppercase' variant={'outline'} size={'xl'}>
@@ -129,12 +129,12 @@ export default function Home() {
 							</p>{' '}
 							<p>
 								That are efficacious, cultured, and{' '}
-								<span className='lowercase text-lg lg:text-6xl'>g</span>
+								<span className='lg:lowercase lg:text-6xl'>g</span>
 								enuine-each
 							</p>{' '}
 							<p>with an ethos that</p>
 							<p className='pl-[40%] lg:pl-[25%]'>
-								<span className='lowercase text-lg lg:text-6xl'>g</span>oes skin
+								<span className='lg:lowercase lg:text-6xl'>g</span>oes skin
 								deep.
 							</p>
 						</blockquote>
@@ -145,12 +145,12 @@ export default function Home() {
 							</p>{' '}
 							<p>
 								That are efficacious, cultured, and{' '}
-								<span className='lowercase text-lg lg:text-6xl'>g</span>
+								<span className='lg:lowercase lg:text-6xl'>g</span>
 								enuine-each with an ethos that
 							</p>{' '}
 							<p></p>
 							<p className='pl-[40%] lg:pl-[25%]'>
-								<span className='lowercase text-lg lg:text-6xl'>g</span>oes skin
+								<span className='lg:lowercase lg:text-6xl'>g</span>oes skin
 								deep.
 							</p>
 						</blockquote>
