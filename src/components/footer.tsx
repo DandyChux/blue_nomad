@@ -7,7 +7,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
-import { sendMail } from '~/lib/send-mail';
+import { sendMail } from '~/app/actions';
 import { NavItem, navLinks } from './navbar';
 import { Button } from './ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from './ui/form';
@@ -68,7 +68,7 @@ export const Footer: React.FC = () => {
 						New York, NY 10010
 					</address>
 					<p className='uppercase font-semibold font-source-code-pro'>
-						M-F 11AM to 8PM
+						Mon-Sat 11AM to 8PM
 					</p>
 				</div>
 

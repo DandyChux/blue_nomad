@@ -1,5 +1,6 @@
 'use server'
 
+import { draftMode } from 'next/headers'
 import nodemailer from 'nodemailer'
 
 const SMTP_SERVER_HOST = 'smtp.gmail.com'
@@ -55,4 +56,11 @@ export async function sendMail({
 	console.log(`Mail sent to: ${sendTo || SMTP_SERVER_USERNAME}`)
 	return info;
 
+}
+
+export async function disableDraftMode() {
+	const disable = (await draftMode()).disable()
+	const delay = new Promise((resolve) => setTimeout(resolve, 1000))
+
+	await Promise.allSettled([disable, delay])
 }
