@@ -38,7 +38,7 @@ const treatments: TreatmentProps[] = [
 	{
 		title: 'Facial ST 60min',
 		description:
-			'Face-to-Neck skin therapy combining advanced technology with traditional massage techniques for optimal skin health. From acne care to well-aging, each treatment is customized to your needs.',
+			'Facial skin therapy combining advanced technology with traditional massage techniques for optimal skin health. From acne care to well-aging, each treatment is customized to your needs.',
 		price: 235,
 		defaultImage: TreatmentShot3.src,
 		hoverImage: HoverShot3.src,

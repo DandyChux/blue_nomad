@@ -31,6 +31,10 @@ export const navLinks: NavItem[] = [
 		label: 'Gift Card',
 		href: 'https://app.squareup.com/gift/ML665NPQYDHTJ/order',
 	},
+	{
+		label: 'Blog',
+		href: '/blog',
+	},
 ];
 
 export const Navbar: React.FC = () => {

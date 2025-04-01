@@ -70,6 +70,7 @@ const config: Config = {
 				"source-code-pro": ['var(--font-source-code-pro)'],
 				"david-libre": ['var(--font-david-libre)'],
 				"harmony": ['var(--font-harmony)'],
+				"marcellus": ['var(--font-marcellus)'],
 			},
 			backgroundImage: {
 				"footer-gradient": "url(/footer_gradient.png)",

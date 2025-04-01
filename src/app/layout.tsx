@@ -1,12 +1,16 @@
 import { GoogleAnalytics } from '@next/third-parties/google';
 import type { Metadata, Viewport } from 'next';
-import { David_Libre, Source_Code_Pro } from 'next/font/google';
+import { VisualEditing } from 'next-sanity';
+import { David_Libre, Marcellus, Source_Code_Pro } from 'next/font/google';
 import localFont from 'next/font/local';
+import { draftMode } from 'next/headers';
 import { PropsWithChildren } from 'react';
 import { Toaster } from 'sonner';
+import { DisableDraftMode } from '~/components/DisableDraftMode';
 import { Footer } from '~/components/footer';
 import { Navbar } from '~/components/navbar';
 import { Providers } from '~/components/providers';
+
 import './globals.css';
 
 export const david_libre = David_Libre({
@@ -21,6 +25,13 @@ export const source_code_pro = Source_Code_Pro({
 	display: 'swap',
 	weight: ['400', '500', '700'],
 	variable: '--font-source-code-pro',
+});
+
+export const marcellus = Marcellus({
+	subsets: ['latin'],
+	display: 'swap',
+	weight: ['400'],
+	variable: '--font-marcellus',
 });
 
 export const harmony = localFont({
@@ -82,20 +93,26 @@ export const viewport: Viewport = {
 	userScalable: false,
 };
 
-export default function RootLayout({ children }: PropsWithChildren) {
+export default async function RootLayout({ children }: PropsWithChildren) {
 	return (
 		<html
 			lang='en'
 			suppressHydrationWarning
-			className={`${david_libre.variable} ${source_code_pro.variable} ${harmony.variable}`}
+			className={`${david_libre.variable} ${source_code_pro.variable} ${harmony.variable} ${marcellus.variable}`}
 		>
 			<body className={`antialiased relative`}>
 				<Providers>
 					<Navbar />
 					<main className='w-full'>
 						{children}
-						<Footer />
+						{(await draftMode()).isEnabled && (
+							<>
+								<VisualEditing />
+								<DisableDraftMode />
+							</>
+						)}
 					</main>
+					<Footer />
 				</Providers>
 				<Toaster
 					richColors
@@ -104,8 +121,8 @@ export default function RootLayout({ children }: PropsWithChildren) {
 					theme='system'
 					position='top-center'
 				/>
+				<GoogleAnalytics gaId={process.env.GOOGLE_MEASUREMENT_ID!} />
 			</body>
-			<GoogleAnalytics gaId={process.env.GOOGLE_MEASUREMENT_ID!} />
 		</html>
 	);
 }
