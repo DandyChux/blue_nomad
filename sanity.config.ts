@@ -4,14 +4,14 @@
  * This configuration is used to for the Sanity Studio that’s mounted on the `/app/studio/[[...tool]]/page.tsx` route
  */
 
-import { defineConfig, InferSchemaValues } from '@sanity-typed/types'
+import { defineConfig } from 'sanity'
 import { visionTool } from '@sanity/vision'
 import { structureTool } from 'sanity/structure'
 
 // Go to https://www.sanity.io/docs/api-versioning to learn how API versioning works
 import { apiVersion, dataset, projectId } from './src/sanity/env'
 import { structure } from './src/sanity/structure'
-import { schemaTypes } from '~/sanity/schema'
+import { schema, schemaTypes } from '~/sanity/schema'
 
 const config = defineConfig({
 	basePath: '/studio',
@@ -31,4 +31,4 @@ const config = defineConfig({
 
 export default config
 
-export type SanityValues = InferSchemaValues<typeof config>
+// export type SanityValues = InferSchemaValues<typeof config>
