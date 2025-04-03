@@ -5,6 +5,12 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { client, urlFor } from '~/sanity/lib/client';
 
+interface PageProps {
+	params: {
+		slug: string;
+	}
+}
+
 async function getPost(slug: string) {
 	return client.fetch(
 		`*[_type == "post" && slug.current == $slug][0] {
@@ -24,16 +30,19 @@ async function getPost(slug: string) {
 	);
 }
 
-export async function generateMetadata({
-	params,
-}: {
-	params: { slug: string };
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
 	const post = await getPost(params.slug);
+
+	if (!post) {
+		return {
+			title: 'Post not found',
+			description: 'The requested post could not be found'
+		}
+	}
 
 	return {
 		title: post.title,
-		description: post.excerpt,
+		description: post.description || 'Blog post',
 		openGraph: {
 			images: post.mainImage ? [urlFor(post.mainImage).url()] : [],
 		},
@@ -50,11 +59,7 @@ export async function generateStaticParams() {
 	}));
 }
 
-export default async function PostPage({
-	params,
-}: {
-	params: { slug: string };
-}) {
+export default async function PostPage({ params }: PageProps) {
 	const post = await getPost(params.slug);
 
 	if (!post) {
