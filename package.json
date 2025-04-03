@@ -42,6 +42,7 @@
 		"zod": "^3.24.2"
 	},
 	"devDependencies": {
+		"@tailwindcss/postcss": "^4.0.17",
 		"@types/node": "^20.17.28",
 		"@types/nodemailer": "^6.4.17",
 		"@types/react": "^18.3.20",

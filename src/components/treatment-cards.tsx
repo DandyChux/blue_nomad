@@ -151,7 +151,7 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 				</CardTitle>
 				<CardDescription
 					className={cn(
-						'text-inherit uppercase font-source-code-pro font-semibold',
+						'text-inherit uppercase font-source-code-pro font-bold',
 						{
 							'order-1': index % 2 !== 0,
 							'order-2': index % 2 === 0,

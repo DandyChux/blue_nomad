@@ -1,7 +1,6 @@
 import { GoogleAnalytics } from '@next/third-parties/google';
 import type { Metadata, Viewport } from 'next';
 import { VisualEditing } from 'next-sanity';
-import { David_Libre, Marcellus, Source_Code_Pro } from 'next/font/google';
 import localFont from 'next/font/local';
 import { draftMode } from 'next/headers';
 import { PropsWithChildren } from 'react';
@@ -12,27 +11,6 @@ import { Navbar } from '~/components/navbar';
 import { Providers } from '~/components/providers';
 
 import './globals.css';
-
-export const david_libre = David_Libre({
-	subsets: ['latin'],
-	display: 'swap',
-	weight: ['400', '500', '700'],
-	variable: '--font-david-libre',
-});
-
-export const source_code_pro = Source_Code_Pro({
-	subsets: ['latin'],
-	display: 'swap',
-	weight: ['400', '500', '700'],
-	variable: '--font-source-code-pro',
-});
-
-export const marcellus = Marcellus({
-	subsets: ['latin'],
-	display: 'swap',
-	weight: ['400'],
-	variable: '--font-marcellus',
-});
 
 export const harmony = localFont({
 	src: [
@@ -98,7 +76,6 @@ export default async function RootLayout({ children }: PropsWithChildren) {
 		<html
 			lang='en'
 			suppressHydrationWarning
-			className={`${david_libre.variable} ${source_code_pro.variable} ${harmony.variable} ${marcellus.variable}`}
 		>
 			<body className={`antialiased relative`}>
 				<Providers>

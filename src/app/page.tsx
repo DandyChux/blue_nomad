@@ -5,12 +5,52 @@ import Headshot from '~/assets/Look 4 139.jpg';
 import OnyedikaHeadshot from '~/assets/Onyedika Portraits/Founder.png';
 import TreatmentCards from '~/components/treatment-cards';
 import { Button } from '~/components/ui/button';
+import { InfiniteMovingCards, MovingCardProps } from '~/components/ui/infinite-moving-cards'
 
 import StudioImage from '~/assets/studio/interiors2.jpg';
 import Partners from '~/components/partners';
 import Testimonials from '~/components/testimonials';
+import ArchitecturalDigestLogo from '~/assets/press logos/ad-logo.svg';
+import AltitudeLogo from '~/assets/press logos/attitude-logo.svg';
+import ElleDecorLogo from '~/assets/press logos/elle-decor-logo.svg';
+import ElleLogo from '~/assets/press logos/elle-logo.svg';
+import FlatironLogo from '~/assets/press logos/flatiron-logo.svg';
+import HospitalityDesignLogo from '~/assets/press logos/HD-logo.jpg';
 
 export default function Home() {
+	const pressBrands: MovingCardProps[] = [
+		{
+			name: 'Architectural Digest',
+			image: ArchitecturalDigestLogo,
+			link: 'https://www.architecturaldigest.com/story/how-to-create-home-spa'
+		},
+		{
+			name: 'Altitude',
+			image: AltitudeLogo,
+			link: 'https://www.attitude-mag.com/en/blog/all/2025-02-17-blue-nomad-um-espaco-onde-o-design-se-encontra-com-o-bem-estar/'
+		},
+		{
+			name: 'Elle Decor',
+			image: ElleDecorLogo,
+			link: 'https://www.elledecor.com/it/viaggi/a63820146/spa-bellissima-nel-centro-di-new-york/'
+		},
+		{
+			name: 'Elle',
+			image: ElleLogo,
+			link: 'https://www.elle.com/nl/interieur/interieur-hotspots/a63482070/wellness-spa-new-york-blue-nomad/'
+		},
+		{
+			name: 'Flatiron',
+			image: FlatironLogo,
+			link: 'https://flatironnomad.nyc/2025/03/05/february-news-roundup-6/'
+		},
+		{
+			name: 'Hospitality Design',
+			image: HospitalityDesignLogo,
+			link: 'https://hospitalitydesign.com/news/wellness-sustainability/blue-nomad-new-york/'
+		}
+	]
+
 	return (
 		<>
 			{/* Hero Section */}
@@ -168,8 +208,8 @@ export default function Home() {
 									height={300}
 									placeholder='empty'
 									priority
-									// sizes='100vw'
-									// className='w-full h-auto'
+								// sizes='100vw'
+								// className='w-full h-auto'
 								/>
 							</Link>
 						</figcaption>
@@ -177,6 +217,14 @@ export default function Home() {
 
 					{/* Testimonials */}
 					<Testimonials />
+				</section>
+
+				{/* Press Section */}
+				<section className='items-center px-2 min-h-fit py-40 lg:flex-col'>
+					<h1 className='uppercase'>
+						What&apos;s Been Said About Us
+					</h1>
+					<InfiniteMovingCards items={pressBrands} direction='right' speed='normal' pauseOnHover />
 				</section>
 
 				{/* Social Section */}

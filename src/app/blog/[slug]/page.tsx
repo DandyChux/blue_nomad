@@ -3,23 +3,7 @@ import { PortableText } from 'next-sanity';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { client, urlFor } from '~/sanity/client';
-
-export async function generateMetadata({
-	params,
-}: {
-	params: { slug: string };
-}): Promise<Metadata> {
-	const post = await getPost(params.slug);
-
-	return {
-		title: post.title,
-		description: post.excerpt,
-		openGraph: {
-			images: post.mainImage ? [urlFor(post.mainImage).url()] : [],
-		},
-	};
-}
+import { client, urlFor } from '~/sanity/lib/client';
 
 async function getPost(slug: string) {
 	return client.fetch(
@@ -38,6 +22,22 @@ async function getPost(slug: string) {
 		}`,
 		{ slug }
 	);
+}
+
+export async function generateMetadata({
+	params,
+}: {
+	params: { slug: string };
+}): Promise<Metadata> {
+	const post = await getPost(params.slug);
+
+	return {
+		title: post.title,
+		description: post.excerpt,
+		openGraph: {
+			images: post.mainImage ? [urlFor(post.mainImage).url()] : [],
+		},
+	};
 }
 
 export async function generateStaticParams() {
@@ -62,7 +62,7 @@ export default async function PostPage({
 	}
 
 	return (
-		<article className='container mx-auto pt-32 pb-12'>
+		<article className='container mx-auto pt-32 pb-12 min-h-dvh'>
 			<nav className='mb-8'>
 				<Link href='/blog' className='text-blue-600 hover:underline'>
 					Back to Blog
