@@ -20,7 +20,7 @@ export default async function BlogPage() {
 		<div className='mx-auto pt-32 px-4 lg:px-10 min-h-dvh'>
 			<h1 className='mb-8'>Blog</h1>
 			<div className='grid gap-8'>
-				{posts.map((post) => (
+				{posts.map((post: Post) => (
 					<article key={post._id} className='border-b pb-8'>
 						<Link href={`/blog/${post?.slug?.current}`}>
 							<h2 className='text-2xl font-semibold hover:text-blue-600'>

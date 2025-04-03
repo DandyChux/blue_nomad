@@ -6,9 +6,7 @@ import { notFound } from 'next/navigation';
 import { client, urlFor } from '~/sanity/lib/client';
 
 interface PageProps {
-	params: {
-		slug: string;
-	}
+	params: Promise<{ id: string }>
 }
 
 async function getPost(slug: string) {
@@ -18,6 +16,7 @@ async function getPost(slug: string) {
 			title,
 			publishedAt,
 			body,
+			excerpt,
 			mainImage {
 				...,
 				asset->{
@@ -31,7 +30,8 @@ async function getPost(slug: string) {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-	const post = await getPost(params.slug);
+	const { id } = await params
+	const post = await getPost(id);
 
 	if (!post) {
 		return {
@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 	return {
 		title: post.title,
-		description: post.description || 'Blog post',
+		description: post.excerpt || 'Blog post',
 		openGraph: {
 			images: post.mainImage ? [urlFor(post.mainImage).url()] : [],
 		},
@@ -60,7 +60,8 @@ export async function generateStaticParams() {
 }
 
 export default async function PostPage({ params }: PageProps) {
-	const post = await getPost(params.slug);
+	const { id } = await params
+	const post = await getPost(id);
 
 	if (!post) {
 		notFound();

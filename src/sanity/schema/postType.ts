@@ -51,6 +51,12 @@ export const postType = defineType({
 			name: 'body',
 			type: 'blockContent',
 		}),
+		defineField({
+			name: 'excerpt',
+			type: 'text',
+			rows: 3,
+			validation: (rule) => rule.max(160).required()
+		}),
 	],
 	preview: {
 		select: {
