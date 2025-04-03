@@ -1,6 +1,6 @@
-import { createClient } from '@sanity-typed/client';
+import { createClient } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
-import type { SanityValues } from '../../../sanity.config';
+// import type { SanityValues } from '../../../sanity.config';
 import { apiVersion, dataset, projectId } from '../env'
 import { ClientConfig } from 'next-sanity';
 
@@ -31,7 +31,7 @@ const config: ClientConfig = {
 	}
 }
 
-export const client = createClient<SanityValues>(config)
+export const client = createClient(config)
 const builder = imageUrlBuilder(client);
 
 export function urlFor(source: any) {
