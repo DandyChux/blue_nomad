@@ -83,7 +83,7 @@ export default async function PostPage({ params }: PageProps) {
 
 			<div className='prose max-w-none'>
 				<PortableText
-					value={post.body}
+					value={post.body!}
 					components={{
 						types: {
 							image: ({ value }) => (
