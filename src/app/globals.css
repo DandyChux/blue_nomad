@@ -14,11 +14,11 @@
 	font-weight: 200 700;
 	font-style: normal;
 	font-display: swap;
-	src: url("./fonts/Harmony.woff") format("woff");
+	src: url("./fonts/Harmony.otf") format("opentype");
 }
 
 :root {
-	font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+	/* font-family: system-ui, Avenir, Helvetica, Arial, sans-serif; */
 	line-height: 1.5;
 	font-weight: 400;
 
@@ -126,9 +126,17 @@
 }
 
 @theme {
+	/* Fonts */
 	--font-harmony: 'Harmony', sans-serif;
 	--font-source-code-pro: 'Source Code Pro', monospace;
 	--font-marcellus: 'Marcellus', serif;
+
+	/* Backgrounds */
+	--bg-hero-section-gradient: url('/hero_section_gradient.png');
+	--bg-footer-gradient: url('/footer_gradient.png');
+	--bg-media-section-gradient: url('/media_section_gradient.png');
+	--bg-background-gradient: url('/background_gradient.png');
+	--bg-studio-background: url('/studio_background.jpg');
 }
 
 @layer base {
@@ -156,7 +164,7 @@
 		flex-direction: column;
 		padding: 2rem;
 
-		@media (min-width: 768px) {
+		@media screen and (min-width: 768px) {
 			flex-direction: row;
 			padding: 4rem;
 			/* align-content: center; */
@@ -164,35 +172,52 @@
 	}
 
 	h1 {
-		font-size: 1.5rem
-			/* 20px */
-		;
-		line-height: 2rem
-			/* 28px */
-		;
+		font-size: 1.5rem;
+		line-height: 2rem;
 		font-weight: 500;
 		letter-spacing: 0.025rem;
 
-		@media {
+		@media screen and (min-width: 768px) {
 			font-size: 2.25rem;
 			line-height: 2.5rem;
 		}
 
-		@screen {
-			font-size: 3rem;
+		@media screen and (min-width: 1024px) {
+			font-size: 2.75rem;
 			line-height: 1;
 		}
 	}
 
 	h2 {
-		font-size: 1.125rem
-			/* 18px */
-		;
-		line-height: 1.75rem
-			/* 28px */
-		;
+		font-size: 1.125rem;
+		line-height: 1.75rem;
 		font-weight: 400;
 		letter-spacing: 0.025rem;
+
+		@media screen and (min-width: 768px) {
+			font-size: 1.5rem;
+			line-height: 2rem;
+		}
+
+		@media screen and (min-width: 1024px) {
+			font-size: 2rem;
+			line-height: 1;
+		}
+
+		@media screen and (min-width: 1280px) {
+			font-size: 1.5rem;
+			line-height: 1;
+		}
+	}
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		word-break: break-word;
+		/* font-family: var(--font-source-code-pro); */
 	}
 
 	a {

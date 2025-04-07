@@ -108,7 +108,7 @@ export default function About() {
 			</div>
 
 			<div className='flex flex-col lg:flex-row'>
-				<p className='uppercase flex-1 lg:basis-[70%] text-xl lg:text-3xl italic space-y-2'>
+				<p className='uppercase flex-1 lg:basis-[70%] text-xl lg:text-3xl font-harmony italic space-y-2'>
 					We are all nomads, dancing the delicate dance <br /> between movement
 					and stillness— <br /> traversing worlds that are physical, mental, and
 					spiritual. <br /> We pick up treasures and leave behind memories.{' '}

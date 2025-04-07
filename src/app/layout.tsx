@@ -1,7 +1,6 @@
 import { GoogleAnalytics } from '@next/third-parties/google';
 import type { Metadata, Viewport } from 'next';
 import { VisualEditing } from 'next-sanity';
-import localFont from 'next/font/local';
 import { draftMode } from 'next/headers';
 import { PropsWithChildren } from 'react';
 import { Toaster } from 'sonner';
@@ -11,18 +10,6 @@ import { Navbar } from '~/components/navbar';
 import { Providers } from '~/components/providers';
 
 import './globals.css';
-
-export const harmony = localFont({
-	src: [
-		{
-			path: './fonts/Harmony.woff',
-			weight: '400',
-			style: 'normal',
-		},
-	],
-	variable: '--font-harmony',
-	weight: '400 700',
-});
 
 export const metadata: Metadata = {
 	title: {

@@ -20,6 +20,12 @@ export const postType = defineType({
 			},
 		}),
 		defineField({
+			name: 'description',
+			title: 'Description',
+			type: 'text',
+			validation: (rule) => rule.max(160).required()
+		}),
+		defineField({
 			name: 'author',
 			type: 'reference',
 			to: [{ type: 'author' }],
@@ -50,12 +56,6 @@ export const postType = defineType({
 		defineField({
 			name: 'body',
 			type: 'blockContent',
-		}),
-		defineField({
-			name: 'excerpt',
-			type: 'text',
-			rows: 3,
-			validation: (rule) => rule.max(160).required()
 		}),
 	],
 	preview: {

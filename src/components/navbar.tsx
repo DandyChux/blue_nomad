@@ -1,6 +1,7 @@
 import { MenuIcon as Menu } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
+import Image from 'next/image';
 import { Button } from './ui/button';
 import {
 	DropdownMenu,
@@ -104,6 +105,16 @@ export const Navbar: React.FC = () => {
 						))}
 					</ul>
 				</nav>
+			</div>
+			<div className='relative w-[200px] ml-auto'>
+				<Image
+					src='/logos/blue-nomad.png'
+					alt='hero'
+					width={0}
+					height={0}
+					sizes='100vw'
+					className='w-full h-auto'
+				/>
 			</div>
 		</header>
 	);

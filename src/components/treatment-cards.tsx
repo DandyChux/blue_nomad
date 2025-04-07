@@ -3,12 +3,12 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState } from 'react';
-import TreatmentShot2 from '~/assets/treatment-section/Artboard 2-1.png';
-import TreatmentShot3 from '~/assets/treatment-section/Artboard 2-2.png';
-import TreatmentShot1 from '~/assets/treatment-section/Artboard 2.png';
-import HoverShot1 from '~/assets/treatment-section/Artboard 3.png';
-import HoverShot2 from '~/assets/treatment-section/Artboard 4.png';
-import HoverShot3 from '~/assets/treatment-section/Artboard 5.png';
+import JohannaShot1 from '~/assets/treatment-section/Artboard 2-2.png';
+import MelShot1 from '~/assets/treatment-section/Artboard 2.png';
+import MelShot2 from '~/assets/treatment-section/Artboard 3.png';
+import EgoShot1 from '~/assets/treatment-section/Artboard 4.png';
+import HoverShot1 from '~/assets/Look 4 213.jpg';
+import JohannaShot2 from '~/assets/Look 1 284.jpg';
 import { cn } from '~/lib/utils';
 import { Button } from './ui/button';
 import {
@@ -40,8 +40,8 @@ const treatments: TreatmentProps[] = [
 		description:
 			'Facial skin therapy combining advanced technology with traditional massage techniques for optimal skin health. From acne care to well-aging, each treatment is customized to your needs.',
 		price: 235,
-		defaultImage: TreatmentShot3.src,
-		hoverImage: HoverShot3.src,
+		defaultImage: JohannaShot1.src,
+		hoverImage: JohannaShot2.src,
 		link: 'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start',
 	},
 	{
@@ -49,8 +49,8 @@ const treatments: TreatmentProps[] = [
 		description:
 			"A customized blend of acids and vitamins that transforms texture and tone while protecting your skin's barrier and revealing its natural luminosity. Most beneficial during colder months.",
 		price: 225,
-		defaultImage: HoverShot1.src,
-		hoverImage: TreatmentShot1.src,
+		defaultImage: MelShot2.src,
+		hoverImage: MelShot1.src,
 		link: 'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start',
 		// membersOnly: true,
 	},
@@ -59,8 +59,8 @@ const treatments: TreatmentProps[] = [
 		description:
 			'Experience our signature 60min facial skin therapy monthly, with exclusive access to on-demand skin health guidance.',
 		price: 185,
-		defaultImage: TreatmentShot2.src,
-		hoverImage: HoverShot2.src,
+		defaultImage: EgoShot1.src,
+		hoverImage: HoverShot1.src,
 		membersOnly: true,
 		link: 'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start',
 	},
@@ -170,15 +170,16 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 					'order-2': index % 2 === 0,
 				})}
 			>
-				<Image
-					src={isHovered ? hoverImage : defaultImage}
-					alt={title}
-					width={550}
-					height={450}
-					sizes='100vw'
-					className='w-full h-full object-cover'
-					placeholder='empty'
-				/>
+				<div className="relative w-full aspect-square">
+					<Image
+						src={isHovered ? hoverImage : defaultImage}
+						alt={title}
+						fill
+						sizes='100vw'
+						className='object-cover'
+						placeholder='empty'
+					/>
+				</div>
 			</CardContent>
 		</Card>
 	);

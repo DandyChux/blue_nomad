@@ -54,59 +54,19 @@ export default function Home() {
 	return (
 		<>
 			{/* Hero Section */}
-			<section className='p-0 bg-hero-section-gradient bg-no-repeat xl:bg-cover'>
-				<div className='flex flex-col flex-1 items-center px-8 pt-16 pb-8 gap-8 lg:gap-12 place-self-center'>
-					<div className='relative w-full lg:w-[85%]'>
-						<Image
-							src='/logos/blue-nomad.png'
-							alt='hero'
-							width={0}
-							height={0}
-							sizes='100vw'
-							className='w-full h-auto'
-						/>
-					</div>
-
-					<Button className='uppercase' variant='outline' size={'xl'}>
+			<section className='p-0 bg-no-repeat xl:bg-cover bg-(image:--bg-studio-background) text-white'>
+				<div className='flex flex-col m-[auto_0] px-8 pt-16 pb-8 gap-8 lg:gap-12 place-self-center'>
+					<h1 className='uppercase w-full lg:w-3/5 font-normal text-2xl lg:text-3xl'>
+						modern wellness inspired by <br /> worlds near, far, and within
+					</h1>
+					<p className='uppercase text-lg lg:text-xl'>
+						latest release - a private skin health studio in NYC
+					</p>
+					<Button className='uppercase self-start border-white' variant='outline' size={'lg'}>
 						<Link href='#treatments'>
-							Discover our <br /> first offering
+							Discover
 						</Link>
 					</Button>
-
-					<div className='relative w-[250px] h-[300px]'>
-						<Image
-							src={StudioImage.src}
-							alt='Image of the studio'
-							fill
-							sizes='250px'
-							// style={{
-							// 	objectFit: 'cover',
-							// }}
-							placeholder='empty'
-							priority
-						/>
-					</div>
-
-					<h1 className='uppercase text-center w-full lg:w-3/5 font-normal text-2xl lg:text-3xl'>
-						A Private Skin Health <br className='lg:hidden' /> Studio in NYC
-					</h1>
-				</div>
-
-				<div
-					className='flex flex-col lg:flex-row flex-1 place-items-center p-4 pl-12 md:pl-8 lg:pl-20 [background-position-y:40%] lg:bg-center min-h-[50dvh] md:min-h-[75dvh] lg:min-h-0'
-					style={{
-						backgroundImage: `url('${EgoHeadshot.src}')`,
-						backgroundSize: 'cover',
-						backgroundRepeat: 'no-repeat',
-					}}
-				>
-					{/* <p className='uppercase text-2xl lg:text-3xl xl:text-4xl mx-auto lg:mx-0 text-black'>
-						Modern <em>Wellness</em> <br />
-						Inspired <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;By{' '}
-						<em>Worlds</em> near, <br />
-						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Far,{' '}
-						and Within
-					</p> */}
 				</div>
 			</section>
 
@@ -220,11 +180,11 @@ export default function Home() {
 				</section>
 
 				{/* Press Section */}
-				<section className='items-center px-2 min-h-fit py-40 lg:flex-col'>
+				<section className='min-h-[unset] items-center px-2 relative py-20 lg:flex-col'>
 					<h1 className='uppercase'>
-						What&apos;s Been Said About Us
+						As Seen In
 					</h1>
-					<InfiniteMovingCards items={pressBrands} direction='right' speed='normal' pauseOnHover />
+					<InfiniteMovingCards items={pressBrands} direction='right' speed='normal' />
 				</section>
 
 				{/* Social Section */}
