@@ -154,8 +154,6 @@
 		font-family: var(--font-harmony);
 		overflow-y: auto;
 		scroll-behavior: smooth;
-		color:
-			/* transition: background-color 0.25s, color 0.25s; */
 	}
 
 	main section {
