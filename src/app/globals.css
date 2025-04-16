@@ -1,20 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Marcellus&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap');
 
 @import 'tailwindcss';
 
 @plugin 'tailwindcss-animate';
 
-/* @config "../../tailwind.config.ts"; */
-
 @custom-variant dark (&:is(.dark *));
 
 @font-face {
-	font-family: Harmony;
-	font-weight: 200 700;
+	font-family: harmony;
+	src: url("/fonts/Harmony.woff") format("woff");
 	font-style: normal;
+	font-weight: 400;
 	font-display: swap;
-	src: url("./fonts/Harmony.otf") format("opentype");
 }
 
 :root {
@@ -33,13 +30,13 @@
 
 	--background: oklch(0.9 0.03 80);
 	--foreground: oklch(0.2 0.01 70);
-	--card: oklch(0.4 0.1 160);
+	--card: oklch(0.25 0.04 155);
 	--card-foreground: oklch(0.2 0.02 60);
 	--popover: oklch(1 0 0);
 	--popover-foreground: oklch(0.2 0.02 60);
 	--primary: oklch(0.25 0.02 75);
 	--primary-foreground: oklch(0.97 0.01 90);
-	--secondary: oklch(0.87 0.03 85);
+	--secondary: oklch(0.88 0.02 81);
 	--secondary-foreground: oklch(0.25 0.02 75);
 	--muted: oklch(0.95 0.01 90);
 	--muted-foreground: oklch(0.55 0.02 70);
@@ -127,16 +124,17 @@
 
 @theme {
 	/* Fonts */
-	--font-harmony: 'Harmony', sans-serif;
-	--font-source-code-pro: 'Source Code Pro', monospace;
-	--font-marcellus: 'Marcellus', serif;
+	/* --font-harmony: "harmony", "harmony Fallback"; */
+	--font-harmony: 'Harmony', 'sans-serif';
+	--font-source-code-pro: 'Source Code Pro', 'monospace';
+	--font-marcellus: 'Marcellus', 'serif';
 
 	/* Backgrounds */
-	--bg-hero-section-gradient: url('/hero_section_gradient.png');
-	--bg-footer-gradient: url('/footer_gradient.png');
-	--bg-media-section-gradient: url('/media_section_gradient.png');
-	--bg-background-gradient: url('/background_gradient.png');
-	--bg-studio-background: url('/studio_background.jpg');
+	--background-image-hero-section-gradient: url('/hero_section_gradient.png');
+	--background-image-footer-gradient: url('/footer_gradient.png');
+	--background-image-media-section-gradient: url('/media_section_gradient.png');
+	--background-image-background-gradient: url('/background_gradient.png');
+	--background-image-studio-background: url('/studio_background.jpg');
 }
 
 @layer base {
@@ -154,6 +152,7 @@
 		font-family: var(--font-harmony);
 		overflow-y: auto;
 		scroll-behavior: smooth;
+		/* @apply font-harmony; */
 	}
 
 	main section {
@@ -172,7 +171,7 @@
 	h1 {
 		font-size: 1.5rem;
 		line-height: 2rem;
-		font-weight: 500;
+		font-weight: 700;
 		letter-spacing: 0.025rem;
 
 		@media screen and (min-width: 768px) {
@@ -184,12 +183,17 @@
 			font-size: 2.75rem;
 			line-height: 1;
 		}
+
+		@media screen and (min-width: 1280px) {
+			font-size: 3.5rem;
+			line-height: 2.75rem;
+		}
 	}
 
 	h2 {
 		font-size: 1.125rem;
 		line-height: 1.75rem;
-		font-weight: 400;
+		font-weight: 600;
 		letter-spacing: 0.025rem;
 
 		@media screen and (min-width: 768px) {
@@ -198,13 +202,13 @@
 		}
 
 		@media screen and (min-width: 1024px) {
-			font-size: 2rem;
-			line-height: 1;
+			font-size: 2.25rem;
+			line-height: 2.5rem;
 		}
 
 		@media screen and (min-width: 1280px) {
-			font-size: 1.5rem;
-			line-height: 1;
+			font-size: 2.5rem;
+			line-height: 2.75rem;
 		}
 	}
 
@@ -214,7 +218,7 @@
 	h4,
 	h5,
 	h6 {
-		word-break: break-word;
+		word-break: break-keep;
 		/* font-family: var(--font-source-code-pro); */
 	}
 

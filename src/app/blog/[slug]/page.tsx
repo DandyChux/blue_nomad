@@ -10,14 +10,23 @@ import { postPathsQuery, postQuery, postsQuery } from '~/sanity/lib/queries';
 import type { Post as PostType } from '../types';
 import imageUrlBuilder from '@sanity/image-url'
 
+export const revalidate = 60; // Revalidate every minute
+
 interface PageProps {
-	params: Promise<{ id: string }>
+	params: Promise<{ slug: string }>
+}
+
+export async function generateStaticParams() {
+	const posts = await client.fetch(postPathsQuery)
+	console.log(posts)
+
+	return posts
 }
 
 export async function generateMetadata(props: PageProps, parent: ResolvingMetadata): Promise<Metadata> {
 	const params = await props.params;
 	const post = await sanityFetch<PostType | undefined>({
-		query: postsQuery,
+		query: postQuery,
 		params
 	})
 
@@ -47,16 +56,9 @@ export async function generateMetadata(props: PageProps, parent: ResolvingMetada
 	};
 }
 
-export async function generateStaticParams() {
-	const posts = await client.fetch(postPathsQuery)
-
-	return posts.map((post: any) => ({
-		slug: post.slug,
-	}));
-}
-
 export default async function PostPage({ params }: PageProps) {
 	const post = await sanityFetch<PostType>({ query: postQuery, params })
+	console.log(post)
 
 	if (!post) {
 		notFound();
@@ -69,7 +71,7 @@ export default async function PostPage({ params }: PageProps) {
 					← Back to posts
 				</Link>
 			</nav>
-			<h1 className='text-4xl font-bold'>{post.title}</h1>
+			<h1>{post.title}</h1>
 			<p>{post.description}</p>
 			{post.mainImage ? (
 				<Image
@@ -102,5 +104,3 @@ export default async function PostPage({ params }: PageProps) {
 		</article>
 	);
 }
-
-export const revalidate = 60; // Revalidate every minute

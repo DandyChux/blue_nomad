@@ -3,12 +3,12 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState } from 'react';
-import JohannaShot1 from '~/assets/treatment-section/Artboard 2-2.png';
+import JohannaShot1 from '~/assets/Look 1 519.jpg';
 import MelShot1 from '~/assets/treatment-section/Artboard 2.png';
 import MelShot2 from '~/assets/treatment-section/Artboard 3.png';
-import EgoShot1 from '~/assets/treatment-section/Artboard 4.png';
+import EgoShot1 from '~/assets/Look 5 306.jpg';
 import HoverShot1 from '~/assets/Look 4 213.jpg';
-import JohannaShot2 from '~/assets/Look 1 284.jpg';
+import JohannaShot2 from '~/assets/Look 1 435.jpg';
 import { cn } from '~/lib/utils';
 import { Button } from './ui/button';
 import {
@@ -165,21 +165,19 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 				</CardDescription>
 			</CardHeader>
 			<CardContent
-				className={cn('p-0 flex-1', {
+				className={cn('p-0 flex-1 relative w-full aspect-square', {
 					'order-1': index % 2 !== 0,
 					'order-2': index % 2 === 0,
 				})}
 			>
-				<div className="relative w-full aspect-square">
-					<Image
-						src={isHovered ? hoverImage : defaultImage}
-						alt={title}
-						fill
-						sizes='100vw'
-						className='object-cover'
-						placeholder='empty'
-					/>
-				</div>
+				<Image
+					src={isHovered ? hoverImage : defaultImage}
+					alt={title}
+					fill
+					sizes='100vw'
+					className='object-cover'
+					placeholder='empty'
+				/>
 			</CardContent>
 		</Card>
 	);

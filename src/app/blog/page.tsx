@@ -1,232 +1,60 @@
 import Link from 'next/link';
 import { client } from '~/sanity/lib/client';
 import type { Post as PostType } from './types';
-import { postsQuery } from '~/sanity/lib/queries';
+import { postPathsQuery, postsQuery } from '~/sanity/lib/queries';
 import { sanityFetch } from '~/sanity/lib/fetch';
 import { Card, CardContent } from '~/components/ui/card';
 import Image from 'next/image';
+import { Badge } from '~/components/ui/badge';
 
 type Post = {
 	title: string;
 	file: string;
 	description: string;
 	date: string;
+	categories: string[];
 	datetime: string;
 	author: { name: string; role: string; href: string; imageUrl: string };
 	imageUrl: string;
 };
 
+type SanitySlug = {
+	_type: 'slug',
+	current: string
+}
+
+type SanityCategory = {
+	title: string;
+	slug: SanitySlug;
+	description?: string
+}
+
 type SanityPost = {
 	title: string;
 	description: string | null;
-	slug: { current: string; _type: "slug" };
+	slug: SanitySlug;
+	categories: SanityCategory[];
 	mainImage: PostType["mainImage"];
 	imageURL: string | null;
 	authorName: string;
 	_createdAt: string;
 };
 
-const mdxPosts: Post[] = [
-	{
-		title: "How Inbox Zero hit #1 on Product Hunt",
-		file: "how-my-open-source-saas-hit-first-on-product-hunt",
-		description:
-			"Two weeks ago I launched Inbox Zero on Product Hunt. It finished in first place with over 1000 upvotes and gained thousands of new users. The app, Inbox Zero, helps you clean up your inbox fast. It lets you bulk unsubscribe from newsletters, automate emails with an AI assistant, automatically block cold emails, and provides email analytics.",
-		date: "Jan 22, 2024",
-		datetime: "2024-01-22",
-		// category: { title: "Marketing", href: "#" },
-		author: {
-			name: "Elie Steinbock",
-			role: "Founder",
-			href: "#",
-			imageUrl: "/images/blog/elie-profile.jpg",
-		},
-		imageUrl: "/images/reach-inbox-zero.png",
-	},
-	{
-		title: "Why Build An Open Source SaaS",
-		file: "why-build-an-open-source-saas",
-		description:
-			"Open source SaaS products are blowing up. This is why you should consider building one.",
-		date: "Jan 25, 2024",
-		datetime: "2024-01-25",
-		// category: { title: "Marketing", href: "#" },
-		author: {
-			name: "Elie Steinbock",
-			role: "Founder",
-			href: "#",
-			imageUrl: "/images/blog/elie-profile.jpg",
-		},
-		imageUrl: "/images/reach-inbox-zero.png",
-	},
-	{
-		title:
-			"Escape the Email Trap: How to Unsubscribe for Good When Senders Won't Let Go",
-		file: "escape-email-trap-unsubscribe-for-good",
-		description:
-			"End unwanted emails permanently. Discover tactics to block persistent senders who disregard unsubscribe requests and spam reports.",
-		date: "Aug 22, 2024",
-		datetime: "2024-08-22",
-		author: {
-			name: "Elie Steinbock",
-			role: "Founder",
-			href: "#",
-			imageUrl: "/images/blog/elie-profile.jpg",
-		},
-		imageUrl: "/images/reach-inbox-zero.png",
-	},
-	{
-		title: "Alternatives to Skiff Mail",
-		file: "alternatives-to-skiff-mail",
-		description:
-			"Notion recently aqcuired Skiff Mail and is sunsetting it in six months. Here are some good alternatives to consider for your email needs.",
-		date: "Feb 22, 2024",
-		datetime: "2024-02-22",
-		// category: { title: "Marketing", href: "#" },
-		author: {
-			name: "Elie Steinbock",
-			role: "Founder",
-			href: "#",
-			imageUrl: "/images/blog/elie-profile.jpg",
-		},
-		imageUrl: "/images/reach-inbox-zero.png",
-	},
-	{
-		title: "How to Bulk Unsubscribe from Emails",
-		file: "bulk-unsubscribe-from-emails",
-		description:
-			"Want to stop the flood of unwanted subscriptions in your email? Learn how to bulk unsubscribe from emails and create a clutter-free inbox with Inbox Zero.",
-		date: "March 05, 2024",
-		datetime: "2024-03-05",
-		// category: { title: "Marketing", href: "#" },
-		author: {
-			name: "Elie Steinbock",
-			role: "Founder",
-			href: "#",
-			imageUrl: "/images/blog/elie-profile.jpg",
-		},
-		imageUrl: "/images/reach-inbox-zero.png",
-	},
-	{
-		title: "Best Email Unsubscribe App to Clean Up Your Inbox",
-		file: "best-email-unsubscribe-app",
-		description:
-			"Managing your email inbox can feel like a full-time job. With promotional emails, newsletters, and updates flooding our inboxes daily, it's crucial to have effective tools to maintain order.",
-		date: "June 26, 2024",
-		datetime: "2024-06-26",
-		author: {
-			name: "Elie Steinbock",
-			role: "Founder",
-			href: "#",
-			imageUrl: "/images/blog/elie-profile.jpg",
-		},
-		imageUrl: "/images/reach-inbox-zero.png",
-	},
-	{
-		title: "Boost Your Email Efficiency with These Gmail Productivity Hacks",
-		file: "gmail-productivity-hacks",
-		description:
-			"Discover effective Gmail productivity hacks to streamline your email management. Learn key tips, tools, and techniques for maximizing efficiency.",
-		date: "Jun 27, 2024",
-		datetime: "2024-06-27",
-		// category: { title: "Marketing", href: "#" },
-		author: {
-			name: "Ricardo Batista",
-			role: "Founder @ AI Blog Articles",
-			href: "https://getaiblogarticles.com/",
-			imageUrl: "/images/blog/ricardo-batista-profile.png",
-		},
-		imageUrl: "/images/reach-inbox-zero.png",
-	},
-	{
-		title: "Achieve Mental Clarity with Inbox Zero",
-		file: "inbox-zero-benefits-for-mental-health",
-		description:
-			"Learn how to achieve and maintain Inbox Zero for better mental health. Reduce stress, boost productivity, and gain mental clarity with these strategies.",
-		date: "Jun 27, 2024",
-		datetime: "2024-06-27",
-		// category: { title: "Marketing", href: "#" },
-		author: {
-			name: "Ricardo Batista",
-			role: "Founder @ AI Blog Articles",
-			href: "https://getaiblogarticles.com/",
-			imageUrl: "/images/blog/ricardo-batista-profile.png",
-		},
-		imageUrl: "/images/reach-inbox-zero.png",
-	},
-	{
-		title: "Mastering Inbox Zero - A Productivity Guide for Entrepreneurs",
-		file: "inbox-zero-workflow-for-entrepreneurs",
-		description:
-			"Learn how to achieve and maintain Inbox Zero as an entrepreneur with effective strategies, tools, and tips for efficient email management.",
-		date: "Jun 27, 2024",
-		datetime: "2024-06-27",
-		author: {
-			name: "Ricardo Batista",
-			role: "Founder @ AI Blog Articles",
-			href: "https://getaiblogarticles.com/",
-			imageUrl: "/images/blog/ricardo-batista-profile.png",
-		},
-		imageUrl: "/images/reach-inbox-zero.png",
-	},
-	{
-		title: "How to Beat Email Stress as a Remote Worker",
-		file: "managing-email-stress-for-remote-workers",
-		description:
-			"Learn effective strategies and tools to manage email stress for remote workers. Increase productivity and work-life balance with expert recommendations.",
-		date: "Jun 27, 2024",
-		datetime: "2024-06-27",
-		// category: { title: "Marketing", href: "#" },
-		author: {
-			name: "Ricardo Batista",
-			role: "Founder @ AI Blog Articles",
-			href: "https://getaiblogarticles.com/",
-			imageUrl: "/images/blog/ricardo-batista-profile.png",
-		},
-		imageUrl: "/images/reach-inbox-zero.png",
-	},
-	{
-		title: "Master Email Management with These Top Tips and Tools",
-		file: "email-management-best-practices",
-		description:
-			"Learn the best email management practices to boost productivity and efficiency. Discover tools and techniques for effective inbox organization.",
-		date: "Jun 27, 2024",
-		datetime: "2024-06-27",
-		// category: { title: "Marketing", href: "#" },
-		author: {
-			name: "Ricardo Batista",
-			role: "Founder @ AI Blog Articles",
-			href: "https://getaiblogarticles.com/",
-			imageUrl: "/images/blog/ricardo-batista-profile.png",
-		},
-		imageUrl: "/images/reach-inbox-zero.png",
-	},
-];
-
 
 export default async function BlogPage() {
 	const posts = await sanityFetch<SanityPost[]>({ query: postsQuery })
-	// console.log(posts)
+	console.log(posts)
 
 	return (
-		<div className='mx-auto pt-32 px-4 lg:px-10 min-h-dvh'>
-			<h1 className='mb-8'>Nomad's Land</h1>
+		<section className='mx-auto pt-32 px-4 lg:px-10 lg:flex-col bg-media-section-gradient bg-cover lg:bg-top bg-no-repeat text-white'>
+			<div className='text-center'>
+				<h1 className='mb-8'>Nomad's Land</h1>
+				<p className='text-2xl lg:text-3xl'>People, Places, & Vibes That Interest Us</p>
+			</div>
 			<div className='grid gap-8'>
-				{/* {posts.map((post: any) => (
-					<article key={post._id} className='border-b pb-8'>
-						<Link href={`/blog/${post?.slug?.current}`}>
-							<h2 className='text-2xl font-semibold hover:text-blue-600'>
-								{post.title}
-							</h2>
-							<time className='text-gray-500 text-sm'>
-								{new Date(post.publishedAt ?? '').toLocaleDateString()}
-							</time>
-						</Link>
-					</article>
-				))} */}
 				<Posts posts={posts} />
 			</div>
-		</div>
+		</section>
 	);
 }
 
@@ -244,19 +72,27 @@ function Posts({ posts }: { posts: SanityPost[] }) {
 				href: "#",
 				imageUrl: "/images/blog/elie-profile.jpg",
 			},
-			imageUrl: post.imageURL ?? "/images/reach-inbox-zero.png",
+			imageUrl: post.imageURL ?? "/footer_gradient.png",
+			categories: post.categories.map(category => category.title)
 		})),
-		...mdxPosts,
+		// ...mdxPosts,
 	];
 
 	return (
 		<div className="py-16 sm:py-24">
 			<div className="mx-auto max-w-7xl px-6 lg:px-8">
-				<div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-					{allPosts.map((post) => (
-						<PostCard key={post.title} post={post} />
-					))}
-				</div>
+				{allPosts.length === 0 ? (
+					<div className="text-center py-12">
+						<h3 className="text-xl lg:text-2xl font-semibold mb-2">No posts available yet</h3>
+						<p className='text-lg lg:text-xl'>Please check back later for new content!</p>
+					</div>
+				) : (
+					<div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+						{allPosts.map((post) => (
+							<PostCard key={post.title} post={post} />
+						))}
+					</div>
+				)}
 			</div>
 		</div>
 	);
@@ -264,8 +100,8 @@ function Posts({ posts }: { posts: SanityPost[] }) {
 
 function PostCard({ post }: { post: Post }) {
 	return (
-		<Card className="overflow-hidden transition-transform duration-300 hover:scale-105 bg-secondary text-secondary-foreground">
-			<Link href={`/blog/post/${post.file}`}>
+		<Card className="overflow-hidden transition-transform duration-300 hover:scale-105 bg-secondary text-secondary-foreground border-none">
+			<Link href={`/blog/${post.file}`}>
 				<div className="relative h-48 w-full">
 					<Image
 						src={post.imageUrl}
@@ -275,26 +111,33 @@ function PostCard({ post }: { post: Post }) {
 					/>
 				</div>
 				<CardContent className="pt-4">
-					<h3 className="mb-2 font-cal text-lg leading-6 text-gray-900 group-hover:text-gray-600">
+					<h3 className="mb-2 font-marcellus text-lg leading-6 text-gray-900 group-hover:text-gray-600">
 						{post.title}
 					</h3>
-					<p className="mb-4 line-clamp-2 text-sm leading-6 text-gray-600">
+					{/* <p className="mb-4 line-clamp-2 text-sm leading-6 text-gray-600">
 						{post.description}
-					</p>
+					</p> */}
 					<div className="flex items-center gap-x-4">
-						<Image
+						{/* <Image
 							src={post.author.imageUrl}
 							alt=""
 							className="h-8 w-8 rounded-full bg-gray-50"
 							width={32}
 							height={32}
-						/>
+						/> */}
 						<div className="text-sm">
-							<p className="font-semibold text-gray-900">{post.author.name}</p>
+							{/* <p className="font-semibold text-gray-900">{post.author.name}</p> */}
 							<time dateTime={post.datetime} className="text-gray-500">
 								{post.date}
 							</time>
 						</div>
+					</div>
+					<div className='inline-flex items-center gap-x-4'>
+						{post.categories.map((category, index) => (
+							<Badge className='text-sm' key={index}>
+								{category}
+							</Badge>
+						))}
 					</div>
 				</CardContent>
 			</Link>

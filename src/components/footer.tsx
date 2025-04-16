@@ -62,12 +62,12 @@ export const Footer: React.FC = () => {
 			<div className='flex flex-col lg:flex-row space-y-14 lg:space-y-0 px-8 md:px-12 lg:px-20 py-4 md:py-8 lg:py-16'>
 				<div className='flex-1 flex flex-col space-y-4'>
 					<h2 className='uppercase text-xl'>Our Studio</h2>
-					<address className='uppercase not-italic font-semibold font-source-code-pro'>
+					<address className='uppercase not-italic font-bold font-source-code-pro'>
 						Blue Nomad <br />
 						1123 Broadway, #1014 <br />
 						New York, NY 10010
 					</address>
-					<p className='uppercase font-semibold font-source-code-pro'>
+					<p className='uppercase font-bold font-source-code-pro'>
 						Mon-Sat 11AM to 8PM
 					</p>
 				</div>
@@ -78,7 +78,7 @@ export const Footer: React.FC = () => {
 							<Link
 								key={link.label}
 								href={link.href}
-								className='uppercase font-semibold text-xl'
+								className='uppercase font-bold text-xl'
 								target={link.href.includes('squareup') ? '_blank' : undefined}
 								rel='noopener noreferrer nofollow'
 							>
@@ -145,7 +145,7 @@ export const Footer: React.FC = () => {
 			<div className='mt-auto flex flex-col w-full px-8 md:px-12 lg:px-20'>
 				<h2 className='uppercase text-xl'>Contact Us</h2>
 				<div className='flex flex-col md:flex-row gap-10'>
-					<span className='uppercase font-source-code-pro font-semibold text-lg'>
+					<span className='uppercase font-source-code-pro font-bold text-lg'>
 						646-566-1183 / hello@bluenomad.nyc
 					</span>
 
@@ -162,7 +162,7 @@ export const Footer: React.FC = () => {
 							href='https://www.instagram.com/bluenomadworld'
 							target='_blank'
 							rel='noopener noreferrer nofollow'
-							className='font-semibold uppercase font-source-code-pro'
+							className='font-bold uppercase font-source-code-pro'
 						>
 							Instagram
 						</Link>
@@ -170,7 +170,7 @@ export const Footer: React.FC = () => {
 							href='https://www.tiktok.com/@bluenomadworld?_t=8sLa1tyGeW6&_r=1'
 							target='_blank'
 							rel='noopener noreferrer nofollow'
-							className='font-semibold uppercase font-source-code-pro'
+							className='font-bold uppercase font-source-code-pro'
 						>
 							TikTok
 						</Link>

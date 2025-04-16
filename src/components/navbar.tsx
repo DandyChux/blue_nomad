@@ -33,7 +33,7 @@ export const navLinks: NavItem[] = [
 		href: 'https://app.squareup.com/gift/ML665NPQYDHTJ/order',
 	},
 	{
-		label: 'Blog',
+		label: "Nomad's Land",
 		href: '/blog',
 	},
 ];
@@ -63,7 +63,7 @@ export const Navbar: React.FC = () => {
 					<DropdownMenuTrigger asChild>
 						<Button variant={'ghost'} className='self-start w-auto h-fit peer'>
 							<Menu
-								className='!size-6 lg:!size-8 xl:!size-10'
+								className='!size-6 lg:!size-8 xl:!size-10 text-white'
 								strokeWidth={2.5}
 							/>
 						</Button>
@@ -91,7 +91,7 @@ export const Navbar: React.FC = () => {
 						{navLinks.map((item) => (
 							<li
 								key={item.label}
-								className='motion-safe:hover:underline motion-safe:hover:underline-offset-2 duration-300 ease-in-out'
+								className='motion-safe:hover:underline motion-safe:hover:underline-offset-2 duration-300 ease-in-out text-white'
 							>
 								<Link
 									href={item.href}
@@ -108,7 +108,7 @@ export const Navbar: React.FC = () => {
 			</div>
 			<div className='relative w-[200px] ml-auto'>
 				<Image
-					src='/logos/blue-nomad.png'
+					src='/logos/blue-nomad-white.png'
 					alt='hero'
 					width={0}
 					height={0}

@@ -8,6 +8,7 @@ import { DisableDraftMode } from '~/components/DisableDraftMode';
 import { Footer } from '~/components/footer';
 import { Navbar } from '~/components/navbar';
 import { Providers } from '~/components/providers';
+// import localFont from 'next/font/local'
 
 import './globals.css';
 

@@ -7,6 +7,11 @@ export const postsQuery = groq`*[_type == "post"] {
 	description,
 	slug,
 	mainImage,
+	categories[]->{
+		title,
+		slug,
+		description,
+	},
 	"imageUrl": mainImage.asset->url,
 	"authorName": author->name,
 }`;
@@ -16,6 +21,7 @@ export const postQuery = groq`*[_type == "post" && slug.current == $slug][0] {
 	title,
 	description,
 	mainImage,
+	categories,
 	body[]{
 		...,
 		_type == "image" => {

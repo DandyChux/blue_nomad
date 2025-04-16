@@ -54,15 +54,15 @@ export default function Home() {
 	return (
 		<>
 			{/* Hero Section */}
-			<section className='p-0 bg-no-repeat xl:bg-cover bg-(image:--bg-studio-background) text-white'>
+			<section className='p-0 bg-no-repeat xl:bg-cover bg-studio-background text-white'>
 				<div className='flex flex-col m-[auto_0] px-8 pt-16 pb-8 gap-8 lg:gap-12 place-self-center'>
-					<h1 className='uppercase w-full lg:w-3/5 font-normal text-2xl lg:text-3xl'>
-						modern wellness inspired by <br /> worlds near, far, and within
-					</h1>
+					<p className='uppercase w-full lg:w-11/12 font-normal text-2xl lg:text-4xl'>
+						modern <em>wellness</em> <br /> &nbsp;&nbsp;inspired <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;by worlds <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;near, far, and within
+					</p>
 					<p className='uppercase text-lg lg:text-xl'>
 						latest release - a private skin health studio in NYC
 					</p>
-					<Button className='uppercase self-start border-white' variant='outline' size={'lg'}>
+					<Button className='uppercase self-start border-white rounded-full' variant='outline' size={'lg'}>
 						<Link href='#treatments'>
 							Discover
 						</Link>
@@ -180,11 +180,18 @@ export default function Home() {
 				</section>
 
 				{/* Press Section */}
-				<section className='min-h-[unset] items-center px-2 relative py-20 lg:flex-col'>
-					<h1 className='uppercase'>
+				<section className='min-h-[unset] items-center px-2 relative py-20 lg:flex-col overflow-hidden flex flex-col md:block'>
+					<h1 className='uppercase md:absolute md:left-0 md:top-1/2 md:-translate-y-1/2 md:z-20 text-3xl md:text-4xl font-bold md:flex md:items-center md:h-full pl-4 md:pl-8'>
 						As Seen In
 					</h1>
-					<InfiniteMovingCards items={pressBrands} direction='right' speed='normal' />
+					<div className='w-full md:ml-[275px] lg:ml-[300px]'>
+						<InfiniteMovingCards
+							items={pressBrands}
+							direction='right'
+							speed='normal'
+							className="[mask-image:linear-gradient(to_right,transparent_0%,white_20%,white_100%)]"
+						/>
+					</div>
 				</section>
 
 				{/* Social Section */}
