@@ -46,10 +46,10 @@ export default async function BlogPage() {
 	console.log(posts)
 
 	return (
-		<section className='mx-auto pt-32 px-4 lg:px-10 lg:flex-col bg-media-section-gradient bg-cover lg:bg-top bg-no-repeat text-white'>
+		<section className='mx-auto pt-32 px-4 lg:px-10 lg:flex-col bg-secondary text-white bg-cover lg:bg-top bg-no-repeat'>
 			<div className='text-center'>
-				<h1 className='mb-8'>Nomad's Land</h1>
-				<p className='text-2xl lg:text-3xl'>People, Places, & Vibes That Interest Us</p>
+				{/* <h1 className='mb-8 uppercase'>Nomad's Land</h1> */}
+				{/* <p className='text-2xl lg:text-3xl'>People, Places, & Vibes That Interest Us</p> */}
 			</div>
 			<div className='grid gap-8'>
 				<Posts posts={posts} />
@@ -72,7 +72,7 @@ function Posts({ posts }: { posts: SanityPost[] }) {
 				href: "#",
 				imageUrl: "/images/blog/elie-profile.jpg",
 			},
-			imageUrl: post.imageURL ?? "/footer_gradient.png",
+			imageUrl: post.imageURL ?? "/studio_background.jpg",
 			categories: post.categories.map(category => category.title)
 		})),
 		// ...mdxPosts,
@@ -100,9 +100,9 @@ function Posts({ posts }: { posts: SanityPost[] }) {
 
 function PostCard({ post }: { post: Post }) {
 	return (
-		<Card className="overflow-hidden transition-transform duration-300 hover:scale-105 bg-secondary text-secondary-foreground border-none">
+		<Card className="overflow-hidden transition-transform duration-300 hover:scale-105 bg-transparent border-none shadow-none rounded-none">
 			<Link href={`/blog/${post.file}`}>
-				<div className="relative h-48 w-full">
+				<div className="relative aspect-video w-full">
 					<Image
 						src={post.imageUrl}
 						alt={post.title}
@@ -111,30 +111,12 @@ function PostCard({ post }: { post: Post }) {
 					/>
 				</div>
 				<CardContent className="pt-4">
-					<h3 className="mb-2 font-marcellus text-lg leading-6 text-gray-900 group-hover:text-gray-600">
+					<h3 className="mb-2 font-marcellus text-lg leading-6 group-hover:text-gray-600">
 						{post.title}
 					</h3>
-					{/* <p className="mb-4 line-clamp-2 text-sm leading-6 text-gray-600">
-						{post.description}
-					</p> */}
-					<div className="flex items-center gap-x-4">
-						{/* <Image
-							src={post.author.imageUrl}
-							alt=""
-							className="h-8 w-8 rounded-full bg-gray-50"
-							width={32}
-							height={32}
-						/> */}
-						<div className="text-sm">
-							{/* <p className="font-semibold text-gray-900">{post.author.name}</p> */}
-							<time dateTime={post.datetime} className="text-gray-500">
-								{post.date}
-							</time>
-						</div>
-					</div>
 					<div className='inline-flex items-center gap-x-4'>
 						{post.categories.map((category, index) => (
-							<Badge className='text-sm' key={index}>
+							<Badge key={index} variant={'outline'} className='text-sm'>
 								{category}
 							</Badge>
 						))}

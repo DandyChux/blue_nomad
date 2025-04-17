@@ -12,6 +12,8 @@ import { NavItem, navLinks } from './navbar';
 import { Button } from './ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from './ui/form';
 import { Input } from './ui/input';
+import { usePathname, useParams } from 'next/navigation';
+import { cn } from '~/lib/utils';
 
 const contactSchema = z.object({
 	email: z.string().email('Invalid email'),
@@ -33,6 +35,8 @@ const accessoryLinks: NavItem[] = [
 ];
 
 export const Footer: React.FC = () => {
+	const pathname = usePathname();
+	const { slug } = useParams();
 	const year = new Date().getFullYear();
 	const form = useForm<z.infer<typeof contactSchema>>({
 		resolver: zodResolver(contactSchema),
@@ -58,7 +62,9 @@ export const Footer: React.FC = () => {
 	}
 
 	return (
-		<footer className='flex flex-col px-2 bg-footer-gradient bg-cover bg-no-repeat bg-top lg:bg-center space-y-6'>
+		<footer className={cn('flex flex-col px-2 bg-footer-gradient bg-cover bg-no-repeat bg-top lg:bg-center space-y-6', {
+			// 'bg-card text-white border-t border-white': pathname === '/blog' || slug !== undefined,
+		})}>
 			<div className='flex flex-col lg:flex-row space-y-14 lg:space-y-0 px-8 md:px-12 lg:px-20 py-4 md:py-8 lg:py-16'>
 				<div className='flex-1 flex flex-col space-y-4'>
 					<h2 className='uppercase text-xl'>Our Studio</h2>
@@ -120,7 +126,9 @@ export const Footer: React.FC = () => {
 										<FormControl>
 											<Input
 												placeholder='E-MAIL'
-												className='placeholder:font-semibold placeholder:text-black placeholder:opacity-85 shadow-none border-t-0 border-l-0 border-r-0 rounded-none'
+												className={cn('placeholder:font-semibold placeholder:text-black placeholder:opacity-85 shadow-none border-t-0 border-l-0 border-r-0 rounded-none', {
+													// 'border-white placeholder:text-white': pathname === '/blog' || slug !== undefined
+												})}
 												{...field}
 											/>
 										</FormControl>
@@ -130,7 +138,9 @@ export const Footer: React.FC = () => {
 							/>
 
 							<Button
-								className='rounded-full uppercase mt-4 bg-transparent self-end'
+								className={cn('rounded-full uppercase mt-4 bg-transparent self-end', {
+									// 'border-white': pathname === '/blog' || slug !== undefined
+								})}
 								variant={'outline'}
 								size={'xl'}
 								disabled={isSubmitting}
@@ -182,6 +192,7 @@ export const Footer: React.FC = () => {
 				<div className='relative w-full md:w-[60%]'>
 					<Link href='/'>
 						<Image
+							// src={(pathname === '/blog' || slug !== undefined) ? '/logos/blue-nomad-white.png' : '/logos/blue-nomad.png'}
 							src='/logos/blue-nomad.png'
 							alt='Blue Nomad Logo'
 							width={0}

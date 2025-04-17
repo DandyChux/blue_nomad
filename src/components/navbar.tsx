@@ -9,6 +9,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from './ui/dropdown-menu';
+import { cn } from '~/lib/utils';
 
 export type NavItem = {
 	label: string;
@@ -39,12 +40,23 @@ export const navLinks: NavItem[] = [
 ];
 
 export const Navbar: React.FC = () => {
+
 	return (
 		<header
 			className={
 				'flex items-center justify-start absolute top-0 w-full bg-transparent p-4 md:p-6'
 			}
 		>
+			<div className='relative w-[300px] mr-auto'>
+				<Image
+					src='/logos/blue-nomad-pale-grey.png'
+					alt='hero'
+					width={0}
+					height={0}
+					sizes='100vw'
+					className='w-full h-auto'
+				/>
+			</div>
 			<div className='flex items-center group'>
 				{/* <Link
 					href='/'
@@ -59,11 +71,30 @@ export const Navbar: React.FC = () => {
 						className='w-auto h-auto'
 					/>
 				</Link> */}
+				<nav className='hidden group-hover:flex'>
+					<ul className='flex gap-8 *:uppercase text-pale-grey'>
+						{navLinks.map((item) => (
+							<li
+								key={item.label}
+								className='motion-safe:hover:underline motion-safe:hover:underline-offset-2 duration-300 ease-in-out'
+							>
+								<Link
+									href={item.href}
+									className='font-semibold text-lg font-source-code-pro no-underline'
+									rel='nofollow noopener noreferrer'
+									target={item.href.includes('squareup') ? '_blank' : undefined}
+								>
+									{item.label}
+								</Link>
+							</li>
+						))}
+					</ul>
+				</nav>
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
-						<Button variant={'ghost'} className='self-start w-auto h-fit peer'>
+						<Button variant={'ghost'} className='self-start w-auto h-fit'>
 							<Menu
-								className='!size-6 lg:!size-8 xl:!size-10 text-white'
+								className={'!size-6 lg:!size-8 xl:!size-10 text-pale-grey'}
 								strokeWidth={2.5}
 							/>
 						</Button>
@@ -86,36 +117,8 @@ export const Navbar: React.FC = () => {
 						))}
 					</DropdownMenuContent>
 				</DropdownMenu>
-				<nav className='hidden group-hover:flex'>
-					<ul className='flex gap-8 *:uppercase'>
-						{navLinks.map((item) => (
-							<li
-								key={item.label}
-								className='motion-safe:hover:underline motion-safe:hover:underline-offset-2 duration-300 ease-in-out text-white'
-							>
-								<Link
-									href={item.href}
-									className='font-semibold text-lg font-source-code-pro no-underline'
-									rel='nofollow noopener noreferrer'
-									target={item.href.includes('squareup') ? '_blank' : undefined}
-								>
-									{item.label}
-								</Link>
-							</li>
-						))}
-					</ul>
-				</nav>
 			</div>
-			<div className='relative w-[200px] ml-auto'>
-				<Image
-					src='/logos/blue-nomad-white.png'
-					alt='hero'
-					width={0}
-					height={0}
-					sizes='100vw'
-					className='w-full h-auto'
-				/>
-			</div>
+
 		</header>
 	);
 };

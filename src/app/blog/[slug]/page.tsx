@@ -9,6 +9,7 @@ import { urlFor } from '~/sanity/lib/image';
 import { postPathsQuery, postQuery, postsQuery } from '~/sanity/lib/queries';
 import type { Post as PostType } from '../types';
 import imageUrlBuilder from '@sanity/image-url'
+import { Divide } from 'lucide-react';
 
 export const revalidate = 60; // Revalidate every minute
 
@@ -65,25 +66,25 @@ export default async function PostPage({ params }: PageProps) {
 	}
 
 	return (
-		<article className='container mx-auto pt-32 pb-12 min-h-dvh'>
+		<article className='px-8 md:px-16 lg:px-24 pt-32 pb-12 min-h-dvh bg-secondary text-secondary-foreground'>
 			<nav className='mb-8'>
 				<Link href='/blog' className='hover:underline'>
 					← Back to posts
 				</Link>
 			</nav>
-			<h1>{post.title}</h1>
-			<p>{post.description}</p>
+			<h1 className='uppercase mb-8'>{post.title}</h1>
+			{/* <p>{post.description}</p> */}
 			{post.mainImage ? (
 				<Image
-					src={urlFor(post.mainImage).width(1200).url()}
+					src={urlFor(post.mainImage).width(800).url()}
 					alt={post.mainImage.alt || ''}
-					width={1200}
-					height={675}
+					width={800}
+					height={475}
 					className='rounded-lg mb-8 h-auto w-full'
 				/>
 			) : null}
 
-			<div className='prose max-w-none'>
+			<div className='prose max-w-none font-marcellus leading-7'>
 				<PortableText
 					value={post.body!}
 					components={{

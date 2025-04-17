@@ -8,6 +8,7 @@ import { DisableDraftMode } from '~/components/DisableDraftMode';
 import { Footer } from '~/components/footer';
 import { Navbar } from '~/components/navbar';
 import { Providers } from '~/components/providers';
+import { BookingButton } from '~/components/booking-button';
 // import localFont from 'next/font/local'
 
 import './globals.css';
@@ -77,6 +78,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
 							</>
 						)}
 					</main>
+					<BookingButton />
 					<Footer />
 				</Providers>
 				<Toaster

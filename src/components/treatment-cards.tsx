@@ -165,7 +165,7 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 				</CardDescription>
 			</CardHeader>
 			<CardContent
-				className={cn('p-0 flex-1 relative w-full aspect-square', {
+				className={cn('p-0 flex-1 relative w-full aspect-[4/3]', {
 					'order-1': index % 2 !== 0,
 					'order-2': index % 2 === 0,
 				})}
@@ -175,7 +175,9 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 					alt={title}
 					fill
 					sizes='100vw'
-					className='object-cover'
+					className={cn('object-cover', {
+						'object-[5%_30%]': title === 'Facial ST Membership' && !isHovered
+					})}
 					placeholder='empty'
 				/>
 			</CardContent>

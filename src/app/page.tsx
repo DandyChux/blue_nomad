@@ -20,6 +20,16 @@ import HospitalityDesignLogo from '~/assets/press logos/HD-logo.jpg';
 export default function Home() {
 	const pressBrands: MovingCardProps[] = [
 		{
+			name: 'Elle',
+			image: ElleLogo,
+			link: 'https://www.elle.com/nl/interieur/interieur-hotspots/a63482070/wellness-spa-new-york-blue-nomad/'
+		},
+		{
+			name: 'Hospitality Design',
+			image: HospitalityDesignLogo,
+			link: 'https://hospitalitydesign.com/news/wellness-sustainability/blue-nomad-new-york/'
+		},
+		{
 			name: 'Architectural Digest',
 			image: ArchitecturalDigestLogo,
 			link: 'https://www.architecturaldigest.com/story/how-to-create-home-spa'
@@ -35,26 +45,16 @@ export default function Home() {
 			link: 'https://www.elledecor.com/it/viaggi/a63820146/spa-bellissima-nel-centro-di-new-york/'
 		},
 		{
-			name: 'Elle',
-			image: ElleLogo,
-			link: 'https://www.elle.com/nl/interieur/interieur-hotspots/a63482070/wellness-spa-new-york-blue-nomad/'
-		},
-		{
 			name: 'Flatiron',
 			image: FlatironLogo,
 			link: 'https://flatironnomad.nyc/2025/03/05/february-news-roundup-6/'
 		},
-		{
-			name: 'Hospitality Design',
-			image: HospitalityDesignLogo,
-			link: 'https://hospitalitydesign.com/news/wellness-sustainability/blue-nomad-new-york/'
-		}
 	]
 
 	return (
 		<>
 			{/* Hero Section */}
-			<section className='p-0 bg-no-repeat xl:bg-cover bg-studio-background text-white'>
+			<section className='p-0 bg-no-repeat xl:bg-cover bg-studio-background text-pale-grey'>
 				<div className='flex flex-col m-[auto_0] px-8 pt-16 pb-8 gap-8 lg:gap-12 place-self-center'>
 					<p className='uppercase w-full lg:w-11/12 font-normal text-2xl lg:text-4xl'>
 						modern <em>wellness</em> <br /> &nbsp;&nbsp;inspired <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;by worlds <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;near, far, and within
@@ -62,7 +62,7 @@ export default function Home() {
 					<p className='uppercase text-lg lg:text-xl'>
 						latest release - a private skin health studio in NYC
 					</p>
-					<Button className='uppercase self-start border-white rounded-full' variant='outline' size={'lg'}>
+					<Button className='uppercase self-start rounded-full border-pale-grey' variant='outline' size={'lg'}>
 						<Link href='#treatments'>
 							Discover
 						</Link>

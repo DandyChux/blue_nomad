@@ -2,14 +2,20 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
 	/* config options here */
-	// images: {
-	// 	localPatterns: [
-	// 		{
-	// 			pathname: '/public/**/*',
-	// 			search: ''
-	// 		}
-	// 	]
-	// }
+	images: {
+		// localPatterns: [
+		// 	{
+		// 		pathname: '/public/**/*',
+		// 		search: ''
+		// 	}
+		// ],
+		remotePatterns: [
+			{
+				hostname: 'cdn.sanity.io',
+				pathname: '/images/**/*'
+			}
+		]
+	},
 	headers: async () => {
 		return [
 			{
