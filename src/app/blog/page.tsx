@@ -46,7 +46,7 @@ export default async function BlogPage() {
 	console.log(posts)
 
 	return (
-		<section className='mx-auto pt-32 px-4 lg:px-10 lg:flex-col bg-secondary text-white bg-cover lg:bg-top bg-no-repeat'>
+		<section className='mx-auto pt-32 px-4 lg:px-10 lg:flex-col bg-secondary text-white'>
 			<div className='text-center'>
 				{/* <h1 className='mb-8 uppercase'>Nomad's Land</h1> */}
 				{/* <p className='text-2xl lg:text-3xl'>People, Places, & Vibes That Interest Us</p> */}

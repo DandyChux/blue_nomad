@@ -48,24 +48,12 @@ export const Navbar: React.FC = () => {
 			}
 		>
 			<div className='flex items-center group'>
-				{/* <Link
-					href='/'
-					className='relative w-[200px] lg:mr-8 motion-safe:hover:scale-105 no-underline'
-				>
-					<Image
-						src='/logos/blue-nomad.png'
-						alt='Blue Nomad Logo'
-						width={0}
-						height={0}
-						sizes='100vw'
-						className='w-auto h-auto'
-					/>
-				</Link> */}
+
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<Button variant={'ghost'} className='self-start w-auto h-fit'>
 							<Menu
-								className={'!size-6 lg:!size-8 xl:!size-10 text-warm-ivory'}
+								className={'!size-6 lg:!size-8 xl:!size-10 text-black'}
 								strokeWidth={2.5}
 							/>
 						</Button>
@@ -89,7 +77,7 @@ export const Navbar: React.FC = () => {
 					</DropdownMenuContent>
 				</DropdownMenu>
 				<nav className='hidden group-hover:flex'>
-					<ul className='flex gap-8 *:uppercase text-warm-ivory'>
+					<ul className='flex gap-8 *:uppercase text-black'>
 						{navLinks.map((item) => (
 							<li
 								key={item.label}
@@ -109,14 +97,27 @@ export const Navbar: React.FC = () => {
 				</nav>
 			</div>
 			<div className='relative w-[300px] ml-auto'>
-				<Image
-					src='/logos/blue-nomad-warm-ivory.png'
+				{/* <Image
+					src='/logos/blue-nomad.png'
 					alt='hero'
 					width={0}
 					height={0}
 					sizes='100vw'
 					className='w-full h-auto'
-				/>
+				/> */}
+				<Link
+					href='/'
+					className='motion-safe:hover:scale-105 no-underline'
+				>
+					<Image
+						src='/logos/blue-nomad.png'
+						alt='Blue Nomad Logo'
+						width={0}
+						height={0}
+						sizes='100vw'
+						className='w-full h-auto'
+					/>
+				</Link>
 			</div>
 		</header>
 	);
