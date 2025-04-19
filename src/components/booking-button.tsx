@@ -14,7 +14,7 @@ export const BookingButton = () => {
 	}
 
 	return (
-		<div className="fixed bottom-0 left-2 z-50">
+		<div className="fixed bottom-0 right-2 z-50">
 			<div className="relative group">
 				<button
 					className="absolute -top-3 -right-3 h-6 w-6 rounded-full bg-black hover:bg-primary text-white items-center justify-center text-xs hidden group-hover:flex"
@@ -23,14 +23,14 @@ export const BookingButton = () => {
 				>
 					X
 				</button>
-				<Button className="rounded-none bg-black uppercase text-lg" size={'xl'} id='booking-button'>
+				<Button className="rounded-full bg-black uppercase text-lg hover:bg-black/85" size={'xl'} id='booking-button'>
 					<Link
 						href="https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start"
 						target="_blank"
 						rel="noopener noreferrer"
 						className='no-underline'
 					>
-						Book complimentary consult
+						Begin with a consultation
 					</Link>
 				</Button>
 			</div>

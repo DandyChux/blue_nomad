@@ -95,33 +95,39 @@ export const InfiniteMovingCards = ({
 						className='relative w-[300px] max-w-full shrink-0 rounded-2xl px-8 py-6'
 						key={item.name}
 					>
-						<Link href={item.link} className='block w-full h-full no-underline' target='_blank' rel='noopener noreferrer'>
-							<blockquote>
-								<div
-									aria-hidden='true'
-									className='user-select-none pointer-events-none absolute -top-0.5 -left-0.5 -z-1 h-[calc(100%_+_4px)] w-[calc(100%_+_4px)]'
-								></div>
+						{/* <Link
+							href={item.link}
+							className='text-sm underline deocration-dotted underline-offset-2'
+							target='_blank'
+							rel='noopener noreferrer'
+						>
+							<span className='absolute inset-0'></span>
+						</Link> */}
+						<blockquote>
+							<div
+								aria-hidden='true'
+								className='user-select-none pointer-events-none absolute -top-0.5 -left-0.5 -z-1 h-[calc(100%_+_4px)] w-[calc(100%_+_4px)]'
+							></div>
 
-								<div className='relative w-full h-40 mb-4 overflow-hidden rounded-lg flex place-items-center aspect-[16/9]'>
-									<Image
-										src={item.image}
-										alt={`Image for ${item.name}`}
-										className='object-cover object-center mx-auto'
-										sizes="(max-width: 768px) 250px, 350px"
-									/>
-								</div>
-								{/* <span className='relative z-20 text-sm leading-[1.6] font-normal'>
-									{item.quote}
-								</span>
-								<div className='relative z-20 mt-6 flex flex-row items-center'>
-									<span className='flex flex-col gap-1'>
-										<span className='text-sm leading-[1.6] font-normal text-secondary-foreground/80'>
-											{item.name}
-										</span>
+							<div className='relative w-full h-40 mb-4 overflow-hidden rounded-lg flex place-items-center aspect-[16/9]'>
+								<Image
+									src={item.image}
+									alt={`Image for ${item.name}`}
+									className='object-cover object-center mx-auto'
+									sizes="(max-width: 768px) 250px, 350px"
+								/>
+							</div>
+							{/* <span className='relative z-20 text-sm leading-[1.6] font-normal'>
+								{item.quote}
+							</span>
+							<div className='relative z-20 mt-6 flex flex-row items-center'>
+								<span className='flex flex-col gap-1'>
+									<span className='text-sm leading-[1.6] font-normal text-secondary-foreground/80'>
+										{item.name}
 									</span>
-								</div> */}
-							</blockquote>
-						</Link>
+								</span>
+							</div> */}
+						</blockquote>
 					</li>
 				))}
 			</ul>
