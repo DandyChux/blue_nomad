@@ -33,7 +33,7 @@ function Posts({ posts }: { posts: Post[] }) {
 
 function PostCard({ post }: { post: Post }) {
 	return (
-		<Card className="overflow-hidden transition-transform duration-300 hover:scale-105 bg-transparent border-none shadow-none rounded-none">
+		<Card className="overflow-hidden transition-transform duration-300 bg-transparent border-none shadow-none rounded-none">
 			<Link href={`/blog/${post.file}`}>
 				<div className="relative aspect-video w-full">
 					<Image
