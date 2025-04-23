@@ -95,7 +95,7 @@ export default function Home() {
 						<h1 className='uppercase text-center text-3xl lg:text-6xl max-w-[750px]'>
 							{' '}
 							For the curious & discernin
-							<span className='lg:lowercase lg:text-8xl'>g</span>
+							<span className='lowercase text-[2.5rem] lg:text-8xl'>g</span>
 						</h1>
 
 						<Button className='uppercase' variant={'outline'} size={'xl'}>

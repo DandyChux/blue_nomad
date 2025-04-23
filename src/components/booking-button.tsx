@@ -17,7 +17,7 @@ export const BookingButton = () => {
 		<div className="fixed bottom-0 right-2 z-50">
 			<div className="relative group">
 				<button
-					className="absolute -top-3 -right-3 h-6 w-6 rounded-full bg-black hover:bg-primary text-white items-center justify-center text-xs hidden group-hover:flex"
+					className="absolute -top-2 -left-2 h-6 w-6 rounded-full bg-black hover:bg-primary text-white items-center justify-center text-xs hidden group-hover:flex"
 					onClick={handleClick}
 					aria-label="Close booking button"
 				>

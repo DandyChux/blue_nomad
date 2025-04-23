@@ -11,6 +11,7 @@ interface SearchBarProps {
 
 export function SearchBar({ onSearch }: SearchBarProps) {
 	const [searchQuery, setSearchQuery] = useState<string>("")
+	const [isExpanded, setIsExpanded] = useState<boolean>(false)
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault()
@@ -23,19 +24,37 @@ export function SearchBar({ onSearch }: SearchBarProps) {
 		onSearch(newQuery) // Real-time filtering as user types
 	}
 
+	const toggleSearch = () => {
+		setIsExpanded(!isExpanded)
+		// Focus the input when expanded
+		if (!isExpanded) {
+			setTimeout(() => document.getElementById("search-input")?.focus(), 100)
+		}
+	}
+
 	return (
-		<form onSubmit={handleSubmit} className="flex w-full gap-2 mb-6">
-			<Input
-				type="text"
-				placeholder="Search posts..."
-				value={searchQuery}
-				onChange={handleInputChange}
-				className="flex-1"
-			/>
-			<Button type="submit" variant="outline">
-				<Search className="h-4 w-4 mr-2" />
-				Search
-			</Button>
+		<form onSubmit={handleSubmit} className="flex items-center">
+			<div className="relative flex items-center">
+				<div className={`overflow-hidden transition-all duration-300 ${isExpanded ? "w-64" : "w-0"}`}>
+					<Input
+						id="search-input"
+						type="text"
+						placeholder="Search posts..."
+						value={searchQuery}
+						onChange={handleInputChange}
+						className="w-full"
+					/>
+				</div>
+				<Button
+					type="button"
+					variant="outline"
+					onClick={toggleSearch}
+					className={isExpanded ? "ml-2" : ""}
+				>
+					<Search className="h-4 w-4" />
+					{!isExpanded && <span className="ml-2">Search</span>}
+				</Button>
+			</div>
 		</form>
 	)
 }

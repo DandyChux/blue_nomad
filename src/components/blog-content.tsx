@@ -84,13 +84,15 @@ export function FilteredBlogContent({ posts }: { posts: Post[] }) {
 			<div className='text-center'>
 				<h1 className='mb-8 uppercase'>Nomad's <span className="italic">L</span>and</h1>
 
-				<SearchBar onSearch={setSearchQuery} />
+				<div className="flex flex-col items-center my-6 mx-auto space-y-6">
+					<SearchBar onSearch={setSearchQuery} />
 
-				<PostFilter
-					posts={posts}
-					onCategorySelect={setSelectedCategories}
-					selectedCategories={selectedCategories}
-				/>
+					<PostFilter
+						posts={posts}
+						onCategorySelect={setSelectedCategories}
+						selectedCategories={selectedCategories}
+					/>
+				</div>
 			</div>
 			<div className='grid gap-8'>
 				<Posts posts={filteredPosts} />

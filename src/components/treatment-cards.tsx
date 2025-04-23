@@ -7,7 +7,7 @@ import JohannaShot1 from '~/assets/Look 1 519.jpg';
 import MelShot1 from '~/assets/treatment-section/Artboard 2.png';
 import MelShot2 from '~/assets/treatment-section/Artboard 3.png';
 import EgoShot1 from '~/assets/Look 5 306.jpg';
-import HoverShot1 from '~/assets/Look 4 213.jpg';
+import EgoShot2 from '~/assets/Look 5 185.jpg';
 import JohannaShot2 from '~/assets/Look 1 435.jpg';
 import { cn } from '~/lib/utils';
 import { Button } from './ui/button';
@@ -60,7 +60,7 @@ const treatments: TreatmentProps[] = [
 			'Experience our signature 60min facial skin therapy monthly, with exclusive access to on-demand skin health guidance.',
 		price: 185,
 		defaultImage: EgoShot1.src,
-		hoverImage: HoverShot1.src,
+		hoverImage: EgoShot2.src,
 		membersOnly: true,
 		link: 'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start',
 	},
@@ -178,6 +178,7 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 					className={cn('object-cover', {
 						'object-[5%_30%]': title === 'Facial ST Membership' && !isHovered,
 						'object-[5%_15%]': title === 'Facial ST 60min' && !isHovered,
+						'object-[5%_25%]': title === 'Facial ST Membership' && isHovered,
 					})}
 					placeholder='empty'
 				/>

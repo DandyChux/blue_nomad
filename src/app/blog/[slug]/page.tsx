@@ -9,7 +9,7 @@ import { urlFor } from '~/sanity/lib/image';
 import { postPathsQuery, postQuery, postsQuery } from '~/sanity/lib/queries';
 import type { FormattedPost as PostType } from '../types';
 import imageUrlBuilder from '@sanity/image-url'
-import { Divide } from 'lucide-react';
+import { ShareLinks } from '~/components/share-links';
 
 export const revalidate = 60; // Revalidate every minute
 
@@ -73,15 +73,24 @@ export default async function PostPage({ params }: PageProps) {
 				</Link>
 			</nav>
 			<h1 className='uppercase mb-8'>{post.title}</h1>
+
+			<ShareLinks
+				title={post.title}
+				description={post.description || ''}
+				className="w-full justify-end"
+			/>
+
 			{/* <p>{post.description}</p> */}
 			{post.mainImage ? (
-				<Image
-					src={urlFor(post.mainImage).width(800).url()}
-					alt={post.mainImage.alt || ''}
-					width={800}
-					height={475}
-					className='rounded-lg mb-8 h-auto w-full'
-				/>
+				<div className='mb-8 relative aspect-[16/9] max-w-[750px] mx-auto'>
+					<Image
+						src={urlFor(post.mainImage).width(800).url()}
+						alt={post.mainImage.alt || ''}
+						width={800}
+						height={475}
+						className='object-cover h-full w-full rounded-md'
+					/>
+				</div>
 			) : null}
 
 			<div className='prose max-w-none font-spectral leading-7'>
