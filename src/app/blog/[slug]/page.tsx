@@ -84,7 +84,7 @@ export default async function PostPage({ params }: PageProps) {
 				/>
 			) : null}
 
-			<div className='prose max-w-none font-david leading-7'>
+			<div className='prose max-w-none font-spectral leading-7'>
 				<PortableText
 					value={post.body!}
 					components={{

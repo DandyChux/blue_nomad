@@ -44,7 +44,7 @@ function PostCard({ post }: { post: Post }) {
 					/>
 				</div>
 				<CardContent className="pt-4">
-					<h3 className="mb-2 font-david text-lg leading-6 group-hover:text-gray-600">
+					<h3 className="mb-2 font-spectral text-lg leading-6 group-hover:text-gray-600">
 						{post.title}
 					</h3>
 					<div className='inline-flex items-center gap-x-4'>
@@ -82,7 +82,7 @@ export function FilteredBlogContent({ posts }: { posts: Post[] }) {
 	return (
 		<>
 			<div className='text-center'>
-				<h1 className='mb-8 uppercase'>Nomad's Land</h1>
+				<h1 className='mb-8 uppercase'>Nomad's <span className="italic">L</span>and</h1>
 
 				<SearchBar onSearch={setSearchQuery} />
 
