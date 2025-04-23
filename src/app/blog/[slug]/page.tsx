@@ -7,7 +7,7 @@ import { client } from '~/sanity/lib/client';
 import { sanityFetch } from '~/sanity/lib/fetch';
 import { urlFor } from '~/sanity/lib/image';
 import { postPathsQuery, postQuery, postsQuery } from '~/sanity/lib/queries';
-import type { Post as PostType } from '../types';
+import type { FormattedPost as PostType } from '../types';
 import imageUrlBuilder from '@sanity/image-url'
 import { Divide } from 'lucide-react';
 
@@ -84,7 +84,7 @@ export default async function PostPage({ params }: PageProps) {
 				/>
 			) : null}
 
-			<div className='prose max-w-none font-marcellus leading-7'>
+			<div className='prose max-w-none font-david leading-7'>
 				<PortableText
 					value={post.body!}
 					components={{

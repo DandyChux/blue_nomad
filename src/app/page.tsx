@@ -92,7 +92,7 @@ export default function Home() {
 							from urban alcoves to distant escapes.
 						</p>
 
-						<h1 className='uppercase text-center text-3xl font-normal lg:text-6xl max-w-[750px]'>
+						<h1 className='uppercase text-center text-3xl lg:text-6xl max-w-[750px]'>
 							{' '}
 							For the curious & discernin
 							<span className='lg:lowercase lg:text-8xl'>g</span>

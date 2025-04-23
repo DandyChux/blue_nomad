@@ -8,7 +8,7 @@ export default function About() {
 		<section className={'gap-4 lg:gap-32 lg:flex-col pt-40'}>
 			<div className='flex flex-col lg:flex-row'>
 				<div className='flex flex-col items-center md:items-start md:grid md:grid-cols-[repeat(3,_1fr)] md:[grid-auto-rows:auto] lg:gap-x-10 lg:gap-y-20 flex-1 lg:px-12 px-4'>
-					<p className='text-xl lg:text-2xl order-3 pt-10 md:pt-0 md:order-none md:col-span-2 font-marcellus'>
+					<p className='text-xl lg:text-2xl order-3 pt-10 md:pt-0 md:order-none md:col-span-2 font-david'>
 						<span className='text-2xl lg:text-3xl pr-2'>Blue Nomad</span> was
 						born at the intersection of my global business career and an
 						enduring passion for beauty, wellness, and culture—a journey that
@@ -44,7 +44,7 @@ export default function About() {
 					</div>
 
 					<div className='[&>p]:text-xl [&>p]:lg:text-2xl order-4 md:order-none md:col-start-2 md:col-span-2'>
-						<p className='font-marcellus'>
+						<p className='font-david'>
 							Recognizing the skin as a key indicator of overall well-being, our
 							journey begins in an intimate skin health studio near Madison
 							Square Park. Here, we offer bespoke, seasonally evolving facial
@@ -54,7 +54,7 @@ export default function About() {
 
 						<br />
 
-						<p className='font-marcellus'>
+						<p className='font-david'>
 							This studio is not just a place for treatments; it is the first
 							step in our broader vision for wellness. In collaboration with
 							Brooklyn-based Colombian architect Silvana Vergara Tobin, we
@@ -66,7 +66,7 @@ export default function About() {
 
 						<br />
 
-						<p className='font-marcellus'>
+						<p className='font-david'>
 							Blue Nomad is an invitation to explore the dynamism of wellness.
 							For the curious and discerning who are dissatisfied with
 							derivative offerings and seek substance over trends, we offer a
@@ -76,7 +76,7 @@ export default function About() {
 
 						<br />
 
-						<p className='font-marcellus'>
+						<p className='font-david'>
 							Whether through a visit to our studio, a deep dive into our
 							philosophy, or simply as a quiet observer, we welcome you to
 							embark on this journey with us.

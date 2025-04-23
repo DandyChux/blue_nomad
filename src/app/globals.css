@@ -14,6 +14,30 @@
 	font-display: swap;
 }
 
+@font-face {
+	font-family: David;
+	src: url("/fonts/DAVID TRIAL/David-AA-trial-03-Regular.otf") format("opentype");
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: David Italic;
+	src: url("/fonts/DAVID TRIAL/David-AA-trial-03-italic.otf") format("opentype");
+	font-style: italic;
+	font-weight: 400;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: David Bold;
+	src: url("/fonts/DAVID TRIAL/David-AA-trial-05-Bold.otf") format("opentype");
+	font-style: normal;
+	font-weight: bold;
+	font-display: swap;
+}
+
 :root {
 	/* font-family: system-ui, Avenir, Helvetica, Arial, sans-serif; */
 	line-height: 1.5;
@@ -136,7 +160,9 @@
 	/* --font-harmony: "harmony", "harmony Fallback"; */
 	--font-harmony: 'Harmony', 'sans-serif';
 	--font-source-code-pro: 'Source Code Pro', 'monospace';
-	--font-marcellus: 'Marcellus', 'serif';
+	--font-david: 'David', 'sans-serif';
+	--font-david-italic: 'David Italic', 'sans-serif';
+	--font-david-bold: 'David Bold', 'sans-serif';
 
 	/* Backgrounds */
 	--background-image-hero-section-gradient: url('/hero_section_gradient.png');
@@ -197,6 +223,10 @@
 			font-size: 3.5rem;
 			line-height: 2.75rem;
 		}
+	}
+
+	a {
+		font-weight: 700;
 	}
 
 	h2 {

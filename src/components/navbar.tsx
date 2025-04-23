@@ -1,3 +1,5 @@
+"use client"
+
 import { MenuIcon as Menu } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
@@ -9,6 +11,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from './ui/dropdown-menu';
+import { usePathname } from 'next/navigation';
 import { cn } from '~/lib/utils';
 
 export type NavItem = {
@@ -40,6 +43,7 @@ export const navLinks: NavItem[] = [
 ];
 
 export const Navbar: React.FC = () => {
+	const pathname = usePathname();
 
 	return (
 		<header
@@ -107,7 +111,10 @@ export const Navbar: React.FC = () => {
 				/> */}
 				<Link
 					href='/'
-					className='motion-safe:hover:scale-105 no-underline'
+					className={cn('motion-safe:hover:scale-105 no-underline', {
+						'block': pathname === '/',
+						'hidden': pathname !== '/'
+					})}
 				>
 					<Image
 						src='/logos/blue-nomad.png'

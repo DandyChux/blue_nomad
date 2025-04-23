@@ -176,7 +176,8 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 					fill
 					sizes='100vw'
 					className={cn('object-cover', {
-						'object-[5%_30%]': title === 'Facial ST Membership' && !isHovered
+						'object-[5%_30%]': title === 'Facial ST Membership' && !isHovered,
+						'object-[5%_15%]': title === 'Facial ST 60min' && !isHovered,
 					})}
 					placeholder='empty'
 				/>
