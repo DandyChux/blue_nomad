@@ -44,22 +44,22 @@ export function PostFilter({ posts, selectedCategories, onCategorySelect }: Post
 				{allCategories.map((category) => (
 					<Badge
 						key={category}
-						variant={selectedCategories.includes(category) ? "default" : "outline"}
-						className="cursor-pointer"
+						variant={selectedCategories.includes(category) ? "default" : "ghost"}
+						className="cursor-pointer uppercase hover:underline"
 						onClick={() => toggleTag(category)}
 					>
 						{category}
 					</Badge>
 				))}
 			</div>
-			<div className="flex items-center justify-between">
-				{/* <h2 className="text-xl font-semibold">Filter by Tags</h2> */}
+			{/* <div className="flex items-center justify-between">
+				<h2 className="text-xl font-semibold">Filter by Tags</h2>
 				{selectedCategories.length > 0 && (
 					<Button variant="ghost" size="sm" onClick={clearFilters}>
 						Clear filters
 					</Button>
 				)}
-			</div>
+			</div> */}
 		</div>
 	)
 }

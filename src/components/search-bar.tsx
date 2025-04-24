@@ -47,12 +47,11 @@ export function SearchBar({ onSearch }: SearchBarProps) {
 				</div>
 				<Button
 					type="button"
-					variant="outline"
+					variant="ghost"
 					onClick={toggleSearch}
 					className={isExpanded ? "ml-2" : ""}
 				>
 					<Search className="h-4 w-4" />
-					{!isExpanded && <span className="ml-2">Search</span>}
 				</Button>
 			</div>
 		</form>

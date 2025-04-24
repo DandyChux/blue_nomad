@@ -23,9 +23,9 @@ export const BookingButton = () => {
 				>
 					X
 				</button>
-				<Button className="rounded-full bg-black uppercase text-lg hover:bg-black/85" size={'xl'} id='booking-button'>
+				<Button className="rounded-full bg-black text-white uppercase text-lg hover:bg-black/85" size={'xl'} id='booking-button'>
 					<Link
-						href="https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start"
+						href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3ztBc4G6m-dPzcmROs_XNBxtvO8gT4zfTcisQo6nv0_6bJnPXlEsbk9ftmKKzK0TlBnBnNu4GE"
 						target="_blank"
 						rel="noopener noreferrer"
 						className='no-underline'

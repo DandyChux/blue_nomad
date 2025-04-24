@@ -7,7 +7,7 @@ import JohannaShot1 from '~/assets/Look 1 519.jpg';
 import MelShot1 from '~/assets/treatment-section/Artboard 2.png';
 import MelShot2 from '~/assets/treatment-section/Artboard 3.png';
 import EgoShot1 from '~/assets/Look 5 306.jpg';
-import EgoShot2 from '~/assets/Look 5 185.jpg';
+import EgoShot2 from '~/assets/Look 5 185_edited.jpg';
 import JohannaShot2 from '~/assets/Look 1 435.jpg';
 import { cn } from '~/lib/utils';
 import { Button } from './ui/button';

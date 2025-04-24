@@ -47,13 +47,13 @@ function PostCard({ post }: { post: Post }) {
 					<h3 className="mb-2 font-spectral text-lg leading-6 group-hover:text-gray-600">
 						{post.title}
 					</h3>
-					<div className='inline-flex items-center gap-x-4'>
+					{/* <div className='inline-flex items-center gap-x-4'>
 						{post.categories.map((category, index) => (
 							<Badge key={index} variant={'outline'} className='text-sm'>
 								{category}
 							</Badge>
 						))}
-					</div>
+					</div> */}
 				</CardContent>
 			</Link>
 		</Card>
@@ -84,14 +84,14 @@ export function FilteredBlogContent({ posts }: { posts: Post[] }) {
 			<div className='text-center'>
 				<h1 className='mb-8 uppercase'>Nomad's <span className="italic">L</span>and</h1>
 
-				<div className="flex flex-col items-center my-6 mx-auto space-y-6">
-					<SearchBar onSearch={setSearchQuery} />
-
+				<div className="flex items-center justify-center my-6 mx-auto space-x-6">
 					<PostFilter
 						posts={posts}
 						onCategorySelect={setSelectedCategories}
 						selectedCategories={selectedCategories}
 					/>
+
+					<SearchBar onSearch={setSearchQuery} />
 				</div>
 			</div>
 			<div className='grid gap-8'>
