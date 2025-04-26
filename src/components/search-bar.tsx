@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Input } from "~/components/ui/input"
 import { Button } from "~/components/ui/button"
 import { Search } from "lucide-react"
+import { cn } from "~/lib/utils"
 
 interface SearchBarProps {
 	onSearch: (query: string) => void
@@ -49,7 +50,9 @@ export function SearchBar({ onSearch }: SearchBarProps) {
 					type="button"
 					variant="ghost"
 					onClick={toggleSearch}
-					className={isExpanded ? "ml-2" : ""}
+					className={cn("hover:cursor-pointer", {
+						'ml-2': isExpanded
+					})}
 				>
 					<Search className="h-4 w-4" />
 				</Button>

@@ -13,14 +13,44 @@ interface PostFilterProps {
 }
 
 export function PostFilter({ posts, selectedCategories, onCategorySelect }: PostFilterProps) {
-	// Extract all unique tags from posts
-	const allCategories = posts
+	// Define exact category order
+	const categoryOrder = [
+		'Skin',
+		'Scent & Body',
+		'Culture',
+		'People & Community',
+		'Place'
+	];
+
+	// Extract all unique categories from posts
+	let uniqueCategories = posts
 		.flatMap((post) => post.categories || [])
 		.filter(Boolean)
-		.filter((tag, index, self) =>
-			index === self.findIndex((t) => t === tag)
-		)
-		.sort((a, b) => a.localeCompare(b))
+		.filter((tag, index, self) => index === self.findIndex((t) => t === tag));
+
+	// Manual sorting based on the categoryOrder array
+	const allCategories = [...uniqueCategories].sort((a, b) => {
+		const indexA = categoryOrder.findIndex(
+			cat => cat.toLowerCase() === a.toLowerCase()
+		);
+		const indexB = categoryOrder.findIndex(
+			cat => cat.toLowerCase() === b.toLowerCase()
+		);
+
+		// If both categories are in our defined order list
+		if (indexA !== -1 && indexB !== -1) {
+			return indexA - indexB;
+		}
+
+		// If only a is in the predefined list, it comes first
+		if (indexA !== -1) return -1;
+
+		// If only b is in the predefined list, it comes first
+		if (indexB !== -1) return 1;
+
+		// Alphabetical sorting for any other categories
+		return a.localeCompare(b);
+	});
 
 	const toggleTag = (tag: string) => {
 		if (selectedCategories.includes(tag)) {

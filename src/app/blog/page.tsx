@@ -32,7 +32,6 @@ type SanityPost = {
 
 export default async function BlogPage() {
 	const posts = await sanityFetch<SanityPost[]>({ query: postsQuery })
-	console.log(posts)
 
 	const formattedPosts: Post[] = posts.map((post) => ({
 		title: post.title,

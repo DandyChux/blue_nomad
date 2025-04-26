@@ -40,7 +40,7 @@ function PostCard({ post }: { post: Post }) {
 						src={post.imageUrl}
 						alt={post.title}
 						fill
-						objectFit='cover'
+						className="object-cover"
 					/>
 				</div>
 				<CardContent className="pt-4">
