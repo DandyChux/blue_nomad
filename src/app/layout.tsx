@@ -12,6 +12,8 @@ import { BookingButton } from '~/components/booking-button';
 // import localFont from 'next/font/local'
 
 import './globals.css';
+import Script from 'next/script';
+import BookingFrame from '~/components/booking-iframe';
 
 export const metadata: Metadata = {
 	title: {
@@ -89,7 +91,14 @@ export default async function RootLayout({ children }: PropsWithChildren) {
 					position='top-center'
 				/>
 				<GoogleAnalytics gaId={process.env.GOOGLE_MEASUREMENT_ID!} />
+
+				<script
+					src='https://square.site/appointments/buyer/widget/augj56g525h4rw/LSP68REJT9SVH.js'
+				/>
 			</body>
 		</html>
 	);
 }
+
+// Embed code for Square:
+// <!-- Start Square Appointments Embed Code --><script src='https://square.site/appointments/buyer/widget/augj56g525h4rw/LSP68REJT9SVH.js'></script><!-- End Square Appointments Embed Code -->
