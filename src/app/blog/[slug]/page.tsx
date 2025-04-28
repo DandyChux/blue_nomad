@@ -73,6 +73,7 @@ export default async function PostPage({ params }: PageProps) {
 				</Link>
 			</nav>
 			<h1 className='uppercase mb-8'>{post.title}</h1>
+			<p className='text-cold-ivory'>{post.authorName}</p>
 
 			<ShareLinks
 				title={post.title}

@@ -45,7 +45,7 @@ function Posts({ posts }: { posts: Post[] }) {
 							{/* Middle column - featured post (50% width) */}
 							<div className="lg:col-span-6 flex items-center justify-center order-1 lg:order-2">
 								<div className="w-full max-w-xl transform scale-105">
-									<PostCard post={featuredPosts[0]} />
+									<PostCard post={featuredPosts[0]} isMainPost={true} />
 								</div>
 							</div>
 
@@ -71,7 +71,7 @@ function Posts({ posts }: { posts: Post[] }) {
 	);
 }
 
-function PostCard({ post }: { post: Post }) {
+function PostCard({ post, isMainPost = false }: { post: Post, isMainPost?: boolean }) {
 	return (
 		<Card className="overflow-hidden transition-transform duration-300 bg-transparent border-none shadow-none rounded-none">
 			<Link href={`/blog/${post.file}`}>
@@ -91,12 +91,17 @@ function PostCard({ post }: { post: Post }) {
 							</Badge>
 						))}
 					</div>
-					<h3 className="mb-2 text-lg leading-6 text-cold-ivory group-hover:text-gray-600">
+					<h3 className="mb-2 text-xl leading-6 text-cold-ivory group-hover:text-gray-600">
 						{post.title}
 					</h3>
 					{post.author && (
 						<p className="text-sm text-cold-ivory group-hover:text-gray-600">
 							By {post.author.name}
+						</p>
+					)}
+					{isMainPost && (
+						<p className="text-base text-cold-ivory group-hover:text-gray-600 mt-2 font-spectral font-normal">
+							{post.description}
 						</p>
 					)}
 				</CardContent>

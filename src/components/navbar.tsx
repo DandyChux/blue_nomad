@@ -57,7 +57,9 @@ export const Navbar: React.FC = () => {
 					<DropdownMenuTrigger asChild>
 						<Button variant={'ghost'} className='self-start w-auto h-fit'>
 							<Menu
-								className={'!size-6 lg:!size-8 xl:!size-10 text-black'}
+								className={cn('!size-6 lg:!size-8 xl:!size-10 text-black', {
+									'text-cold-ivory': pathname === '/blog'
+								})}
 								strokeWidth={2.5}
 							/>
 						</Button>
@@ -89,7 +91,9 @@ export const Navbar: React.FC = () => {
 							>
 								<Link
 									href={item.href}
-									className='font-semibold text-lg font-source-code-pro no-underline'
+									className={cn('font-semibold text-lg font-source-code-pro no-underline', {
+										'text-cold-ivory': pathname === '/blog'
+									})}
 									rel='nofollow noopener noreferrer'
 									target={item.href.includes('squareup') ? '_blank' : undefined}
 								>
