@@ -17,6 +17,7 @@ export function PostFilter({ posts, selectedCategories, onCategorySelect }: Post
 	const categoryOrder = [
 		'Skin',
 		'Scent & Body',
+		'Self',
 		'Culture',
 		'People & Community',
 		'Place'

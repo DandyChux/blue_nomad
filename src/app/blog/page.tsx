@@ -50,7 +50,7 @@ export default async function BlogPage() {
 	}))
 
 	return (
-		<section className='mx-auto pt-32 px-4 lg:px-10 lg:flex-col bg-secondary text-black'>
+		<section className='mx-auto pt-32 px-4 lg:px-10 lg:flex-col bg-media-section-gradient bg-no-repeat bg-cover bg-center text-cold-ivory'>
 			<FilteredBlogContent posts={formattedPosts} />
 		</section>
 	);
