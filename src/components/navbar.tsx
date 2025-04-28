@@ -105,6 +105,9 @@ export const Navbar: React.FC = () => {
 				</nav>
 			</div>
 			<div className='relative w-[300px] ml-auto'>
+				<Button variant={'ghost'} className='text-cold-ivory'>
+					Get Our Newsletter
+				</Button>
 				{/* <Image
 					src='/logos/blue-nomad.png'
 					alt='hero'
@@ -113,22 +116,24 @@ export const Navbar: React.FC = () => {
 					sizes='100vw'
 					className='w-full h-auto'
 				/> */}
-				<Link
-					href='/'
-					className={cn('motion-safe:hover:scale-105 no-underline', {
-						'block': pathname === '/',
-						'hidden': pathname !== '/'
-					})}
-				>
-					<Image
-						src='/logos/blue-nomad.png'
-						alt='Blue Nomad Logo'
-						width={0}
-						height={0}
-						sizes='100vw'
-						className='w-full h-auto'
-					/>
-				</Link>
+				{pathname !== '/blog' && (
+					<Link
+						href='/'
+						className={cn('motion-safe:hover:scale-105 no-underline', {
+							'block': pathname === '/',
+							'hidden': pathname !== '/'
+						})}
+					>
+						<Image
+							src='/logos/blue-nomad.png'
+							alt='Blue Nomad Logo'
+							width={0}
+							height={0}
+							sizes='100vw'
+							className='w-full h-auto'
+						/>
+					</Link>
+				)}
 			</div>
 		</header>
 	);
