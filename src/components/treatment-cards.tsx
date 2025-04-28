@@ -45,10 +45,10 @@ const treatments: TreatmentProps[] = [
 		link: 'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start',
 	},
 	{
-		title: 'Refresh Peel 45min',
+		title: 'AcuTherapy 50min',
 		description:
-			"A customized blend of acids and vitamins that transforms texture and tone while protecting your skin's barrier and revealing its natural luminosity. Most beneficial during colder months.",
-		price: 225,
+			"Precision acupuncture targeting key points to promote relaxation, reduce tension, and restore body balance. Fine needles help alleviate discomfort and encourage the body's natural healing processes. Each session is tailored to your individual needs for optimal results.",
+		price: 195,
 		defaultImage: MelShot2.src,
 		hoverImage: MelShot1.src,
 		link: 'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start',
