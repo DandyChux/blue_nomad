@@ -105,8 +105,8 @@ export const Navbar: React.FC = () => {
 					</ul>
 				</nav>
 			</div>
-			<div className='relative w-[300px] ml-auto'>
-				<Button variant={'ghost'} className='text-cold-ivory'>
+			<div className='relative w-[450px] ml-auto flex items-center'>
+				<Button variant={'ghost'} className='text-cold-ivory hover:text-white'>
 					Get Our Newsletter
 				</Button>
 				{/* <Image
@@ -120,7 +120,7 @@ export const Navbar: React.FC = () => {
 				{pathname !== '/blog' && (
 					<Link
 						href='/'
-						className={cn('motion-safe:hover:scale-105 no-underline', {
+						className={cn('no-underline', {
 							'block': pathname === '/',
 							'hidden': pathname !== '/'
 						})}
