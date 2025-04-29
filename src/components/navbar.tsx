@@ -30,8 +30,8 @@ export const navLinks: NavItem[] = [
 	},
 	{
 		label: 'Book a Treatment',
-		// href: 'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start',
-		href: '/booking'
+		href: 'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start',
+		// href: '/booking'
 	},
 	{
 		label: 'Gift Card',
