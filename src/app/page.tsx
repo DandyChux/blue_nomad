@@ -54,7 +54,7 @@ export default function Home() {
 	return (
 		<>
 			{/* Hero Section */}
-			<section className='p-0 bg-no-repeat xl:bg-cover bg-studio-background text-black'>
+			<section className='p-0 bg-no-repeat xl:bg-cover bg-studio-background text-primary-foreground'>
 				<div className='flex flex-col m-[auto_0] px-8 pt-16 pb-8 gap-8 lg:gap-12 place-self-center'>
 					<p className='uppercase w-full lg:w-[500px] font-normal text-2xl lg:text-4xl'>
 						modern <em>wellness</em> <br /> &nbsp;&nbsp;inspired <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;by worlds <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;near, far, and within
@@ -62,7 +62,7 @@ export default function Home() {
 					{/* <p className='uppercase text-lg lg:text-xl'>
 						latest release - a private skin health studio in NYC
 					</p> */}
-					<Button className='uppercase self-start rounded-full h-auto py-2' variant='outline' size={'lg'}>
+					<Button className='uppercase self-start rounded-full h-auto py-2 bg-black text-primary-foreground hover:bg-black/85' size={'lg'}>
 						<Link href='#treatments'>
 							Discover <br /> skin health
 						</Link>
@@ -119,8 +119,8 @@ export default function Home() {
 				</section>
 
 				{/* Testimonial Section */}
-				<section className='lg:flex-col px-4 md:px-8 lg:px-12 pb-20'>
-					<figure className='flex flex-col'>
+				<section className='lg:flex-col px-4 md:px-8 lg:px-12 mb-20'>
+					<figure className='flex flex-col max-w-[1250px] mx-auto mb-12 lg:mb-16'>
 						<blockquote className='uppercase text-base lg:text-5xl hidden md:block'>
 							<p>I seek out brands</p>{' '}
 							<p className='pl-[5%] lg:pl-[10%]'>
@@ -154,7 +154,7 @@ export default function Home() {
 							</p>
 						</blockquote>
 
-						<figcaption className='flex flex-col-reverse md:flex-row gap-2 place-self-end mt-4'>
+						<figcaption className='flex flex-col-reverse md:flex-row gap-2 place-self-end mt-4 lg:mt-0'>
 							<div className='place-self-end flex flex-col'>
 								<p className='text-xl lg:text-2xl self-end'>Onyedikachi</p>
 								<small className='lg:text-lg self-end'>Founder</small>

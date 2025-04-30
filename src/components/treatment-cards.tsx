@@ -47,7 +47,7 @@ const treatments: TreatmentProps[] = [
 	{
 		title: 'AcuTherapy 50min',
 		description:
-			"Precision acupuncture targeting key points to promote relaxation, reduce tension, and restore body balance. Fine needles help alleviate discomfort and encourage the body's natural healing processes. Each session is tailored to your individual needs for optimal results.",
+			"Precision acupuncture to target key points that promote relaxation, reduce tension, and optimize both skin health and total body balance. Fine needles help alleviate discomfort and encourage the body's natural healing processes. [coming soon]",
 		price: 195,
 		defaultImage: MelShot2.src,
 		hoverImage: MelShot1.src,
@@ -122,7 +122,7 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 				'relative group rounded-none p-4 border-none flex flex-col',
 				{
 					'bg-secondary text-secondary-foreground': index % 2 === 0,
-					'text-white': index % 2 !== 0,
+					'text-primary-foreground': index % 2 !== 0,
 				},
 				className
 			)}

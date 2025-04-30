@@ -91,10 +91,6 @@ export default async function RootLayout({ children }: PropsWithChildren) {
 					position='top-center'
 				/>
 				<GoogleAnalytics gaId={process.env.GOOGLE_MEASUREMENT_ID!} />
-
-				<script
-					src='https://square.site/appointments/buyer/widget/augj56g525h4rw/LSP68REJT9SVH.js'
-				/>
 			</body>
 		</html>
 	);

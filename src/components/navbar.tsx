@@ -59,7 +59,8 @@ export const Navbar: React.FC = () => {
 						<Button variant={'ghost'} className='self-start w-auto h-fit'>
 							<Menu
 								className={cn('!size-6 lg:!size-8 xl:!size-10 text-black', {
-									'text-cold-ivory': pathname === '/blog'
+									'text-cold-ivory': pathname === '/blog',
+									'text-primary-foreground': pathname === '/'
 								})}
 								strokeWidth={2.5}
 							/>
@@ -84,7 +85,12 @@ export const Navbar: React.FC = () => {
 					</DropdownMenuContent>
 				</DropdownMenu>
 				<nav className='hidden group-hover:flex'>
-					<ul className='flex gap-8 *:uppercase text-black'>
+					<ul
+						className={cn('flex gap-8 *:uppercase text-black', {
+							'text-cold-ivory': pathname === '/blog',
+							'text-primary-foreground': pathname === '/'
+						})}
+					>
 						{navLinks.map((item) => (
 							<li
 								key={item.label}
@@ -106,7 +112,9 @@ export const Navbar: React.FC = () => {
 				</nav>
 			</div>
 			<div className='relative w-[450px] ml-auto flex items-center'>
-				<Button variant={'ghost'} className='text-cold-ivory hover:text-white'>
+				<Button variant={'ghost'} className={cn('text-cold-ivory hover:text-white', {
+					'hidden': pathname !== '/blog'
+				})}>
 					Get Our Newsletter
 				</Button>
 				{/* <Image
@@ -126,7 +134,8 @@ export const Navbar: React.FC = () => {
 						})}
 					>
 						<Image
-							src='/logos/blue-nomad.png'
+							// src={'/logos/blue-nomad.png'}
+							src={pathname === '/' ? '/logos/blue-nomad-warm-ivory.png' : '/logos/blue-nomad.png'}
 							alt='Blue Nomad Logo'
 							width={0}
 							height={0}
