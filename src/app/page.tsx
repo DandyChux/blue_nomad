@@ -62,7 +62,7 @@ export default function Home() {
 					{/* <p className='uppercase text-lg lg:text-xl'>
 						latest release - a private skin health studio in NYC
 					</p> */}
-					<Button className='uppercase self-start rounded-full h-auto py-2 bg-black text-primary-foreground hover:bg-black/85' size={'lg'}>
+					<Button variant={'outline'} className='uppercase self-start rounded-full h-auto py-2 border-primary-foreground text-primary-foreground' size={'lg'}>
 						<Link href='#treatments'>
 							Discover <br /> skin health
 						</Link>
@@ -120,8 +120,8 @@ export default function Home() {
 
 				{/* Testimonial Section */}
 				<section className='lg:flex-col px-4 md:px-8 lg:px-12 mb-20'>
-					<figure className='flex flex-col max-w-[1250px] mx-auto mb-12 lg:mb-16'>
-						<blockquote className='uppercase text-base lg:text-5xl hidden md:block'>
+					<figure className='flex flex-col max-w-[1300px] mx-auto mb-12 lg:mb-16'>
+						<blockquote className='uppercase text-base lg:text-5xl hidden md:block break-keep'>
 							<p>I seek out brands</p>{' '}
 							<p className='pl-[5%] lg:pl-[10%]'>
 								From diverse origins, curating those

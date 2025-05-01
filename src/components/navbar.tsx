@@ -135,7 +135,7 @@ export const Navbar: React.FC = () => {
 					>
 						<Image
 							// src={'/logos/blue-nomad.png'}
-							src={pathname === '/' ? '/logos/blue-nomad-warm-ivory.png' : '/logos/blue-nomad.png'}
+							src={pathname === '/' ? '/logos/blue-nomad-light.png' : '/logos/blue-nomad.png'}
 							alt='Blue Nomad Logo'
 							width={0}
 							height={0}
