@@ -47,7 +47,7 @@ const treatments: TreatmentProps[] = [
 	{
 		title: 'AcuTherapy 50min',
 		description:
-			"Precision acupuncture to target key points that promote relaxation, reduce tension, and optimize both skin health and total body balance. Fine needles help alleviate discomfort and encourage the body's natural healing processes. [coming soon]",
+			"[Coming Soon] Precision acupuncture to promote relaxation, reduce tension, optimize skin health and total body well-being. Fine needles help alleviate discomfort and encourage the body's natural healing processes.",
 		price: 195,
 		defaultImage: MelShot2.src,
 		hoverImage: MelShot1.src,

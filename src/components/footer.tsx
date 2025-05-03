@@ -84,7 +84,7 @@ export const Footer: React.FC = () => {
 							<Link
 								key={link.label}
 								href={link.href}
-								className='uppercase text-lg md:text-xl'
+								className='uppercase text-lg md:text-xl font-extrabold'
 								target={link.href.includes('squareup') ? '_blank' : undefined}
 								rel='noopener noreferrer nofollow'
 							>

@@ -120,7 +120,7 @@ export default function Home() {
 
 				{/* Testimonial Section */}
 				<section className='lg:flex-col px-4 md:px-8 lg:px-12 mb-20'>
-					<figure className='flex flex-col max-w-[1300px] mx-auto mb-12 lg:mb-16'>
+					<figure className='flex flex-col mb-12 lg:mb-16'>
 						<blockquote className='uppercase text-base lg:text-5xl hidden md:block break-keep'>
 							<p>I seek out brands</p>{' '}
 							<p className='pl-[5%] lg:pl-[10%]'>

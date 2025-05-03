@@ -1,19 +1,43 @@
 import { GoogleAnalytics } from '@next/third-parties/google';
 import type { Metadata, Viewport } from 'next';
-import { VisualEditing } from 'next-sanity';
-import { draftMode } from 'next/headers';
 import { PropsWithChildren } from 'react';
 import { Toaster } from 'sonner';
-import { DisableDraftMode } from '~/components/DisableDraftMode';
 import { Footer } from '~/components/footer';
 import { Navbar } from '~/components/navbar';
 import { Providers } from '~/components/providers';
 import { BookingButton } from '~/components/booking-button';
-// import localFont from 'next/font/local'
+import localFont from 'next/font/local'
+import { Spectral, Source_Code_Pro } from 'next/font/google'
 
 import './globals.css';
-import Script from 'next/script';
-import BookingFrame from '~/components/booking-iframe';
+
+// Load Google fonts
+const spectral = Spectral({
+	subsets: ['latin'],
+	display: 'swap',
+	variable: '--font-spectral',
+	weight: ['200', '300', '400', '500', '600', '700', '800'],
+});
+
+const sourceCodePro = Source_Code_Pro({
+	subsets: ['latin'],
+	display: 'swap',
+	variable: '--font-source-code-pro',
+});
+
+// Load local font
+const harmony = localFont({
+	src: [
+		{
+			path: './fonts/Harmony.woff',
+			weight: '400',
+			style: 'normal'
+		}
+	],
+	variable: '--font-harmony',
+	display: 'swap',
+	weight: '400 700'
+});
 
 export const metadata: Metadata = {
 	title: {
@@ -67,18 +91,13 @@ export default async function RootLayout({ children }: PropsWithChildren) {
 		<html
 			lang='en'
 			suppressHydrationWarning
+			className={`${spectral.variable} ${sourceCodePro.variable} ${harmony.variable}`}
 		>
 			<body className={`antialiased relative`}>
 				<Providers>
 					<Navbar />
 					<main className='w-full'>
 						{children}
-						{(await draftMode()).isEnabled && (
-							<>
-								<VisualEditing />
-								<DisableDraftMode />
-							</>
-						)}
 					</main>
 					<BookingButton />
 					<Footer />
