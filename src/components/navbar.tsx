@@ -6,11 +6,11 @@ import React from 'react';
 import Image from 'next/image';
 import { Button } from './ui/button';
 import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from './ui/dropdown-menu';
+	Sheet,
+	SheetContent,
+	SheetTrigger,
+	SheetTitle,
+} from './ui/sheet';
 import { usePathname } from 'next/navigation';
 import { cn } from '~/lib/utils';
 
@@ -52,10 +52,9 @@ export const Navbar: React.FC = () => {
 				'flex items-center justify-start absolute top-0 w-full bg-transparent p-4 md:p-6'
 			}
 		>
-			<div className='flex items-center group'>
-
-				<DropdownMenu>
-					<DropdownMenuTrigger asChild>
+			<Sheet>
+				<div className='flex items-center group'>
+					<SheetTrigger asChild>
 						<Button variant={'ghost'} className='self-start w-auto h-fit'>
 							<Menu
 								className={cn('!size-6 lg:!size-8 xl:!size-10 text-black', {
@@ -65,59 +64,60 @@ export const Navbar: React.FC = () => {
 								strokeWidth={2.5}
 							/>
 						</Button>
-					</DropdownMenuTrigger>
-					<DropdownMenuContent
-						sideOffset={4}
-						className='md:hidden shadow-none bg-black text-white border-none'
+					</SheetTrigger>
+					<SheetContent
+						side="left"
+						className='md:hidden shadow-none bg-black text-white border-none pl-4'
 					>
-						{navLinks.map((item) => (
-							<DropdownMenuItem key={item.label} asChild>
+						<SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+						<nav className="flex flex-col gap-4 mt-8">
+							{navLinks.map((item) => (
 								<Link
+									key={item.label}
 									href={item.href}
 									rel='nofollow noopener noreferrer'
 									target={item.href.includes('squareup') ? '_blank' : undefined}
-									className='font-source-code-pro uppercase'
+									className='font-source-code-pro uppercase text-lg'
 								>
 									{item.label}
 								</Link>
-							</DropdownMenuItem>
-						))}
-					</DropdownMenuContent>
-				</DropdownMenu>
-				<nav className='hidden group-hover:flex'>
-					<ul
-						className={cn('flex gap-8 *:uppercase text-black', {
-							'text-cold-ivory': pathname === '/blog',
-							'text-primary-foreground': pathname === '/'
-						})}
-					>
-						{navLinks.map((item) => (
-							<li
-								key={item.label}
-								className='motion-safe:hover:underline motion-safe:hover:underline-offset-2 duration-300 ease-in-out'
-							>
-								<Link
-									href={item.href}
-									className={cn('font-semibold text-lg font-source-code-pro no-underline', {
-										'text-cold-ivory': pathname === '/blog'
-									})}
-									rel='nofollow noopener noreferrer'
-									target={item.href.includes('squareup') ? '_blank' : undefined}
+							))}
+						</nav>
+					</SheetContent>
+					<nav className='hidden group-hover:flex'>
+						<ul
+							className={cn('flex gap-8 *:uppercase text-black', {
+								'text-cold-ivory': pathname === '/blog',
+								'text-primary-foreground': pathname === '/'
+							})}
+						>
+							{navLinks.map((item) => (
+								<li
+									key={item.label}
+									className='motion-safe:hover:underline motion-safe:hover:underline-offset-2 duration-300 ease-in-out'
 								>
-									{item.label}
-								</Link>
-							</li>
-						))}
-					</ul>
-				</nav>
-			</div>
-			<div className='relative w-[300px] ml-auto flex items-center'>
-				<Button variant={'ghost'} className={cn('text-cold-ivory hover:text-white', {
-					'hidden': pathname !== '/blog'
-				})}>
-					Get Our Newsletter
-				</Button>
-				{/* <Image
+									<Link
+										href={item.href}
+										className={cn('font-semibold text-lg font-source-code-pro no-underline', {
+											'text-cold-ivory': pathname === '/blog'
+										})}
+										rel='nofollow noopener noreferrer'
+										target={item.href.includes('squareup') ? '_blank' : undefined}
+									>
+										{item.label}
+									</Link>
+								</li>
+							))}
+						</ul>
+					</nav>
+				</div>
+				<div className='relative w-[300px] ml-auto flex items-center'>
+					<Button variant={'ghost'} className={cn('text-cold-ivory hover:text-white', {
+						'hidden': pathname !== '/blog'
+					})}>
+						Get Our Newsletter
+					</Button>
+					{/* <Image
 					src='/logos/blue-nomad.png'
 					alt='hero'
 					width={0}
@@ -125,26 +125,27 @@ export const Navbar: React.FC = () => {
 					sizes='100vw'
 					className='w-full h-auto'
 				/> */}
-				{pathname !== '/blog' && (
-					<Link
-						href='/'
-						className={cn('no-underline', {
-							'block': pathname === '/',
-							'hidden': pathname !== '/'
-						})}
-					>
-						<Image
-							// src={'/logos/blue-nomad.png'}
-							src={pathname === '/' ? '/logos/blue-nomad-light.png' : '/logos/blue-nomad.png'}
-							alt='Blue Nomad Logo'
-							width={0}
-							height={0}
-							sizes='100vw'
-							className='w-full h-auto'
-						/>
-					</Link>
-				)}
-			</div>
+					{pathname !== '/blog' && (
+						<Link
+							href='/'
+							className={cn('no-underline', {
+								'block': pathname === '/',
+								'hidden': pathname !== '/'
+							})}
+						>
+							<Image
+								// src={'/logos/blue-nomad.png'}
+								src={pathname === '/' ? '/logos/blue-nomad-light.png' : '/logos/blue-nomad.png'}
+								alt='Blue Nomad Logo'
+								width={0}
+								height={0}
+								sizes='100vw'
+								className='w-full h-auto'
+							/>
+						</Link>
+					)}
+				</div>
+			</Sheet>
 		</header>
 	);
 };

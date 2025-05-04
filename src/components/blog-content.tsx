@@ -134,7 +134,7 @@ export function FilteredBlogContent({ posts }: { posts: Post[] }) {
 			<div className='text-center'>
 				<h1 className='mb-8 uppercase'>Nomad's <span className="italic">L</span>and</h1>
 
-				<div className="flex items-center justify-center my-6 mx-auto space-x-6">
+				<div className="flex flex-col md:flex-row items-center md:justify-center my-6 mx-auto space-x-6">
 					<PostFilter
 						posts={posts}
 						onCategorySelect={setSelectedCategories}
