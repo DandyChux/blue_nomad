@@ -64,7 +64,7 @@ export default function Home() {
 					</p> */}
 					<Button variant={'outline'} className='uppercase self-start rounded-full h-auto py-2 border-primary-foreground text-primary-foreground' size={'lg'}>
 						<Link href='#treatments'>
-							Discover <br /> skin health
+							Discover
 						</Link>
 					</Button>
 				</div>
