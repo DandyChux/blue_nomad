@@ -29,14 +29,20 @@ const sourceCodePro = Source_Code_Pro({
 const harmony = localFont({
 	src: [
 		{
-			path: './fonts/Harmony.woff',
+			path: './fonts/Harmony/Web Fonts/harmony-webfont-webfont.woff2',
 			weight: '400',
 			style: 'normal'
-		}
+		},
+		{
+			path: './fonts/Harmony/Web Fonts/harmony-webfont-webfont.woff',
+			weight: '400',
+			style: 'normal'
+		},
 	],
 	variable: '--font-harmony',
 	display: 'swap',
-	weight: '400 700'
+	weight: '200 900',
+	fallback: ['Arial', 'sans-serif']
 });
 
 export const metadata: Metadata = {
