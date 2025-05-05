@@ -64,7 +64,7 @@ export default function Home() {
 					</p> */}
 					<Button variant={'outline'} className='uppercase self-start rounded-full h-auto py-2 border-primary-foreground text-primary-foreground' size={'lg'}>
 						<Link href='#treatments'>
-							Discover
+							Discover <br /> skin health
 						</Link>
 					</Button>
 				</div>
@@ -128,12 +128,12 @@ export default function Home() {
 							</p>{' '}
 							<p>
 								That are efficacious, cultured, and{' '}
-								<span className='lg:lowercase lg:text-6xl'>g</span>
+								<span className='lowercase lg:text-6xl'>g</span>
 								enuine-each
 							</p>{' '}
 							<p>with an ethos that</p>
 							<p className='pl-[40%] lg:pl-[25%]'>
-								<span className='lg:lowercase lg:text-6xl'>g</span>oes skin
+								<span className='lowercase lg:text-6xl'>g</span>oes skin
 								deep.
 							</p>
 						</blockquote>
@@ -144,12 +144,12 @@ export default function Home() {
 							</p>{' '}
 							<p>
 								That are efficacious, cultured, and{' '}
-								<span className='lg:lowercase lg:text-6xl'>g</span>
+								<span className='lowercase text-xl lg:text-6xl'>g</span>
 								enuine-each with an ethos that
 							</p>{' '}
 							<p></p>
 							<p className='pl-[40%] lg:pl-[25%]'>
-								<span className='lg:lowercase lg:text-6xl'>g</span>oes skin
+								<span className='lowercase text-xl lg:text-6xl'>g</span>oes skin
 								deep.
 							</p>
 						</blockquote>
@@ -179,7 +179,7 @@ export default function Home() {
 				</section>
 
 				{/* Press Section */}
-				<section className='min-h-[unset] items-center px-2 relative py-20 lg:flex-col overflow-hidden flex flex-col md:block'>
+				<section className='min-h-[unset] items-center p-2 relative lg:py-20 lg:flex-col overflow-hidden flex flex-col md:block'>
 					<h1 className='uppercase md:absolute md:left-0 md:top-1/2 md:-translate-y-1/2 md:z-20 text-3xl md:text-4xl font-bold md:flex md:items-center md:h-full pl-4 md:pl-8'>
 						As Seen In
 					</h1>

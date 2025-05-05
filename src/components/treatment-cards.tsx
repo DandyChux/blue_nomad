@@ -174,13 +174,11 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 					src={isHovered ? hoverImage : defaultImage}
 					alt={title}
 					fill
-					sizes='100vw'
-					className={cn('object-cover', {
+					className={cn('object-cover h-full w-full', {
 						'object-[5%_30%]': title === 'Facial ST Membership' && !isHovered,
 						'object-[5%_15%]': title === 'Facial ST 60min' && !isHovered,
 						'object-[5%_25%]': title === 'Facial ST Membership' && isHovered,
 					})}
-					placeholder='empty'
 				/>
 			</CardContent>
 		</Card>

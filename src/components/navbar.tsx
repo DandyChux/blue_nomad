@@ -111,7 +111,7 @@ export const Navbar: React.FC = () => {
 						</ul>
 					</nav>
 				</div>
-				<div className='relative w-[300px] ml-auto flex items-center'>
+				<div className='relative w-[175px] md:w-[300px] ml-auto flex items-center'>
 					<Button variant={'ghost'} className={cn('text-cold-ivory hover:text-white', {
 						'hidden': pathname !== '/blog'
 					})}>

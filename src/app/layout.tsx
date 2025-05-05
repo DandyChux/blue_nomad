@@ -96,7 +96,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
 			<body className={`antialiased relative`}>
 				<Providers>
 					<Navbar />
-					<main className='w-full'>
+					<main className='w-full overflow-hidden'>
 						{children}
 					</main>
 					<BookingButton />
