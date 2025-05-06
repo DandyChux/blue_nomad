@@ -138,7 +138,7 @@ export const Footer: React.FC = () => {
 							/>
 
 							<Button
-								className={cn('rounded-full uppercase mt-4 bg-transparent self-end', {
+								className={cn('rounded-full uppercase mt-4 bg-transparent self-end font-bold', {
 									// 'border-white': pathname === '/blog' || slug !== undefined
 								})}
 								variant={'outline'}

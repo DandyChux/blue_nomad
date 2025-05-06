@@ -176,7 +176,7 @@
 	h1 {
 		font-size: 1.5rem;
 		line-height: 2rem;
-		font-weight: 700;
+		/* font-weight: 700; */
 		letter-spacing: 0.025rem;
 
 		@media screen and (min-width: 768px) {

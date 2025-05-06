@@ -57,7 +57,7 @@ export default function Home() {
 			<section className='p-0 bg-no-repeat xl:bg-cover bg-studio-background text-primary-foreground'>
 				<div className='flex flex-col m-[auto_0] px-8 pt-16 pb-8 gap-8 lg:gap-12 place-self-center'>
 					<p className='uppercase w-full lg:w-[500px] font-normal text-2xl lg:text-4xl'>
-						modern <em>wellness</em> <br /> &nbsp;&nbsp;inspired <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;by worlds <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;near, far, and within
+						modern wellness <br /> &nbsp;&nbsp;inspired <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;by worlds <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;near, far, and within
 					</p>
 					{/* <p className='uppercase text-lg lg:text-xl'>
 						latest release - a private skin health studio in NYC
