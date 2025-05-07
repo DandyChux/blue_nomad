@@ -26,7 +26,7 @@ export const BookingButton = () => {
 				>
 					X
 				</button>
-				<Button className="rounded-full bg-black text-primary-foreground border-2 border-black uppercase hover:bg-transparent hover:text-black" size={'xl'} id='booking-button'>
+				<Button className="rounded-full bg-black text-white border-2 border-black uppercase hover:bg-transparent hover:text-black" size={'xl'} id='booking-button'>
 					<Link
 						href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3ztBc4G6m-dPzcmROs_XNBxtvO8gT4zfTcisQo6nv0_6bJnPXlEsbk9ftmKKzK0TlBnBnNu4GE"
 						target="_blank"

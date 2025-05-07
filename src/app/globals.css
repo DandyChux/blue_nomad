@@ -202,7 +202,7 @@
 	h2 {
 		font-size: 1.125rem;
 		line-height: 1.75rem;
-		font-weight: 600;
+		/* font-weight: 600; */
 		letter-spacing: 0.025rem;
 
 		@media screen and (min-width: 768px) {

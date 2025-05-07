@@ -54,15 +54,15 @@ export default function Home() {
 	return (
 		<>
 			{/* Hero Section */}
-			<section className='p-0 bg-no-repeat xl:bg-cover bg-studio-background text-primary-foreground'>
+			<section className='p-0 bg-no-repeat xl:bg-cover bg-studio-background text-black md:text-primary-foreground'>
 				<div className='flex flex-col m-[auto_0] px-8 pt-16 pb-8 gap-8 lg:gap-12 place-self-center'>
-					<p className='uppercase w-full lg:w-[500px] font-normal text-2xl lg:text-4xl'>
+					<p className='uppercase w-full lg:w-[500px] text-2xl lg:text-4xl'>
 						modern wellness <br /> &nbsp;&nbsp;inspired <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;by worlds <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;near, far, and within
 					</p>
 					{/* <p className='uppercase text-lg lg:text-xl'>
 						latest release - a private skin health studio in NYC
 					</p> */}
-					<Button variant={'outline'} className='uppercase self-start rounded-full h-auto py-2 border-primary-foreground text-primary-foreground' size={'lg'}>
+					<Button variant={'outline'} className='uppercase self-start rounded-full h-auto py-2 md:border-primary-foreground md:text-primary-foreground' size={'lg'}>
 						<Link href='#treatments'>
 							Discover <br /> skin health
 						</Link>
@@ -180,7 +180,7 @@ export default function Home() {
 
 				{/* Press Section */}
 				<section className='min-h-[unset] items-center p-2 relative lg:py-20 lg:flex-col overflow-hidden flex flex-col md:block'>
-					<h1 className='uppercase md:absolute md:left-0 md:top-1/2 md:-translate-y-1/2 md:z-20 text-3xl md:text-4xl font-bold md:flex md:items-center md:h-full pl-4 md:pl-8'>
+					<h1 className='uppercase md:absolute md:left-0 md:top-1/2 md:-translate-y-1/2 md:z-20 text-3xl md:text-4xl md:flex md:items-center md:h-full pl-4 md:pl-8'>
 						As Seen In
 					</h1>
 					<div className='w-full md:ml-[275px] lg:ml-[300px]'>

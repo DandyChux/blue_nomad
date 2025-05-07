@@ -73,7 +73,7 @@ export default function Testimonials() {
 			{/* Desktop Layout */}
 			<div className='relative w-full h-[750px] self-center hidden md:block mt-32'>
 				<div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center'>
-					<h2 className='uppercase text-xl md:text-2xl lg:text-4xl'>
+					<h2 className='font-medium uppercase text-xl md:text-2xl lg:text-4xl'>
 						Earned Love
 					</h2>
 					<p className='text-lg md:text-xl lg:text-2xl'>
@@ -123,7 +123,7 @@ export default function Testimonials() {
 										}}
 									/>
 								</div>
-								<figcaption className='font-semibold uppercase mt-5 font-source-code-pro'>
+								<figcaption className='font-[700] uppercase mt-5 font-source-code-pro'>
 									{testimonial.name}, {testimonial.profession}
 								</figcaption>
 								<figcaption className='font-source-code-pro'>
@@ -138,7 +138,7 @@ export default function Testimonials() {
 			{/* Mobile Layout */}
 			<div className='flex flex-col items-center gap-4 mt-16 md:hidden relative'>
 				<div className='flex flex-col items-center'>
-					<h2 className='uppercase text-xl md:text-2xl lg:text-4xl'>
+					<h2 className='font-medium uppercase text-xl md:text-2xl lg:text-4xl'>
 						Earned Love
 					</h2>
 					<p className='text-lg md:text-xl lg:text-2xl'>
@@ -160,7 +160,7 @@ export default function Testimonials() {
 										}}
 									/>
 								</div>
-								<figcaption className='font-semibold uppercase text-center font-source-code-pro'>
+								<figcaption className='font-[700] uppercase text-center font-source-code-pro'>
 									{testimonial.name}, {testimonial.profession}
 								</figcaption>
 								<figcaption className='text-center font-source-code-pro'>

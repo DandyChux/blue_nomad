@@ -76,7 +76,7 @@ export function PostFilter({ posts, selectedCategories, onCategorySelect }: Post
 					<Badge
 						key={category}
 						variant={selectedCategories.includes(category) ? "default" : "ghost"}
-						className="cursor-pointer uppercase hover:underline"
+						className="cursor-pointer uppercase hover:underline text-sm hover:text-cold-ivory"
 						onClick={() => toggleTag(category)}
 					>
 						{category}

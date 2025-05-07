@@ -23,6 +23,7 @@ const sourceCodePro = Source_Code_Pro({
 	subsets: ['latin'],
 	display: 'swap',
 	variable: '--font-source-code-pro',
+	weight: ['200', '300', '400', '500', '600', '700', '800']
 });
 
 // Load local font
