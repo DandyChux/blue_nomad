@@ -1,13 +1,42 @@
 "use client"
 
-import { useState } from "react"
+import { RefObject, useEffect, useRef, useState } from "react"
 import { PostFilter } from "./post-filter"
 import type { Post } from "~/app/blog/types"
 import { Badge } from "./ui/badge";
 import Link from 'next/link';
 import { Card, CardContent } from "./ui/card";
 import Image from "next/image";
-import { SearchBar } from "./search-bar";
+import { useSearch } from "~/lib/contexts/search-context";
+
+// Custom hook for intersection observer
+function useIntersectionObserver(options = {}) {
+	const [isIntersecting, setIsIntersecting] = useState(false);
+	const elementRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		const observer = new IntersectionObserver(([entry]) => {
+			setIsIntersecting(entry.isIntersecting);
+		}, {
+			threshold: 0.1,
+			rootMargin: '0px 0px -10% 0px',
+			...options
+		});
+
+		const element = elementRef.current;
+		if (element) {
+			observer.observe(element);
+		}
+
+		return () => {
+			if (element) {
+				observer.unobserve(element);
+			}
+		};
+	}, [options]);
+
+	return [elementRef, isIntersecting];
+}
 
 function Posts({ posts }: { posts: Post[] }) {
 	if (posts.length === 0) {
@@ -23,55 +52,46 @@ function Posts({ posts }: { posts: Post[] }) {
 		);
 	}
 
-	// Check if we have enough posts for the featured section
-	const hasFeaturedSection = posts.length >= 5;
-
-	// Split posts into featured and remaining
-	const featuredPosts = hasFeaturedSection ? posts.slice(0, 5) : [];
-	const remainingPosts = hasFeaturedSection ? posts.slice(5) : posts;
+	// Group posts into rows of 2 for desktop view
+	const rows = [];
+	for (let i = 0; i < posts.length; i += 2) {
+		rows.push(posts.slice(i, i + 2));
+	}
 
 	return (
 		<div className="py-16 sm:py-24">
 			<div className="mx-auto px-6 lg:px-8">
-				{hasFeaturedSection && (
-					<div className="mb-16">
-						<div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-							{/* Left column - two stacked posts */}
-							<div className="lg:col-span-3 space-y-6 order-2 lg:order-1">
-								<PostCard post={featuredPosts[1]} />
-								<PostCard post={featuredPosts[2]} />
-							</div>
+				{rows.map((row, rowIndex) => {
+					const [rowRef, isRowVisible] = useIntersectionObserver();
 
-							{/* Middle column - featured post (50% width) */}
-							<div className="lg:col-span-6 flex items-center justify-center order-1 lg:order-2">
-								<div className="w-full max-w-xl transform scale-105">
-									<PostCard post={featuredPosts[0]} isMainPost={true} />
+					return (
+						<div
+							key={`row-${rowIndex}`}
+							ref={rowRef as RefObject<HTMLDivElement>}
+							className={`
+									grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16 mb-16
+									opacity-0 translate-y-8 transition-all duration-700
+									${isRowVisible ? 'opacity-100 translate-y-0' : ''}
+								`}
+							style={{ transitionDelay: `${rowIndex * 200}ms` }}
+						>
+							{row.map((post, index) => (
+								<div
+									key={post.title}
+									className={`${index % 2 === 1 ? 'md:mt-24' : ''}`}
+								>
+									<PostCard post={post} showDescription={(rowIndex * 2 + index) % 4 === 0} />
 								</div>
-							</div>
-
-							{/* Right column - two stacked posts */}
-							<div className="lg:col-span-3 space-y-6 order-3">
-								<PostCard post={featuredPosts[3]} />
-								<PostCard post={featuredPosts[4]} />
-							</div>
+							))}
 						</div>
-					</div>
-				)}
-
-				{/* Regular grid for remaining posts */}
-				{remainingPosts.length > 0 && (
-					<div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-						{remainingPosts.map((post) => (
-							<PostCard key={post.title} post={post} />
-						))}
-					</div>
-				)}
+					);
+				})}
 			</div>
 		</div>
 	);
 }
 
-function PostCard({ post, isMainPost = false }: { post: Post, isMainPost?: boolean }) {
+function PostCard({ post, showDescription = false }: { post: Post, showDescription?: boolean }) {
 	return (
 		<Card className="overflow-hidden transition-transform duration-300 bg-transparent border-none shadow-none rounded-none">
 			<Link href={`/blog/${post.file}`}>
@@ -99,7 +119,7 @@ function PostCard({ post, isMainPost = false }: { post: Post, isMainPost?: boole
 							By {post.author.name}
 						</p>
 					)}
-					{isMainPost && (
+					{showDescription && (
 						<p className="text-base text-cold-ivory group-hover:text-gray-600 mt-2 font-spectral font-normal">
 							{post.description}
 						</p>
@@ -111,23 +131,23 @@ function PostCard({ post, isMainPost = false }: { post: Post, isMainPost?: boole
 }
 
 export function FilteredBlogContent({ posts }: { posts: Post[] }) {
-	const [selectedCategories, setSelectedCategories] = useState<string[]>([])
-	const [searchQuery, setSearchQuery] = useState<string>('')
+	const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+	const { searchQuery } = useSearch();
 
 	// Filter posts based on both category and search query
 	const filteredPosts = posts.filter((post) => {
 		// Check if post matches selected categories (if any are selected)
 		const matchesCategory = selectedCategories.length === 0 ||
-			post.categories.some(category => selectedCategories.includes(category))
+			post.categories.some(category => selectedCategories.includes(category));
 
 		// Check if post matches search query (if there is one)
 		const matchesSearch = !searchQuery ||
 			post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-			post.description.toLowerCase().includes(searchQuery.toLowerCase())
+			post.description.toLowerCase().includes(searchQuery.toLowerCase());
 
 		// Post must match both conditions
-		return matchesCategory && matchesSearch
-	})
+		return matchesCategory && matchesSearch;
+	});
 
 	return (
 		<>
@@ -140,13 +160,11 @@ export function FilteredBlogContent({ posts }: { posts: Post[] }) {
 						onCategorySelect={setSelectedCategories}
 						selectedCategories={selectedCategories}
 					/>
-
-					<SearchBar onSearch={setSearchQuery} />
 				</div>
 			</div>
 			<div className='grid gap-8'>
 				<Posts posts={filteredPosts} />
 			</div>
 		</>
-	)
+	);
 }

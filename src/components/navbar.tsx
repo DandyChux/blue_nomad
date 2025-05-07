@@ -13,6 +13,9 @@ import {
 } from './ui/sheet';
 import { usePathname } from 'next/navigation';
 import { cn } from '~/lib/utils';
+import { useViewport } from '~/lib/useViewport';
+import { SearchBar } from './search-bar';
+import { useSearch } from '~/lib/contexts/search-context';
 
 export type NavItem = {
 	label: string;
@@ -45,21 +48,28 @@ export const navLinks: NavItem[] = [
 
 export const Navbar: React.FC = () => {
 	const pathname = usePathname();
+	const { width } = useViewport();
+	const { setSearchQuery } = useSearch(); // Use our search context
+
+	// Handle search query changes
+	const handleSearch = (query: string) => {
+		setSearchQuery(query);
+	};
 
 	return (
 		<header
 			className={
-				'flex items-center justify-start absolute top-0 w-full bg-transparent p-4 md:p-6'
+				'flex items-center justify-between absolute top-0 w-full bg-transparent p-4 md:p-6'
 			}
 		>
-			<Sheet>
-				<div className='flex items-center group'>
+			<div className='flex items-center group'>
+				<Sheet>
 					<SheetTrigger asChild>
 						<Button variant={'ghost'} className='self-start w-auto h-fit'>
 							<Menu
 								className={cn('!size-6 lg:!size-8 xl:!size-10 text-black', {
-									'text-cold-ivory': pathname === '/blog',
-									'text-primary-foreground': pathname === '/'
+									'md:text-primary-foreground': pathname === '/',
+									'text-primary-foreground': pathname === '/blog'
 								})}
 								strokeWidth={2.5}
 							/>
@@ -84,68 +94,65 @@ export const Navbar: React.FC = () => {
 							))}
 						</nav>
 					</SheetContent>
-					<nav className='hidden group-hover:flex'>
-						<ul
-							className={cn('flex gap-8 *:uppercase text-black', {
-								'text-cold-ivory': pathname === '/blog',
-								'text-primary-foreground': pathname === '/'
-							})}
-						>
-							{navLinks.map((item) => (
-								<li
-									key={item.label}
-									className='motion-safe:hover:underline motion-safe:hover:underline-offset-2 duration-300 ease-in-out'
+				</Sheet>
+				<nav className='hidden group-hover:flex'>
+					<ul
+						className={cn('flex gap-8 *:uppercase text-black', {
+							'text-primary-foreground': pathname === '/' || pathname === '/blog'
+						})}
+					>
+						{navLinks.map((item) => (
+							<li
+								key={item.label}
+								className='motion-safe:hover:underline motion-safe:hover:underline-offset-2 duration-300 ease-in-out'
+							>
+								<Link
+									href={item.href}
+									className={cn('font-semibold text-lg font-source-code-pro no-underline', {
+										'text-primary-foreground': pathname === '/blog'
+									})}
+									rel='nofollow noopener noreferrer'
+									target={item.href.includes('squareup') ? '_blank' : undefined}
 								>
-									<Link
-										href={item.href}
-										className={cn('font-semibold text-lg font-source-code-pro no-underline', {
-											'text-cold-ivory': pathname === '/blog'
-										})}
-										rel='nofollow noopener noreferrer'
-										target={item.href.includes('squareup') ? '_blank' : undefined}
-									>
-										{item.label}
-									</Link>
-								</li>
-							))}
-						</ul>
-					</nav>
-				</div>
-				<div className='relative w-[175px] md:w-[300px] ml-auto flex items-center'>
-					<Button variant={'ghost'} className={cn('text-cold-ivory hover:text-white', {
-						'hidden': pathname !== '/blog'
-					})}>
-						Get Our Newsletter
-					</Button>
-					{/* <Image
-					src='/logos/blue-nomad.png'
-					alt='hero'
-					width={0}
-					height={0}
-					sizes='100vw'
-					className='w-full h-auto'
-				/> */}
-					{pathname !== '/blog' && (
-						<Link
-							href='/'
-							className={cn('no-underline', {
-								'block': pathname === '/',
-								'hidden': pathname !== '/'
-							})}
-						>
-							<Image
-								// src={'/logos/blue-nomad.png'}
-								src={pathname === '/' ? '/logos/blue-nomad-light.png' : '/logos/blue-nomad.png'}
-								alt='Blue Nomad Logo'
-								width={0}
-								height={0}
-								sizes='100vw'
-								className='w-full h-auto'
-							/>
-						</Link>
-					)}
-				</div>
-			</Sheet>
+									{item.label}
+								</Link>
+							</li>
+						))}
+					</ul>
+				</nav>
+			</div>
+
+			<div className='flex max-w-[500px] w-auto items-center justify-end'>
+				<Button variant={'ghost'} className={'hidden sm:inline-flex text-primary-foreground hover:text-white hover:bg-black rounded-full hover:cursor-pointer'}>
+					Get Our Newsletter
+				</Button>
+				{pathname === '/blog' && (
+					<>
+						<div className="flex items-center mr-2">
+							<SearchBar onSearch={handleSearch} />
+						</div>
+					</>
+				)}
+				{pathname !== '/blog' && (
+					<Link
+						href='/'
+						className={cn('no-underline', {
+							'block': pathname === '/',
+							'hidden': pathname !== '/'
+						})}
+					>
+						<Image
+							src={pathname === '/' ? (width < 468 ? '/logos/blue-nomad.png' : '/logos/blue-nomad-light.png') : '/logos/blue-nomad.png'}
+							alt='Blue Nomad Logo'
+							width={0}
+							height={0}
+							sizes='100vw'
+							className='w-full h-auto'
+						/>
+					</Link>
+				)}
+			</div>
 		</header>
 	);
+
 };

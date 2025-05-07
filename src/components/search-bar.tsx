@@ -5,6 +5,7 @@ import { Input } from "~/components/ui/input"
 import { Button } from "~/components/ui/button"
 import { Search } from "lucide-react"
 import { cn } from "~/lib/utils"
+import { usePathname } from "next/navigation"
 
 interface SearchBarProps {
 	onSearch: (query: string) => void
@@ -36,26 +37,29 @@ export function SearchBar({ onSearch }: SearchBarProps) {
 	return (
 		<form onSubmit={handleSubmit} className="flex items-center">
 			<div className="relative flex items-center">
-				<div className={`overflow-hidden transition-all duration-300 ${isExpanded ? "w-64" : "w-0"}`}>
-					<Input
-						id="search-input"
-						type="text"
-						placeholder="Search posts..."
-						value={searchQuery}
-						onChange={handleInputChange}
-						className="w-full"
-					/>
-				</div>
+				{/* Search button first, then input - this helps with the left expansion */}
 				<Button
 					type="button"
 					variant="ghost"
 					onClick={toggleSearch}
-					className={cn("hover:cursor-pointer", {
-						'ml-2': isExpanded
-					})}
+					className="hover:cursor-pointer"
 				>
-					<Search className="h-4 w-4" />
+					<Search className={cn("h-4 w-4", {
+						"text-white": usePathname() === '/blog'
+					})} />
 				</Button>
+				<div className={`absolute right-full overflow-hidden transition-all duration-300 ${isExpanded ? "w-28 sm:w-40 md:w-56 pr-2" : "w-0"}`}>
+					<Input
+						id="search-input"
+						type="text"
+						placeholder="Search..."
+						value={searchQuery}
+						onChange={handleInputChange}
+						className={cn("w-full", {
+							'border-white text-white': usePathname() === '/blog'
+						})}
+					/>
+				</div>
 			</div>
 		</form>
 	)
