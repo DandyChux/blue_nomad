@@ -12,6 +12,8 @@ import { NavItem, navLinks } from './navbar';
 import { Button } from './ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from './ui/form';
 import { Input } from './ui/input';
+import { usePathname, useParams } from 'next/navigation';
+import { cn } from '~/lib/utils';
 
 const contactSchema = z.object({
 	email: z.string().email('Invalid email'),
@@ -33,6 +35,8 @@ const accessoryLinks: NavItem[] = [
 ];
 
 export const Footer: React.FC = () => {
+	const pathname = usePathname();
+	const { slug } = useParams();
 	const year = new Date().getFullYear();
 	const form = useForm<z.infer<typeof contactSchema>>({
 		resolver: zodResolver(contactSchema),
@@ -58,16 +62,18 @@ export const Footer: React.FC = () => {
 	}
 
 	return (
-		<footer className='flex flex-col px-2 bg-footer-gradient bg-cover bg-no-repeat bg-top lg:bg-center space-y-6'>
+		<footer className={cn('flex flex-col px-2 bg-footer-gradient bg-cover bg-no-repeat bg-top lg:bg-center space-y-6', {
+			// 'bg-card text-white border-t border-white': pathname === '/blog' || slug !== undefined,
+		})}>
 			<div className='flex flex-col lg:flex-row space-y-14 lg:space-y-0 px-8 md:px-12 lg:px-20 py-4 md:py-8 lg:py-16'>
 				<div className='flex-1 flex flex-col space-y-4'>
 					<h2 className='uppercase text-xl'>Our Studio</h2>
-					<address className='uppercase not-italic font-semibold font-source-code-pro'>
+					<address className='uppercase not-italic font-bold font-source-code-pro'>
 						Blue Nomad <br />
 						1123 Broadway, #1014 <br />
 						New York, NY 10010
 					</address>
-					<p className='uppercase font-semibold font-source-code-pro'>
+					<p className='uppercase font-bold font-source-code-pro'>
 						Mon-Sat 11AM to 8PM
 					</p>
 				</div>
@@ -78,7 +84,7 @@ export const Footer: React.FC = () => {
 							<Link
 								key={link.label}
 								href={link.href}
-								className='uppercase font-semibold text-xl'
+								className='uppercase text-lg md:text-xl font-bold'
 								target={link.href.includes('squareup') ? '_blank' : undefined}
 								rel='noopener noreferrer nofollow'
 							>
@@ -120,7 +126,9 @@ export const Footer: React.FC = () => {
 										<FormControl>
 											<Input
 												placeholder='E-MAIL'
-												className='placeholder:font-semibold placeholder:text-black placeholder:opacity-85 shadow-none border-t-0 border-l-0 border-r-0 rounded-none'
+												className={cn('placeholder:font-semibold placeholder:text-black placeholder:opacity-85 shadow-none border-t-0 border-l-0 border-r-0 rounded-none', {
+													// 'border-white placeholder:text-white': pathname === '/blog' || slug !== undefined
+												})}
 												{...field}
 											/>
 										</FormControl>
@@ -130,7 +138,9 @@ export const Footer: React.FC = () => {
 							/>
 
 							<Button
-								className='rounded-full uppercase mt-4 bg-transparent self-end'
+								className={cn('rounded-full uppercase mt-4 bg-transparent self-end font-bold', {
+									// 'border-white': pathname === '/blog' || slug !== undefined
+								})}
 								variant={'outline'}
 								size={'xl'}
 								disabled={isSubmitting}
@@ -145,7 +155,7 @@ export const Footer: React.FC = () => {
 			<div className='mt-auto flex flex-col w-full px-8 md:px-12 lg:px-20'>
 				<h2 className='uppercase text-xl'>Contact Us</h2>
 				<div className='flex flex-col md:flex-row gap-10'>
-					<span className='uppercase font-source-code-pro font-semibold text-lg'>
+					<span className='uppercase font-source-code-pro font-bold text-lg'>
 						646-566-1183 / hello@bluenomad.nyc
 					</span>
 
@@ -162,7 +172,7 @@ export const Footer: React.FC = () => {
 							href='https://www.instagram.com/bluenomadworld'
 							target='_blank'
 							rel='noopener noreferrer nofollow'
-							className='font-semibold uppercase font-source-code-pro'
+							className='font-bold uppercase font-source-code-pro'
 						>
 							Instagram
 						</Link>
@@ -170,7 +180,7 @@ export const Footer: React.FC = () => {
 							href='https://www.tiktok.com/@bluenomadworld?_t=8sLa1tyGeW6&_r=1'
 							target='_blank'
 							rel='noopener noreferrer nofollow'
-							className='font-semibold uppercase font-source-code-pro'
+							className='font-bold uppercase font-source-code-pro'
 						>
 							TikTok
 						</Link>
@@ -182,6 +192,7 @@ export const Footer: React.FC = () => {
 				<div className='relative w-full md:w-[60%]'>
 					<Link href='/'>
 						<Image
+							// src={(pathname === '/blog' || slug !== undefined) ? '/logos/blue-nomad-white.png' : '/logos/blue-nomad.png'}
 							src='/logos/blue-nomad.png'
 							alt='Blue Nomad Logo'
 							width={0}

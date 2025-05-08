@@ -1,13 +1,21 @@
+"use client"
+
 import { MenuIcon as Menu } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
+import Image from 'next/image';
 import { Button } from './ui/button';
 import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from './ui/dropdown-menu';
+	Sheet,
+	SheetContent,
+	SheetTrigger,
+	SheetTitle,
+} from './ui/sheet';
+import { usePathname } from 'next/navigation';
+import { cn } from '~/lib/utils';
+import { useViewport } from '~/lib/useViewport';
+import { SearchBar } from './search-bar';
+import { useSearch } from '~/lib/contexts/search-context';
 
 export type NavItem = {
 	label: string;
@@ -26,63 +34,73 @@ export const navLinks: NavItem[] = [
 	{
 		label: 'Book a Treatment',
 		href: 'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start',
+		// href: '/booking'
 	},
 	{
 		label: 'Gift Card',
 		href: 'https://app.squareup.com/gift/ML665NPQYDHTJ/order',
 	},
+	// {
+	// 	label: "Nomad's Land",
+	// 	href: '/blog',
+	// },
 ];
 
 export const Navbar: React.FC = () => {
+	const pathname = usePathname();
+	const { width } = useViewport();
+	const { setSearchQuery } = useSearch(); // Use our search context
+
+	// Handle search query changes
+	const handleSearch = (query: string) => {
+		setSearchQuery(query);
+	};
+
 	return (
 		<header
 			className={
-				'flex items-center justify-start absolute top-0 w-full bg-transparent p-4 md:p-6'
+				'flex items-center justify-between absolute top-0 w-full bg-transparent p-4 md:p-6'
 			}
 		>
 			<div className='flex items-center group'>
-				{/* <Link
-					href='/'
-					className='relative w-[200px] lg:mr-8 motion-safe:hover:scale-105 no-underline'
-				>
-					<Image
-						src='/logos/blue-nomad.png'
-						alt='Blue Nomad Logo'
-						width={0}
-						height={0}
-						sizes='100vw'
-						className='w-auto h-auto'
-					/>
-				</Link> */}
-				<DropdownMenu>
-					<DropdownMenuTrigger asChild>
-						<Button variant={'ghost'} className='self-start w-auto h-fit peer'>
+				<Sheet>
+					<SheetTrigger asChild>
+						<Button variant={'ghost'} className='self-start w-auto h-fit'>
 							<Menu
-								className='!size-6 lg:!size-8 xl:!size-10'
+								className={cn('!size-6 lg:!size-8 xl:!size-10 text-black', {
+									'md:text-primary-foreground': pathname === '/',
+									'text-primary-foreground': pathname === '/blog'
+								})}
 								strokeWidth={2.5}
 							/>
 						</Button>
-					</DropdownMenuTrigger>
-					<DropdownMenuContent
-						sideOffset={4}
-						className='md:hidden shadow-none bg-black text-white border-none'
+					</SheetTrigger>
+					<SheetContent
+						side="left"
+						className='md:hidden shadow-none bg-black text-white border-none pl-4'
 					>
-						{navLinks.map((item) => (
-							<DropdownMenuItem key={item.label} asChild>
+						<SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+						<nav className="flex flex-col gap-4 mt-8">
+							{navLinks.map((item) => (
 								<Link
+									key={item.label}
 									href={item.href}
 									rel='nofollow noopener noreferrer'
 									target={item.href.includes('squareup') ? '_blank' : undefined}
-									className='font-source-code-pro uppercase'
+									className='font-source-code-pro uppercase text-lg'
 								>
 									{item.label}
 								</Link>
-							</DropdownMenuItem>
-						))}
-					</DropdownMenuContent>
-				</DropdownMenu>
+							))}
+						</nav>
+					</SheetContent>
+				</Sheet>
 				<nav className='hidden group-hover:flex'>
-					<ul className='flex gap-8 *:uppercase'>
+					<ul
+						className={cn('flex gap-8 *:uppercase text-black', {
+							'text-primary-foreground': pathname === '/' || pathname === '/blog'
+						})}
+					>
 						{navLinks.map((item) => (
 							<li
 								key={item.label}
@@ -90,7 +108,9 @@ export const Navbar: React.FC = () => {
 							>
 								<Link
 									href={item.href}
-									className='font-semibold text-lg font-source-code-pro no-underline'
+									className={cn('font-semibold text-lg font-source-code-pro no-underline', {
+										'text-primary-foreground': pathname === '/blog'
+									})}
 									rel='nofollow noopener noreferrer'
 									target={item.href.includes('squareup') ? '_blank' : undefined}
 								>
@@ -101,6 +121,38 @@ export const Navbar: React.FC = () => {
 					</ul>
 				</nav>
 			</div>
+
+			<div className='flex max-w-[500px] w-auto items-center justify-end'>
+				<Button variant={'ghost'} className={'hidden sm:inline-flex text-primary-foreground hover:text-white hover:bg-black rounded-full hover:cursor-pointer'}>
+					Get Our Newsletter
+				</Button>
+				{pathname === '/blog' && (
+					<>
+						<div className="flex items-center mr-2">
+							<SearchBar onSearch={handleSearch} />
+						</div>
+					</>
+				)}
+				{pathname !== '/blog' && (
+					<Link
+						href='/'
+						className={cn('no-underline', {
+							'block': pathname === '/',
+							'hidden': pathname !== '/'
+						})}
+					>
+						<Image
+							src={pathname === '/' ? (width < 468 ? '/logos/blue-nomad.png' : '/logos/blue-nomad-light.png') : '/logos/blue-nomad.png'}
+							alt='Blue Nomad Logo'
+							width={0}
+							height={0}
+							sizes='100vw'
+							className='w-full h-auto'
+						/>
+					</Link>
+				)}
+			</div>
 		</header>
 	);
+
 };

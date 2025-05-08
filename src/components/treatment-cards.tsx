@@ -3,12 +3,12 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState } from 'react';
-import TreatmentShot2 from '~/assets/treatment-section/Artboard 2-1.png';
-import TreatmentShot3 from '~/assets/treatment-section/Artboard 2-2.png';
-import TreatmentShot1 from '~/assets/treatment-section/Artboard 2.png';
-import HoverShot1 from '~/assets/treatment-section/Artboard 3.png';
-import HoverShot2 from '~/assets/treatment-section/Artboard 4.png';
-import HoverShot3 from '~/assets/treatment-section/Artboard 5.png';
+import JohannaShot1 from '~/assets/Look 1 519.jpg';
+import MelShot1 from '~/assets/treatment-section/Artboard 2.png';
+import MelShot2 from '~/assets/treatment-section/Artboard 3.png';
+import EgoShot1 from '~/assets/Look 5 306.jpg';
+import EgoShot2 from '~/assets/Look 5 185_edited.jpg';
+import JohannaShot2 from '~/assets/Look 1 435.jpg';
 import { cn } from '~/lib/utils';
 import { Button } from './ui/button';
 import {
@@ -38,19 +38,19 @@ const treatments: TreatmentProps[] = [
 	{
 		title: 'Facial ST 60min',
 		description:
-			'Face-to-Neck skin therapy combining advanced technology with traditional massage techniques for optimal skin health. From acne care to well-aging, each treatment is customized to your needs.',
+			'Facial skin therapy combining advanced technology with traditional massage techniques for optimal skin health. From acne care to well-aging, each treatment is customized to your needs.',
 		price: 235,
-		defaultImage: TreatmentShot3.src,
-		hoverImage: HoverShot3.src,
+		defaultImage: JohannaShot1.src,
+		hoverImage: JohannaShot2.src,
 		link: 'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start',
 	},
 	{
-		title: 'Refresh Peel 45min',
+		title: 'AcuTherapy 50min',
 		description:
-			"A customized blend of acids and vitamins that transforms texture and tone while protecting your skin's barrier and revealing its natural luminosity. Most beneficial during colder months.",
-		price: 225,
-		defaultImage: HoverShot1.src,
-		hoverImage: TreatmentShot1.src,
+			"*Coming Soon* Precision acupuncture to promote relaxation, reduce tension, optimize skin health and total body well-being. Fine needles help alleviate discomfort and encourage the body's natural healing.",
+		price: 195,
+		defaultImage: MelShot2.src,
+		hoverImage: MelShot1.src,
 		link: 'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start',
 		// membersOnly: true,
 	},
@@ -59,8 +59,8 @@ const treatments: TreatmentProps[] = [
 		description:
 			'Experience our signature 60min facial skin therapy monthly, with exclusive access to on-demand skin health guidance.',
 		price: 185,
-		defaultImage: TreatmentShot2.src,
-		hoverImage: HoverShot2.src,
+		defaultImage: EgoShot1.src,
+		hoverImage: EgoShot2.src,
 		membersOnly: true,
 		link: 'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start',
 	},
@@ -122,7 +122,7 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 				'relative group rounded-none p-4 border-none flex flex-col',
 				{
 					'bg-secondary text-secondary-foreground': index % 2 === 0,
-					'text-white': index % 2 !== 0,
+					'text-primary-foreground': index % 2 !== 0,
 				},
 				className
 			)}
@@ -151,7 +151,7 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 				</CardTitle>
 				<CardDescription
 					className={cn(
-						'text-inherit uppercase font-source-code-pro font-semibold',
+						'text-inherit uppercase font-source-code-pro font-bold',
 						{
 							'order-1': index % 2 !== 0,
 							'order-2': index % 2 === 0,
@@ -165,7 +165,7 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 				</CardDescription>
 			</CardHeader>
 			<CardContent
-				className={cn('p-0 flex-1', {
+				className={cn('p-0 flex-1 relative w-full aspect-[4/3]', {
 					'order-1': index % 2 !== 0,
 					'order-2': index % 2 === 0,
 				})}
@@ -173,11 +173,12 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 				<Image
 					src={isHovered ? hoverImage : defaultImage}
 					alt={title}
-					width={550}
-					height={450}
-					sizes='100vw'
-					className='w-full h-full object-cover'
-					placeholder='empty'
+					fill
+					className={cn('object-cover h-full w-full', {
+						'object-[5%_30%]': title === 'Facial ST Membership' && !isHovered,
+						'object-[5%_15%]': title === 'Facial ST 60min' && !isHovered,
+						'object-[5%_25%]': title === 'Facial ST Membership' && isHovered,
+					})}
 				/>
 			</CardContent>
 		</Card>

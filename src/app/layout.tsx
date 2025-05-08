@@ -1,38 +1,49 @@
 import { GoogleAnalytics } from '@next/third-parties/google';
 import type { Metadata, Viewport } from 'next';
-import { David_Libre, Source_Code_Pro } from 'next/font/google';
-import localFont from 'next/font/local';
 import { PropsWithChildren } from 'react';
 import { Toaster } from 'sonner';
 import { Footer } from '~/components/footer';
 import { Navbar } from '~/components/navbar';
 import { Providers } from '~/components/providers';
+import { BookingButton } from '~/components/booking-button';
+import localFont from 'next/font/local'
+import { Spectral, Source_Code_Pro } from 'next/font/google'
+
 import './globals.css';
 
-export const david_libre = David_Libre({
+// Load Google fonts
+const spectral = Spectral({
 	subsets: ['latin'],
 	display: 'swap',
-	weight: ['400', '500', '700'],
-	variable: '--font-david-libre',
+	variable: '--font-spectral',
+	weight: ['200', '300', '400', '500', '600', '700', '800'],
 });
 
-export const source_code_pro = Source_Code_Pro({
+const sourceCodePro = Source_Code_Pro({
 	subsets: ['latin'],
 	display: 'swap',
-	weight: ['400', '500', '700'],
 	variable: '--font-source-code-pro',
+	weight: ['200', '300', '400', '500', '600', '700', '800']
 });
 
-export const harmony = localFont({
+// Load local font
+const harmony = localFont({
 	src: [
 		{
-			path: './fonts/Harmony.woff',
+			path: './fonts/Harmony/Web Fonts/harmony-webfont-webfont.woff2',
 			weight: '400',
-			style: 'normal',
+			style: 'normal'
+		},
+		{
+			path: './fonts/Harmony/Web Fonts/harmony-webfont-webfont.woff',
+			weight: '400',
+			style: 'normal'
 		},
 	],
 	variable: '--font-harmony',
-	weight: '400 700',
+	display: 'swap',
+	weight: '200 900',
+	fallback: ['Arial', 'sans-serif']
 });
 
 export const metadata: Metadata = {
@@ -82,20 +93,21 @@ export const viewport: Viewport = {
 	userScalable: false,
 };
 
-export default function RootLayout({ children }: PropsWithChildren) {
+export default async function RootLayout({ children }: PropsWithChildren) {
 	return (
 		<html
 			lang='en'
 			suppressHydrationWarning
-			className={`${david_libre.variable} ${source_code_pro.variable} ${harmony.variable}`}
+			className={`${spectral.variable} ${sourceCodePro.variable} ${harmony.variable}`}
 		>
 			<body className={`antialiased relative`}>
 				<Providers>
 					<Navbar />
-					<main className='w-full'>
+					<main className='w-full overflow-hidden'>
 						{children}
-						<Footer />
 					</main>
+					<BookingButton />
+					<Footer />
 				</Providers>
 				<Toaster
 					richColors
@@ -104,8 +116,11 @@ export default function RootLayout({ children }: PropsWithChildren) {
 					theme='system'
 					position='top-center'
 				/>
+				<GoogleAnalytics gaId={process.env.GOOGLE_MEASUREMENT_ID!} />
 			</body>
-			<GoogleAnalytics gaId={process.env.GOOGLE_MEASUREMENT_ID!} />
 		</html>
 	);
 }
+
+// Embed code for Square:
+// <!-- Start Square Appointments Embed Code --><script src='https://square.site/appointments/buyer/widget/augj56g525h4rw/LSP68REJT9SVH.js'></script><!-- End Square Appointments Embed Code -->

@@ -24,10 +24,10 @@ const surroundingLogos: LogoProps[] = [
 		src: '/logos/woods-copenhagen.png',
 		alt: 'Woods Copenhagen',
 	},
-	{
-		src: '/logos/omorovicza.png',
-		alt: 'Omorovicza',
-	},
+	// {
+	// 	src: '/logos/omorovicza.png',
+	// 	alt: 'Omorovicza',
+	// },
 	{
 		src: '/logos/amolin.png',
 		alt: 'Amolin',
