@@ -48,7 +48,7 @@ const treatments: TreatmentProps[] = [
 		title: 'AcuTherapy 50min',
 		description:
 			"*Coming Soon* Precision acupuncture to promote relaxation, reduce tension, optimize skin health and total body well-being. Fine needles help alleviate discomfort and encourage the body's natural healing.",
-		price: 195,
+		price: 225,
 		defaultImage: MelShot2.src,
 		hoverImage: MelShot1.src,
 		link: 'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start',

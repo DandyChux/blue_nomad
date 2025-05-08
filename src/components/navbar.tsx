@@ -122,15 +122,15 @@ export const Navbar: React.FC = () => {
 				</nav>
 			</div>
 
-			<div className='flex max-w-[500px] w-auto items-center justify-end'>
-				<Button variant={'ghost'} className={'hidden sm:inline-flex text-primary-foreground hover:text-white hover:bg-black rounded-full hover:cursor-pointer'}>
-					Get Our Newsletter
-				</Button>
+			<div className='flex max-w-[500px] sm:w-auto w-[200px] items-center justify-end'>
 				{pathname === '/blog' && (
 					<>
 						<div className="flex items-center mr-2">
 							<SearchBar onSearch={handleSearch} />
 						</div>
+						<Button variant={'ghost'} className={'hidden sm:inline-flex text-primary-foreground hover:text-white hover:bg-black rounded-full hover:cursor-pointer'}>
+							Get Our Newsletter
+						</Button>
 					</>
 				)}
 				{pathname !== '/blog' && (
