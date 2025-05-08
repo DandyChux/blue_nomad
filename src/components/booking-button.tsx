@@ -28,7 +28,7 @@ export const BookingButton = () => {
 				</button>
 				<Button className="rounded-full bg-black text-white border-2 border-black uppercase hover:bg-transparent hover:text-black" size={'xl'} id='booking-button'>
 					<Link
-						href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3ztBc4G6m-dPzcmROs_XNBxtvO8gT4zfTcisQo6nv0_6bJnPXlEsbk9ftmKKzK0TlBnBnNu4GE"
+						href="https://book.squareup.com/appointments/augj56g525h4rw/location/LSP68REJT9SVH/services"
 						target="_blank"
 						rel="noopener noreferrer"
 						className='no-underline'

@@ -40,10 +40,10 @@ export const navLinks: NavItem[] = [
 		label: 'Gift Card',
 		href: 'https://app.squareup.com/gift/ML665NPQYDHTJ/order',
 	},
-	{
-		label: "Nomad's Land",
-		href: '/blog',
-	},
+	// {
+	// 	label: "Nomad's Land",
+	// 	href: '/blog',
+	// },
 ];
 
 export const Navbar: React.FC = () => {
