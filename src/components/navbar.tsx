@@ -122,7 +122,7 @@ export const Navbar: React.FC = () => {
 				</nav>
 			</div>
 
-			<div className='flex max-w-[500px] sm:w-auto w-[200px] items-center justify-end'>
+			<div className='flex max-w-[500px] w-auto items-center justify-end'>
 				{pathname === '/blog' && (
 					<>
 						<div className="flex items-center mr-2">
@@ -147,7 +147,7 @@ export const Navbar: React.FC = () => {
 							width={0}
 							height={0}
 							sizes='100vw'
-							className='w-full h-auto'
+							className='w-full h-auto sm:max-w-[300px]'
 						/>
 					</Link>
 				)}
