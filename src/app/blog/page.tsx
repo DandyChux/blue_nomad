@@ -1,15 +1,7 @@
-import Link from 'next/link';
-import { client } from '~/sanity/lib/client';
 import type { Post, SanityCategory, SanitySlug } from './types';
 import { postPathsQuery, postsQuery } from '~/sanity/lib/queries';
 import { sanityFetch } from '~/sanity/lib/fetch';
-import { Card, CardContent } from '~/components/ui/card';
-import Image from 'next/image';
-import { Badge } from '~/components/ui/badge';
-import { PostFilter } from '~/components/post-filter';
 import { FilteredBlogContent } from '~/components/blog-content';
-
-
 
 type SanityPost = {
 	title: string;
@@ -24,14 +16,22 @@ type SanityPost = {
 			_type: 'reference'
 		}
 	} | null;
-	imageURL: string | null;
-	authorName: string;
+	imageUrl: string | null;
+	author: {
+		name: string;
+		bio: string | null;
+		image: string | null;
+		slug: string | null;
+	} | null,
 	_createdAt: string;
 };
 
 
 export default async function BlogPage() {
-	const posts = await sanityFetch<SanityPost[]>({ query: postsQuery })
+	const posts = await sanityFetch<SanityPost[]>({
+		query: postsQuery,
+		tags: ['blog', 'posts']
+	})
 
 	const formattedPosts: Post[] = posts.map((post) => ({
 		title: post.title,
@@ -40,12 +40,12 @@ export default async function BlogPage() {
 		date: new Date(post._createdAt).toLocaleDateString(),
 		datetime: post._createdAt,
 		author: {
-			name: post.authorName,
+			name: post.author?.name ?? "Blue Nomad",
 			role: "Founder",
 			href: "#",
 			imageUrl: "/images/blog/elie-profile.jpg",
 		},
-		imageUrl: post.imageURL ?? "/studio_background.jpg",
+		imageUrl: post.imageUrl ?? "/studio_background.jpg",
 		categories: post.categories.map(category => category.title)
 	}))
 

@@ -23,7 +23,7 @@ const nextConfig: NextConfig = {
 	headers: async () => {
 		return [
 			{
-				source: '/(.*)', // Match all pages
+				source: '/((?!blog).*)', // Match all pages EXCEPT '/blog'
 				headers: [
 					{
 						key: "Cache-Control",

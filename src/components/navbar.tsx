@@ -40,10 +40,10 @@ export const navLinks: NavItem[] = [
 		label: 'Gift Card',
 		href: 'https://app.squareup.com/gift/ML665NPQYDHTJ/order',
 	},
-	// {
-	// 	label: "Nomad's Land",
-	// 	href: '/blog',
-	// },
+	{
+		label: "Nomad's Land",
+		href: '/blog',
+	},
 ];
 
 export const Navbar: React.FC = () => {
@@ -129,7 +129,9 @@ export const Navbar: React.FC = () => {
 							<SearchBar onSearch={handleSearch} />
 						</div>
 						<Button variant={'ghost'} className={'hidden sm:inline-flex text-primary-foreground hover:text-white hover:bg-black rounded-full hover:cursor-pointer'}>
-							Get Our Newsletter
+							<Link href="https://substack.com/@bluenomadworld" target='_blank' rel='noopener noreferrer' className='no-underline'>
+								Get Our Newsletter
+							</Link>
 						</Button>
 					</>
 				)}

@@ -13,7 +13,18 @@ export const postsQuery = groq`*[_type == "post"] {
 		description,
 	},
 	"imageUrl": mainImage.asset->url,
-	"authorName": author->name,
+	"author": author->{
+		name,
+		image->{
+			...,
+			metadata
+		},
+		bio,
+		slug->{
+			...,
+			metadata
+		}
+	}
 }`;
 
 // Get a single post by slug

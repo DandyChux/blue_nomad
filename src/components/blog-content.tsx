@@ -10,6 +10,31 @@ import Image from "next/image";
 import { useSearch } from "~/lib/contexts/search-context";
 import { useIntersectionObserver } from "~/lib/useIntersectionObserver";
 
+function PostRow({ row, rowIndex }: { row: Post[], rowIndex: number }) {
+	const [rowRef, isRowVisible] = useIntersectionObserver();
+
+	return (
+		<div
+			ref={rowRef as RefObject<HTMLDivElement>}
+			className={`
+        grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16 mb-16
+        opacity-0 translate-y-8 transition-all duration-[1500ms] ease-in-out
+        ${isRowVisible ? 'opacity-100 translate-y-0' : ''}
+      `}
+			style={{ transitionDelay: `${rowIndex * 200}ms` }}
+		>
+			{row.map((post, index) => (
+				<div
+					key={post.title}
+					className={`${index % 2 === 1 ? 'md:mt-24' : ''}`}
+				>
+					<PostCard post={post} showDescription={(rowIndex * 2 + index) % 4 === 0} />
+				</div>
+			))}
+		</div>
+	);
+}
+
 function Posts({ posts }: { posts: Post[] }) {
 	if (posts.length === 0) {
 		return (
@@ -33,31 +58,9 @@ function Posts({ posts }: { posts: Post[] }) {
 	return (
 		<div className="py-16 sm:py-24">
 			<div className="mx-auto px-6 lg:px-8">
-				{rows.map((row, rowIndex) => {
-					const [rowRef, isRowVisible] = useIntersectionObserver();
-
-					return (
-						<div
-							key={`row-${rowIndex}`}
-							ref={rowRef as RefObject<HTMLDivElement>}
-							className={`
-									grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16 mb-16
-									opacity-0 translate-y-8 transition-all duration-[1500ms] ease-in-out
-									${isRowVisible ? 'opacity-100 translate-y-0' : ''}
-								`}
-							style={{ transitionDelay: `${rowIndex * 200}ms` }}
-						>
-							{row.map((post, index) => (
-								<div
-									key={post.title}
-									className={`${index % 2 === 1 ? 'md:mt-24' : ''}`}
-								>
-									<PostCard post={post} showDescription={(rowIndex * 2 + index) % 4 === 0} />
-								</div>
-							))}
-						</div>
-					);
-				})}
+				{rows.map((row, rowIndex) => (
+					<PostRow key={`row-${rowIndex}`} row={row} rowIndex={rowIndex} />
+				))}
 			</div>
 		</div>
 	);

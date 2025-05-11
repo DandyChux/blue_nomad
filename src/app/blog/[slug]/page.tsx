@@ -10,6 +10,7 @@ import { postPathsQuery, postQuery, postsQuery } from '~/sanity/lib/queries';
 import type { FormattedPost as PostType } from '../types';
 import imageUrlBuilder from '@sanity/image-url'
 import { ShareLinks } from '~/components/share-links';
+import { Separator } from '~/components/ui/separator';
 
 export const revalidate = 60; // Revalidate every minute
 
@@ -19,7 +20,6 @@ interface PageProps {
 
 export async function generateStaticParams() {
 	const posts = await client.fetch(postPathsQuery)
-	console.log(posts)
 
 	return posts
 }
@@ -59,7 +59,6 @@ export async function generateMetadata(props: PageProps, parent: ResolvingMetada
 
 export default async function PostPage({ params }: PageProps) {
 	const post = await sanityFetch<PostType>({ query: postQuery, params })
-	console.log(post)
 
 	if (!post) {
 		notFound();
@@ -105,10 +104,47 @@ export default async function PostPage({ params }: PageProps) {
 									width={800}
 									height={400}
 									alt={value.alt || ' '}
-									className='rounded-lg my-8'
+									className='rounded-lg my-8 mx-auto'
 								/>
 							),
 						},
+						block: {
+							normal: ({ children }) => {
+								return <p className="mb-4">{children}</p>
+							},
+							h1: ({ children }) => {
+								return <h1 className="mb-4 font-extrabold">{children}</h1>
+							},
+							h2: ({ children }) => {
+								return <h2 className="mb-4 font-extrabold">{children}</h2>
+							},
+							h3: ({ children }) => {
+								return <h3 className="mb-4 font-extrabold">{children}</h3>
+							},
+							h4: ({ children }) => {
+								return <h4 className="mb-4 font-extrabold">{children}</h4>
+							},
+							h5: ({ children }) => {
+								return <h5 className="mb-4 font-extrabold">{children}</h5>
+							},
+							h6: ({ children }) => {
+								return <h6 className="mb-4 font-extrabold">{children}</h6>
+							},
+						},
+						list: {
+							ordered: ({ children }) => {
+								return <ol className="mb-6">{children}</ol>
+							},
+							unordered: ({ children }) => {
+								return <ul className="mb-6">{children}</ul>
+							}
+						},
+						listItem: ({ children }) => {
+							return <li className="mb-2 list-disc list">{children}</li>
+						},
+						// hardBreak: () => {
+						// 	return <Separator className="my-4" />;
+						// },
 					}}
 				/>
 			</div>
