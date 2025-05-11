@@ -1,4 +1,3 @@
-import { GoogleAnalytics } from '@next/third-parties/google';
 import type { Metadata, Viewport } from 'next';
 import { PropsWithChildren } from 'react';
 import { Toaster } from 'sonner';
@@ -16,6 +15,7 @@ const spectral = Spectral({
 	subsets: ['latin'],
 	display: 'swap',
 	variable: '--font-spectral',
+	fallback: ['Arial', 'sans-serif'],
 	weight: ['200', '300', '400', '500', '600', '700', '800'],
 });
 
@@ -23,6 +23,7 @@ const sourceCodePro = Source_Code_Pro({
 	subsets: ['latin'],
 	display: 'swap',
 	variable: '--font-source-code-pro',
+	fallback: ['Arial', 'sans-serif'],
 	weight: ['200', '300', '400', '500', '600', '700', '800']
 });
 
@@ -64,8 +65,9 @@ export const metadata: Metadata = {
 		'facials',
 	],
 	icons: {
-		icon: '/icon.ico',
+		icon: '/favicon.ico',
 	},
+	manifest: "/manifest.json",
 	openGraph: {
 		type: 'website',
 		locale: 'en_US',
@@ -90,7 +92,6 @@ export const viewport: Viewport = {
 	initialScale: 1,
 	minimumScale: 1,
 	maximumScale: 5,
-	userScalable: false,
 };
 
 export default async function RootLayout({ children }: PropsWithChildren) {
@@ -116,7 +117,6 @@ export default async function RootLayout({ children }: PropsWithChildren) {
 					theme='system'
 					position='top-center'
 				/>
-				<GoogleAnalytics gaId={process.env.GOOGLE_MEASUREMENT_ID!} />
 			</body>
 		</html>
 	);

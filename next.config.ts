@@ -14,6 +14,10 @@ const nextConfig: NextConfig = {
 				hostname: 'cdn.sanity.io',
 				pathname: '/images/**/*'
 			},
+			{
+				hostname: "blue-nomad.nyc3.cdn.digitaloceanspaces.com",
+				// pathname: '/**/*'
+			}
 		]
 	},
 	headers: async () => {

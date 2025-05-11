@@ -1,7 +1,4 @@
 import Image from 'next/image';
-import OnyedikaImage from '~/assets/Onyedika Portraits/Onyedika11902.png';
-import InteriorImage from '~/assets/studio/interiors2.jpg';
-import StudioImage from '~/assets/studio/interiors3.jpg';
 
 export default function About() {
 	return (
@@ -34,7 +31,7 @@ export default function About() {
 
 					<div className='relative w-full h-[500px] order-3 md:order-none md:col-start-1 my-6 md:my-0'>
 						<Image
-							src={OnyedikaImage.src}
+							src={'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Onyedika/Onyedika11902.webp'}
 							alt='Picture of Onyedikachi'
 							sizes='100vw'
 							fill
@@ -96,7 +93,7 @@ export default function About() {
 
 				<div className='lg:basis-[30%] mt-10 lg:mt-0'>
 					<Image
-						src={`${InteriorImage.src}`}
+						src={'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/interiors2.webp'}
 						alt='Picture of the studio'
 						className='w-full h-auto'
 						width={0}
@@ -121,7 +118,7 @@ export default function About() {
 
 				<div className='lg:basis-[30%] mt-8 lg:mt-0'>
 					<Image
-						src={StudioImage}
+						src={'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/interiors3.webp'}
 						alt='Picture of the studio'
 						sizes='100vw'
 						style={{

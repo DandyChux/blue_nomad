@@ -8,35 +8,7 @@ import Link from 'next/link';
 import { Card, CardContent } from "./ui/card";
 import Image from "next/image";
 import { useSearch } from "~/lib/contexts/search-context";
-
-// Custom hook for intersection observer
-function useIntersectionObserver(options = {}) {
-	const [isIntersecting, setIsIntersecting] = useState(false);
-	const elementRef = useRef<HTMLDivElement>(null);
-
-	useEffect(() => {
-		const observer = new IntersectionObserver(([entry]) => {
-			setIsIntersecting(entry.isIntersecting);
-		}, {
-			threshold: 0.1,
-			rootMargin: '0px 0px -10% 0px',
-			...options
-		});
-
-		const element = elementRef.current;
-		if (element) {
-			observer.observe(element);
-		}
-
-		return () => {
-			if (element) {
-				observer.unobserve(element);
-			}
-		};
-	}, [options]);
-
-	return [elementRef, isIntersecting];
-}
+import { useIntersectionObserver } from "~/lib/useIntersectionObserver";
 
 function Posts({ posts }: { posts: Post[] }) {
 	if (posts.length === 0) {
@@ -70,7 +42,7 @@ function Posts({ posts }: { posts: Post[] }) {
 							ref={rowRef as RefObject<HTMLDivElement>}
 							className={`
 									grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16 mb-16
-									opacity-0 translate-y-8 transition-all duration-700
+									opacity-0 translate-y-8 transition-all duration-[1500ms] ease-in-out
 									${isRowVisible ? 'opacity-100 translate-y-0' : ''}
 								`}
 							style={{ transitionDelay: `${rowIndex * 200}ms` }}

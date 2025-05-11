@@ -11,45 +11,45 @@ type LogoProps = {
 };
 
 const centralLogo: LogoProps = {
-	src: '/logos/blue-nomad.png',
+	src: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/blue-nomad.png',
 	alt: 'Blue Nomad Logo',
 };
 
 const surroundingLogos: LogoProps[] = [
 	{
-		src: '/logos/lookout-and-wonderland.png',
+		src: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/lookout-and-wonderland.png',
 		alt: 'Lookout and Wonderland',
 	},
 	{
-		src: '/logos/woods-copenhagen.png',
+		src: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/woods-copenhagen.png',
 		alt: 'Woods Copenhagen',
 	},
 	// {
-	// 	src: '/logos/omorovicza.png',
+	// 	src: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/omorovicza.png',
 	// 	alt: 'Omorovicza',
 	// },
 	{
-		src: '/logos/amolin.png',
+		src: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/amolin.png',
 		alt: 'Amolin',
 	},
 	{
-		src: '/logos/27-rosiers.png',
+		src: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/27-rosiers.png',
 		alt: '27 Rosiers',
 	},
 	{
-		src: '/logos/dermalogica.png',
+		src: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/dermalogica.png',
 		alt: 'Dermalogica',
 	},
 	{
-		src: '/logos/earl-of-east.png',
+		src: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/earl-of-east.png',
 		alt: 'Earl of East',
 	},
 	{
-		src: '/logos/arami.png',
+		src: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/arami.png',
 		alt: 'Arami',
 	},
 	{
-		src: '/logos/lesse.png',
+		src: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/lesse.png',
 		alt: 'Lesse',
 	},
 ];

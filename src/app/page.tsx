@@ -1,52 +1,42 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import EgoHeadshot from '~/assets/Ego with text.png';
-import Headshot from '~/assets/Look 4 139.jpg';
-import OnyedikaHeadshot from '~/assets/Onyedika Portraits/Founder.png';
 import TreatmentCards from '~/components/treatment-cards';
 import { Button } from '~/components/ui/button';
 import { InfiniteMovingCards, MovingCardProps } from '~/components/ui/infinite-moving-cards'
 
-import StudioImage from '~/assets/studio/interiors2.jpg';
 import Partners from '~/components/partners';
 import Testimonials from '~/components/testimonials';
-import ArchitecturalDigestLogo from '~/assets/press logos/ad-logo.svg';
-import AltitudeLogo from '~/assets/press logos/attitude-logo.svg';
-import ElleDecorLogo from '~/assets/press logos/elle-decor-logo.svg';
-import ElleLogo from '~/assets/press logos/elle-logo.svg';
-import FlatironLogo from '~/assets/press logos/flatiron-logo.svg';
-import HospitalityDesignLogo from '~/assets/press logos/HD-logo.jpg';
 
 export default function Home() {
 	const pressBrands: MovingCardProps[] = [
 		{
 			name: 'Elle',
-			image: ElleLogo,
+			image: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/elle-logo.svg',
 			link: 'https://www.elle.com/nl/interieur/interieur-hotspots/a63482070/wellness-spa-new-york-blue-nomad/'
 		},
 		{
 			name: 'Hospitality Design',
-			image: HospitalityDesignLogo,
+			image: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/HD-logo.jpg',
 			link: 'https://hospitalitydesign.com/news/wellness-sustainability/blue-nomad-new-york/'
 		},
 		{
 			name: 'Architectural Digest',
-			image: ArchitecturalDigestLogo,
+			image: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/ad-logo.svg',
 			link: 'https://www.architecturaldigest.com/story/how-to-create-home-spa'
 		},
 		{
 			name: 'Altitude',
-			image: AltitudeLogo,
+			image: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/attitude-logo.svg',
 			link: 'https://www.attitude-mag.com/en/blog/all/2025-02-17-blue-nomad-um-espaco-onde-o-design-se-encontra-com-o-bem-estar/'
 		},
 		{
 			name: 'Elle Decor',
-			image: ElleDecorLogo,
+			image: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/elle-decor-logo.svg',
 			link: 'https://www.elledecor.com/it/viaggi/a63820146/spa-bellissima-nel-centro-di-new-york/'
 		},
 		{
 			name: 'Flatiron',
-			image: FlatironLogo,
+			image: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/flatiron-logo.svg',
 			link: 'https://flatironnomad.nyc/2025/03/05/february-news-roundup-6/'
 		},
 	]
@@ -78,7 +68,7 @@ export default function Home() {
 				<section className='py-12 px-8 lg:items-center'>
 					<div className='flex-1'>
 						<Image
-							src={Headshot}
+							src={'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Christian?/Look%204%20139.webp'}
 							alt=''
 							width={0}
 							height={0}
@@ -95,11 +85,11 @@ export default function Home() {
 							from urban alcoves to distant escapes.
 						</p>
 
-						<h1 className='uppercase text-center text-3xl lg:text-6xl max-w-[750px]'>
+						<p className='uppercase text-center text-3xl lg:text-6xl max-w-[750px]'>
 							{' '}
 							For the curious & discernin
 							<span className='lowercase text-[2.5rem] lg:text-8xl'>g</span>
-						</h1>
+						</p>
 
 						<Button className='uppercase' variant={'outline'} size={'xl'}>
 							<Link href='/about'>
@@ -164,14 +154,12 @@ export default function Home() {
 							</div>
 							<Link href='/about'>
 								<Image
-									src={OnyedikaHeadshot}
+									src={'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Onyedika/Founder.webp'}
 									alt='Onyedikachi'
 									width={250}
 									height={300}
-									placeholder='empty'
-									priority
-								// sizes='100vw'
-								// className='w-full h-auto'
+									placeholder='blur'
+									blurDataURL='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InRyYW5zcGFyZW50Ij48L3JlY3Q+PHJlY3Qgd2lkdGg9IjYwJSIgaGVpZ2h0PSI2MCUiIHg9IjIwJSIgeT0iMjAlIiBmaWxsPSIjZWVlZWVlIiBvcGFjaXR5PSIwLjQiPjxhbmltYXRlVHJhbnNmb3JtIGF0dHJpYnV0ZU5hbWU9Im9wYWNpdHkiIHZhbHVlcz0iMC4yOzAuNTswLjIiIGR1cj0iMnMiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIj48L2FuaW1hdGVUcmFuc2Zvcm0+PC9yZWN0Pjwvc3ZnPg=='
 								/>
 							</Link>
 						</figcaption>
@@ -195,44 +183,6 @@ export default function Home() {
 						/>
 					</div>
 				</section>
-
-				{/* Social Section */}
-				{/* <section className='lg:flex-col items-center px-2 gap-4 bg-media-section-gradient bg-cover lg:bg-top bg-no-repeat text-white min-h-fit pt-0 pb-8 lg:pb-32'>
-					<h1 className='uppercase pt-12'>Nomad&apos;s Land</h1>
-					<p className='text-xl lg:text-2xl'>
-						People, Places, and Ideas that Interest Us
-					</p>
-					<Button
-						variant={'outline'}
-						size={'xl'}
-						className='mx-auto rounded-full border-white py-6'
-					>
-						<Link
-							href='https://www.instagram.com/bluenomadworld'
-							className='uppercase'
-						>
-							@bluenomadworld
-						</Link>
-					</Button>
-
-					<div className='grid grid-cols-2 md:grid-cols-3 lg:flex lg:flex-wrap lg:justify-center gap-2 w-full'>
-						{Array.from({ length: 5 }).map((_, index) => (
-							// <Skeleton key={index} className={"w-[15rem] h-[20rem]"}></Skeleton>
-							<div key={index} className='relative w-full h-[350px]'>
-								<Image
-									src={socialMediaImages[index % socialMediaImages.length]} // Alternat ebetween image1 and image2
-									alt={`Image ${index + 1}`}
-									// sizes="100vw"
-									fill
-									priority
-									style={{
-										objectFit: 'cover',
-									}}
-								/>
-							</div>
-						))}
-					</div>
-				</section> */}
 			</div>
 		</>
 	);
