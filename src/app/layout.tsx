@@ -44,7 +44,8 @@ const harmony = localFont({
 	variable: '--font-harmony',
 	display: 'swap',
 	weight: '200 900',
-	fallback: ['Arial', 'sans-serif']
+	preload: true,
+	fallback: ['system-ui', 'sans-serif']
 });
 
 export const metadata: Metadata = {

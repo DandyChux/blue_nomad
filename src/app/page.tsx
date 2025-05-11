@@ -46,7 +46,7 @@ export default function Home() {
 			{/* Hero Section */}
 			<section className='p-0 bg-no-repeat xl:bg-cover bg-studio-background text-black md:text-primary-foreground'>
 				<div className='flex flex-col m-[auto_0] px-8 pt-16 pb-8 gap-8 lg:gap-12 place-self-center'>
-					<p className='uppercase w-full md:w-auto text-2xl lg:text-4xl'>
+					<p className='uppercase w-full md:w-auto text-2xl lg:text-4xl min-h-[120px] contain-layout'>
 						<span>modern wellness</span> <br />
 						<span className='pl-4 md:pl-8'>inspired</span> <br />
 						<span className='pl-8 md:pl-16'>by worlds</span> <br />
