@@ -66,12 +66,12 @@ export default function Home() {
 			<div className='bg-background-gradient bg-no-repeat bg-cover bg-top'>
 				{/* Our Story Section */}
 				<section className='py-12 px-8 lg:items-center'>
-					<div className='flex-1'>
+					<div className='relative flex-1'>
 						<Image
-							src={'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Christian?/Look%204%20139.webp'}
+							src={'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Christian/Look%204%20139.webp'}
 							alt=''
-							width={0}
-							height={0}
+							width={180}
+							height={200}
 							sizes='100vw'
 							className='w-full h-auto'
 							priority

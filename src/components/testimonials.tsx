@@ -121,6 +121,7 @@ export default function Testimonials() {
 										style={{
 											objectFit: 'cover',
 										}}
+										loading='lazy'
 										placeholder='blur'
 										blurDataURL='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InRyYW5zcGFyZW50Ij48L3JlY3Q+PHJlY3Qgd2lkdGg9IjYwJSIgaGVpZ2h0PSI2MCUiIHg9IjIwJSIgeT0iMjAlIiBmaWxsPSIjZWVlZWVlIiBvcGFjaXR5PSIwLjQiPjxhbmltYXRlVHJhbnNmb3JtIGF0dHJpYnV0ZU5hbWU9Im9wYWNpdHkiIHZhbHVlcz0iMC4yOzAuNTswLjIiIGR1cj0iMnMiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIj48L2FuaW1hdGVUcmFuc2Zvcm0+PC9yZWN0Pjwvc3ZnPg=='
 									/>
@@ -160,6 +161,7 @@ export default function Testimonials() {
 										style={{
 											objectFit: 'cover',
 										}}
+										loading='lazy'
 										placeholder='blur'
 										blurDataURL='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InRyYW5zcGFyZW50Ij48L3JlY3Q+PHJlY3Qgd2lkdGg9IjYwJSIgaGVpZ2h0PSI2MCUiIHg9IjIwJSIgeT0iMjAlIiBmaWxsPSIjZWVlZWVlIiBvcGFjaXR5PSIwLjQiPjxhbmltYXRlVHJhbnNmb3JtIGF0dHJpYnV0ZU5hbWU9Im9wYWNpdHkiIHZhbHVlcz0iMC4yOzAuNTswLjIiIGR1cj0iMnMiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIj48L2FuaW1hdGVUcmFuc2Zvcm0+PC9yZWN0Pjwvc3ZnPg=='
 									/>
