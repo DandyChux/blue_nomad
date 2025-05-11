@@ -121,6 +121,8 @@ export default function About() {
 						src={'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/interiors3.webp'}
 						alt='Picture of the studio'
 						sizes='100vw'
+						width={400}
+						height={600}
 						style={{
 							width: '100%',
 							height: 'auto',
