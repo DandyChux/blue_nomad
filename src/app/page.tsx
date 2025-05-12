@@ -45,21 +45,27 @@ export default function Home() {
 	return (
 		<>
 			{/* Hero Section */}
-			<section className='p-0 bg-no-repeat xl:bg-cover bg-studio-background text-black md:text-primary-foreground'>
+			<section className='relative p-0 text-black md:text-primary-foreground'>
+				<div className="absolute inset-0 -z-10">
+					<Image
+						src="/studio_background.jpg"
+						alt="Background"
+						fill
+						priority
+						placeholder="blur"
+						blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNmZmZmZmYiPjwvcmVjdD48L3N2Zz4="
+						className="object-cover xl:object-cover object-center"
+						sizes="100vw"
+					/>
+				</div>
+
 				<div className='flex flex-col m-[auto_0] px-8 pt-16 pb-8 gap-8 lg:gap-12 place-self-center'>
-					<p className='hidden md:block uppercase w-full md:w-auto text-2xl lg:text-4xl'>
+					<p className='uppercase w-full md:w-auto text-2xl lg:text-4xl'>
 						<span>modern wellness</span> <br />
 						<span className='pl-4 md:pl-8'>inspired</span> <br />
 						<span className='pl-8 md:pl-16'>by worlds</span> <br />
 						<span className='pl-12 md:pl-24'>near, far, and within</span>
 					</p>
-					<Image
-						src={HeroText}
-						alt='Hero Text'
-						className='md:hidden w-full'
-						priority
-						loading='eager'
-					/>
 					<Button variant={'outline'} className='uppercase self-start rounded-full h-auto py-2 md:border-primary-foreground md:text-primary-foreground' size={'lg'}>
 						<Link href='#treatments'>
 							Discover <br /> skin health
@@ -68,7 +74,20 @@ export default function Home() {
 				</div>
 			</section>
 
-			<div className='bg-background-gradient bg-no-repeat bg-cover bg-top'>
+			<div className='relative'>
+				<div className="absolute inset-0 -z-10">
+					<Image
+						src="/background_gradient.png"
+						alt="Background"
+						fill
+						priority
+						placeholder="blur"
+						blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNmZmZmZmYiPjwvcmVjdD48L3N2Zz4="
+						className="object-cover xl:object-cover object-center"
+						sizes="100vw"
+					/>
+				</div>
+
 				{/* Our Story Section */}
 				<section className='py-12 px-8 lg:items-center'>
 					<div className='relative flex-1'>

@@ -2,6 +2,7 @@ import type { Post, SanityCategory, SanitySlug } from './types';
 import { postPathsQuery, postsQuery } from '~/sanity/lib/queries';
 import { sanityFetch } from '~/sanity/lib/fetch';
 import { FilteredBlogContent } from '~/components/blog-content';
+import Image from 'next/image';
 
 type SanityPost = {
 	title: string;
@@ -50,7 +51,20 @@ export default async function BlogPage() {
 	}))
 
 	return (
-		<section className='mx-auto pt-32 px-4 lg:px-10 lg:flex-col bg-media-section-gradient bg-no-repeat bg-cover bg-center text-primary-foreground'>
+		<section className='mx-auto pt-32 px-4 lg:px-10 lg:flex-col text-primary-foreground relative'>
+			<div className="absolute inset-0 -z-10">
+				<Image
+					src="/media_section_gradient.png"
+					alt="Background"
+					fill
+					priority
+					placeholder="blur"
+					blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNmZmZmZmYiPjwvcmVjdD48L3N2Zz4="
+					className="object-cover object-center"
+					sizes="100vw"
+				/>
+			</div>
+
 			<FilteredBlogContent posts={formattedPosts} />
 		</section>
 	);

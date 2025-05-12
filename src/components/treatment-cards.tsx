@@ -201,9 +201,7 @@ const TreatmentCard: React.FC<TreatmentCardProps & { imagesLoaded: boolean }> = 
 					fill
 					priority
 					className={cn('object-cover h-full w-full', {
-						'object-[5%_30%]': title === 'Facial ST Membership' && !shouldApplyHover,
-						'object-[5%_15%]': title === 'Facial ST 60min' && !shouldApplyHover,
-						'object-[5%_25%]': title === 'Facial ST Membership' && shouldApplyHover,
+						'object-[5%_35%]': index % 2 === 0,
 					})}
 				/>
 			</CardContent>

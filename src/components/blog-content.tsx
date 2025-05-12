@@ -75,7 +75,7 @@ function PostCard({ post, showDescription = false }: { post: Post, showDescripti
 						src={post.imageUrl}
 						alt={post.title}
 						fill
-						className="object-cover"
+						className="object-contain"
 					/>
 				</div>
 				<CardContent className="pt-4">

@@ -62,9 +62,20 @@ export const Footer: React.FC = () => {
 	}
 
 	return (
-		<footer className={cn('flex flex-col px-2 bg-footer-gradient bg-cover bg-no-repeat bg-top lg:bg-center space-y-6', {
-			// 'bg-card text-white border-t border-white': pathname === '/blog' || slug !== undefined,
-		})}>
+		<footer className={cn('flex flex-col px-2 space-y-6 relative')}>
+			<div className="absolute inset-0 -z-10">
+				<Image
+					src="/footer_gradient.png"
+					alt="Background"
+					fill
+					priority
+					placeholder="blur"
+					blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNmZmZmZmYiPjwvcmVjdD48L3N2Zz4="
+					className="object-cover xl:object-cover object-center"
+					sizes="100vw"
+				/>
+			</div>
+
 			<div className='flex flex-col lg:flex-row space-y-14 lg:space-y-0 px-8 md:px-12 lg:px-20 py-4 md:py-8 lg:py-16'>
 				<div className='flex-1 flex flex-col space-y-4'>
 					<h2 className='uppercase text-xl'>Our Studio</h2>

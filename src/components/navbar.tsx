@@ -59,7 +59,7 @@ export const Navbar: React.FC = () => {
 	return (
 		<header
 			className={
-				'flex items-center justify-between absolute top-0 w-full bg-transparent p-4 md:p-6'
+				'flex items-center justify-between absolute top-0 w-full bg-transparent p-4 md:p-6 z-10'
 			}
 		>
 			<div className='flex items-center group'>
@@ -67,7 +67,7 @@ export const Navbar: React.FC = () => {
 					<SheetTrigger asChild>
 						<Button variant={'ghost'} className='self-start w-auto h-fit'>
 							<Menu
-								className={cn('!size-6 lg:!size-8 xl:!size-10 text-black', {
+								className={cn('!size-6 lg:!size-8 xl:!size-10 text-black hover:cursor-pointer', {
 									'md:text-primary-foreground': pathname === '/',
 									'text-primary-foreground': pathname === '/blog'
 								})}
