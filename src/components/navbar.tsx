@@ -144,7 +144,7 @@ export const Navbar: React.FC = () => {
 						})}
 					>
 						<Image
-							src={pathname === '/' ? (width < 468 ? 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/blue-nomad.png' : 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/blue-nomad-light.png') : 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/blue-nomad.png'}
+							src={pathname === '/' ? (width < 768 ? 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/blue-nomad.png' : 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/blue-nomad-light.png') : 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/blue-nomad.png'}
 							alt='Blue Nomad Logo'
 							width={0}
 							height={0}

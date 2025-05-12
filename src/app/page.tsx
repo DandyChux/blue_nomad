@@ -3,6 +3,7 @@ import Link from 'next/link';
 import TreatmentCards from '~/components/treatment-cards';
 import { Button } from '~/components/ui/button';
 import { InfiniteMovingCards, MovingCardProps } from '~/components/ui/infinite-moving-cards'
+import HeroText from '~/assets/MODERN_WELLNESS.png'
 
 import Partners from '~/components/partners';
 import Testimonials from '~/components/testimonials';
@@ -46,15 +47,17 @@ export default function Home() {
 			{/* Hero Section */}
 			<section className='p-0 bg-no-repeat xl:bg-cover bg-studio-background text-black md:text-primary-foreground'>
 				<div className='flex flex-col m-[auto_0] px-8 pt-16 pb-8 gap-8 lg:gap-12 place-self-center'>
-					<p className='uppercase w-full md:w-auto text-2xl lg:text-4xl min-h-[120px] contain-layout'>
+					<p className='hidden md:block uppercase w-full md:w-auto text-2xl lg:text-4xl'>
 						<span>modern wellness</span> <br />
 						<span className='pl-4 md:pl-8'>inspired</span> <br />
 						<span className='pl-8 md:pl-16'>by worlds</span> <br />
 						<span className='pl-12 md:pl-24'>near, far, and within</span>
 					</p>
-					{/* <p className='uppercase text-lg lg:text-xl'>
-						latest release - a private skin health studio in NYC
-					</p> */}
+					<Image
+						src={HeroText}
+						alt='Hero Text'
+						className='md:hidden w-full'
+					/>
 					<Button variant={'outline'} className='uppercase self-start rounded-full h-auto py-2 md:border-primary-foreground md:text-primary-foreground' size={'lg'}>
 						<Link href='#treatments'>
 							Discover <br /> skin health
