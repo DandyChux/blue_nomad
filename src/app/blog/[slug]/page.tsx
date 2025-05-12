@@ -82,13 +82,14 @@ export default async function PostPage({ params }: PageProps) {
 
 			{/* <p>{post.description}</p> */}
 			{post.mainImage ? (
-				<div className='mb-8 relative aspect-[16/9] max-w-[750px] mx-auto'>
+				<div className='mb-8 relative aspect-[4/3] max-w-[750px] mx-auto'>
 					<Image
 						src={urlFor(post.mainImage).width(800).url()}
 						alt={post.mainImage.alt || ''}
-						width={800}
-						height={475}
-						className='object-cover h-full w-full rounded-md'
+						// width={800}
+						// height={475}
+						fill
+						className='object-contain h-auto w-full rounded-md'
 					/>
 				</div>
 			) : null}

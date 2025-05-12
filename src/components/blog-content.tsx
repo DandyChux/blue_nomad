@@ -81,21 +81,21 @@ function PostCard({ post, showDescription = false }: { post: Post, showDescripti
 				<CardContent className="pt-4">
 					<div className='inline-flex items-center gap-x-4'>
 						{post.categories.map((category, index) => (
-							<Badge key={index} variant={'ghost'} className='text-sm text-cold-ivory hover:text-white'>
+							<Badge key={index} variant={'ghost'} className='text-sm text-primary-foreground hover:text-white'>
 								{category}
 							</Badge>
 						))}
 					</div>
-					<h3 className="mb-2 text-xl leading-6 text-cold-ivory group-hover:text-gray-600">
+					<h3 className="mb-2 text-xl leading-6 text-primary-foreground group-hover:text-cold-ivory">
 						{post.title}
 					</h3>
 					{post.author && (
-						<p className="text-sm text-cold-ivory group-hover:text-gray-600">
+						<p className="text-sm text-primary-foreground group-hover:text-cold-ivory">
 							By {post.author.name}
 						</p>
 					)}
 					{showDescription && (
-						<p className="text-base text-cold-ivory group-hover:text-gray-600 mt-2 font-spectral font-normal">
+						<p className="text-base text-primary-foreground group-hover:text-cold-ivory mt-2 font-spectral font-normal">
 							{post.description}
 						</p>
 					)}
