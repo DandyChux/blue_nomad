@@ -57,6 +57,8 @@ export default function Home() {
 						src={HeroText}
 						alt='Hero Text'
 						className='md:hidden w-full'
+						priority
+						loading='eager'
 					/>
 					<Button variant={'outline'} className='uppercase self-start rounded-full h-auto py-2 md:border-primary-foreground md:text-primary-foreground' size={'lg'}>
 						<Link href='#treatments'>
