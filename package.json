@@ -37,6 +37,7 @@
 		"react-dom": "19.0.0-rc-02c0e824-20241028",
 		"react-hook-form": "^7.56.3",
 		"sanity": "^3.88.2",
+		"sharp": "^0.34.1",
 		"sonner": "^1.7.4",
 		"styled-components": "^6.1.18",
 		"tailwind-merge": "^2.6.0",
