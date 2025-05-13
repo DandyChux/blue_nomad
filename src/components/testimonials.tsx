@@ -118,6 +118,7 @@ export default function Testimonials() {
 										src={testimonial.image}
 										alt={`Picture of ${testimonial.name}`}
 										fill
+										sizes="(max-width: 768px) 100vw, 900px"
 										style={{
 											objectFit: 'cover',
 										}}
@@ -158,6 +159,7 @@ export default function Testimonials() {
 										src={testimonial.image}
 										alt={`Picture of ${testimonial.name}`}
 										fill
+										sizes="(max-width: 768px) 125px, 125px"
 										style={{
 											objectFit: 'cover',
 										}}

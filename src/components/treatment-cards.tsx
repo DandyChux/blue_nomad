@@ -54,7 +54,7 @@ const treatments: TreatmentProps[] = [
 			'Experience our signature 60min facial skin therapy monthly, with exclusive access to on-demand skin health guidance.',
 		price: 185,
 		defaultImage: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Ego/Look%205%20306.webp',
-		hoverImage: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Ego/Look%205%20185.webp',
+		hoverImage: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Ego/Ego.webp',
 		membersOnly: true,
 		link: 'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start',
 	},
@@ -168,6 +168,8 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 					src={isHovered ? hoverImage : defaultImage}
 					alt={title}
 					fill
+					sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+					// quality={85}
 					loading='lazy'
 					className={cn('object-cover h-full w-full', {
 						'object-[5%_35%]': index % 2 === 0,

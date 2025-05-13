@@ -99,7 +99,8 @@ export default function Home() {
 						alt=''
 						width={400}
 						height={600}
-						// sizes='100vw'
+						quality={85}
+						sizes="(max-width: 768px) 100vw, 400px"
 						className='w-full h-auto'
 					/>
 				</div>
@@ -184,6 +185,7 @@ export default function Home() {
 								alt='Onyedikachi'
 								width={250}
 								height={300}
+								sizes="(max-width: 768px) 80vw, 250px"
 								placeholder='blur'
 								blurDataURL='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InRyYW5zcGFyZW50Ij48L3JlY3Q+PHJlY3Qgd2lkdGg9IjYwJSIgaGVpZ2h0PSI2MCUiIHg9IjIwJSIgeT0iMjAlIiBmaWxsPSIjZWVlZWVlIiBvcGFjaXR5PSIwLjQiPjxhbmltYXRlVHJhbnNmb3JtIGF0dHJpYnV0ZU5hbWU9Im9wYWNpdHkiIHZhbHVlcz0iMC4yOzAuNTswLjIiIGR1cj0iMnMiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIj48L2FuaW1hdGVUcmFuc2Zvcm0+PC9yZWN0Pjwvc3ZnPg=='
 							/>
