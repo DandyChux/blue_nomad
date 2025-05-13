@@ -91,139 +91,124 @@ export default function Home() {
 				</div>
 			</section>
 
-			<div className='relative'>
-				<div className="absolute inset-0 -z-10">
+			{/* Our Story Section */}
+			<section className='py-12 px-8 lg:items-center'>
+				<div className='relative flex-1'>
 					<Image
-						src="/background_gradient.png"
-						alt="Background"
-						fill
-						priority
-						placeholder="blur"
-						blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNmZmZmZmYiPjwvcmVjdD48L3N2Zz4="
-						className="object-cover xl:object-cover object-center"
-						sizes="100vw"
+						src={'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Christian/Look%204%20139.webp'}
+						alt=''
+						width={400}
+						height={600}
+						// sizes='100vw'
+						className='w-full h-auto'
 					/>
 				</div>
 
-				{/* Our Story Section */}
-				<section className='py-12 px-8 lg:items-center'>
-					<div className='relative flex-1'>
-						<Image
-							src={'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Christian/Look%204%20139.webp'}
-							alt=''
-							width={400}
-							height={600}
-							// sizes='100vw'
-							className='w-full h-auto'
-						/>
-					</div>
-
-					<div className='flex-[1_1_30%] flex flex-col items-center gap-10 mt-6'>
-						<p className='text-center text-xl lg:text-3xl'>
-							Reimagining wellness by creating <br /> distinctive experiences,
-							guiding curious <br /> minds on transformative journeys <br />{' '}
-							from urban alcoves to distant escapes.
-						</p>
-
-						<p className='uppercase text-center text-3xl lg:text-6xl max-w-[750px]'>
-							{' '}
-							For the curious & discernin
-							<span className='lowercase text-[2.5rem] lg:text-8xl'>g</span>
-						</p>
-
-						<Button className='uppercase' variant={'outline'} size={'xl'}>
-							<Link href='/about'>
-								Our <br /> story
-							</Link>
-						</Button>
-					</div>
-				</section>
-
-				{/* Treatments Section */}
-				<section className='lg:flex-col items-center' id='treatments'>
-					<h1 className='uppercase'>Treatments</h1>
-					<p className='text-lg lg:text-xl text-center'>
-						Tradition meets science for skin health and well-being
+				<div className='flex-[1_1_30%] flex flex-col items-center gap-10 mt-6'>
+					<p className='text-center text-xl lg:text-3xl'>
+						Reimagining wellness by creating <br /> distinctive experiences,
+						guiding curious <br /> minds on transformative journeys <br />{' '}
+						from urban alcoves to distant escapes.
 					</p>
-					<TreatmentCards />
 
-					{/* Partners Section */}
-					<Partners />
-				</section>
+					<p className='uppercase text-center text-3xl lg:text-6xl max-w-[750px]'>
+						{' '}
+						For the curious & discernin
+						<span className='lowercase text-[2.5rem] lg:text-8xl'>g</span>
+					</p>
 
-				{/* Testimonial Section */}
-				<section className='lg:flex-col px-4 md:px-8 lg:px-12 mb-20'>
-					<figure className='flex flex-col mb-12 lg:mb-16'>
-						<blockquote className='uppercase text-base lg:text-5xl hidden md:block break-keep'>
-							<p>I seek out brands</p>{' '}
-							<p className='pl-[5%] lg:pl-[10%]'>
-								From diverse origins, curating those
-							</p>{' '}
-							<p>
-								That are efficacious, cultured, and{' '}
-								<span className='lowercase lg:text-6xl'>g</span>
-								enuine-each
-							</p>{' '}
-							<p>with an ethos that</p>
-							<p className='pl-[40%] lg:pl-[25%]'>
-								<span className='lowercase lg:text-6xl'>g</span>oes skin
-								deep.
-							</p>
-						</blockquote>
-						<blockquote className='md:hidden uppercase text-base lg:text-5xl'>
-							<p>I seek out brands</p>{' '}
-							<p className='pl-[5%] lg:pl-[10%]'>
-								From diverse origins, curating those
-							</p>{' '}
-							<p>
-								That are efficacious, cultured, and{' '}
-								<span className='lowercase text-xl lg:text-6xl'>g</span>
-								enuine-each with an ethos that
-							</p>{' '}
-							<p></p>
-							<p className='pl-[40%] lg:pl-[25%]'>
-								<span className='lowercase text-xl lg:text-6xl'>g</span>oes skin
-								deep.
-							</p>
-						</blockquote>
+					<Button className='uppercase' variant={'outline'} size={'xl'}>
+						<Link href='/about'>
+							Our <br /> story
+						</Link>
+					</Button>
+				</div>
+			</section>
 
-						<figcaption className='flex flex-col-reverse md:flex-row gap-2 place-self-end mt-4 lg:mt-0'>
-							<div className='place-self-end flex flex-col'>
-								<p className='text-xl lg:text-2xl self-end'>Onyedikachi</p>
-								<small className='lg:text-lg self-end'>Founder</small>
-							</div>
-							<Link href='/about'>
-								<Image
-									src={'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Onyedika/Founder.webp'}
-									alt='Onyedikachi'
-									width={250}
-									height={300}
-									placeholder='blur'
-									blurDataURL='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InRyYW5zcGFyZW50Ij48L3JlY3Q+PHJlY3Qgd2lkdGg9IjYwJSIgaGVpZ2h0PSI2MCUiIHg9IjIwJSIgeT0iMjAlIiBmaWxsPSIjZWVlZWVlIiBvcGFjaXR5PSIwLjQiPjxhbmltYXRlVHJhbnNmb3JtIGF0dHJpYnV0ZU5hbWU9Im9wYWNpdHkiIHZhbHVlcz0iMC4yOzAuNTswLjIiIGR1cj0iMnMiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIj48L2FuaW1hdGVUcmFuc2Zvcm0+PC9yZWN0Pjwvc3ZnPg=='
-								/>
-							</Link>
-						</figcaption>
-					</figure>
+			{/* Treatments Section */}
+			<section className='lg:flex-col items-center' id='treatments'>
+				<h1 className='uppercase'>Treatments</h1>
+				<p className='text-lg lg:text-xl text-center'>
+					Tradition meets science for skin health and well-being
+				</p>
+				<TreatmentCards />
 
-					{/* Testimonials */}
-					<Testimonials />
-				</section>
+				{/* Partners Section */}
+				<Partners />
+			</section>
 
-				{/* Press Section */}
-				<section className='min-h-[unset] items-center p-2 relative lg:py-20 lg:flex-col overflow-hidden flex flex-col md:block'>
-					<h1 className='uppercase md:absolute md:left-0 md:top-1/2 md:-translate-y-1/2 md:z-20 text-3xl md:text-4xl md:flex md:items-center md:h-full pl-4 md:pl-8'>
-						As Seen In
-					</h1>
-					<div className='w-full md:ml-[275px] lg:ml-[300px]'>
-						<InfiniteMovingCards
-							items={pressBrands}
-							direction='right'
-							speed='normal'
-							className="[mask-image:linear-gradient(to_right,transparent_0%,white_20%,white_100%)]"
-						/>
-					</div>
-				</section>
-			</div>
+			{/* Testimonial Section */}
+			<section className='lg:flex-col px-4 md:px-8 lg:px-12 mb-20'>
+				<figure className='flex flex-col mb-12 lg:mb-16'>
+					<blockquote className='uppercase text-base lg:text-5xl hidden md:block break-keep'>
+						<p>I seek out brands</p>{' '}
+						<p className='pl-[5%] lg:pl-[10%]'>
+							From diverse origins, curating those
+						</p>{' '}
+						<p>
+							That are efficacious, cultured, and{' '}
+							<span className='lowercase lg:text-6xl'>g</span>
+							enuine-each
+						</p>{' '}
+						<p>with an ethos that</p>
+						<p className='pl-[40%] lg:pl-[25%]'>
+							<span className='lowercase lg:text-6xl'>g</span>oes skin
+							deep.
+						</p>
+					</blockquote>
+					<blockquote className='md:hidden uppercase text-base lg:text-5xl'>
+						<p>I seek out brands</p>{' '}
+						<p className='pl-[5%] lg:pl-[10%]'>
+							From diverse origins, curating those
+						</p>{' '}
+						<p>
+							That are efficacious, cultured, and{' '}
+							<span className='lowercase text-xl lg:text-6xl'>g</span>
+							enuine-each with an ethos that
+						</p>{' '}
+						<p></p>
+						<p className='pl-[40%] lg:pl-[25%]'>
+							<span className='lowercase text-xl lg:text-6xl'>g</span>oes skin
+							deep.
+						</p>
+					</blockquote>
+
+					<figcaption className='flex flex-col-reverse md:flex-row gap-2 place-self-end mt-4 lg:mt-0'>
+						<div className='place-self-end flex flex-col'>
+							<p className='text-xl lg:text-2xl self-end'>Onyedikachi</p>
+							<small className='lg:text-lg self-end'>Founder</small>
+						</div>
+						<Link href='/about'>
+							<Image
+								src={'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Onyedika/Founder.webp'}
+								alt='Onyedikachi'
+								width={250}
+								height={300}
+								placeholder='blur'
+								blurDataURL='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InRyYW5zcGFyZW50Ij48L3JlY3Q+PHJlY3Qgd2lkdGg9IjYwJSIgaGVpZ2h0PSI2MCUiIHg9IjIwJSIgeT0iMjAlIiBmaWxsPSIjZWVlZWVlIiBvcGFjaXR5PSIwLjQiPjxhbmltYXRlVHJhbnNmb3JtIGF0dHJpYnV0ZU5hbWU9Im9wYWNpdHkiIHZhbHVlcz0iMC4yOzAuNTswLjIiIGR1cj0iMnMiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIj48L2FuaW1hdGVUcmFuc2Zvcm0+PC9yZWN0Pjwvc3ZnPg=='
+							/>
+						</Link>
+					</figcaption>
+				</figure>
+
+				{/* Testimonials */}
+				<Testimonials />
+			</section>
+
+			{/* Press Section */}
+			<section className='min-h-[unset] items-center p-2 relative lg:py-20 lg:flex-col overflow-hidden flex flex-col md:block'>
+				<h1 className='uppercase md:absolute md:left-0 md:top-1/2 md:-translate-y-1/2 md:z-20 text-3xl md:text-4xl md:flex md:items-center md:h-full pl-4 md:pl-8'>
+					As Seen In
+				</h1>
+				<div className='w-full md:ml-[275px] lg:ml-[300px]'>
+					<InfiniteMovingCards
+						items={pressBrands}
+						direction='right'
+						speed='normal'
+						className="[mask-image:linear-gradient(to_right,transparent_0%,white_20%,white_100%)]"
+					/>
+				</div>
+			</section>
 		</>
 	);
 }

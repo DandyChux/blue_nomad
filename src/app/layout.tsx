@@ -7,6 +7,7 @@ import { Providers } from '~/components/providers';
 import { BookingButton } from '~/components/booking-button';
 import localFont from 'next/font/local'
 import { Spectral, Source_Code_Pro } from 'next/font/google'
+import Image from 'next/image';
 
 import './globals.css';
 
@@ -103,6 +104,17 @@ export default async function RootLayout({ children }: PropsWithChildren) {
 			className={`${spectral.variable} ${sourceCodePro.variable} ${harmony.variable}`}
 		>
 			<body className={`antialiased relative`}>
+				<div className="absolute inset-0 -z-10">
+					<Image
+						src="/background_gradient.png"
+						alt="Background"
+						fill
+						priority
+						className="object-cover object-center"
+						sizes="100vw"
+						quality={75}
+					/>
+				</div>
 				<Providers>
 					<Navbar />
 					<main className='w-full overflow-hidden'>

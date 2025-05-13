@@ -69,7 +69,7 @@ export const Navbar: React.FC = () => {
 							<Menu
 								className={cn('!size-6 lg:!size-8 xl:!size-10 text-black hover:cursor-pointer', {
 									'md:text-primary-foreground': pathname === '/',
-									'text-primary-foreground': pathname === '/nomadsland'
+									'text-pale-grey': pathname === '/nomadsland'
 								})}
 								strokeWidth={2.5}
 							/>
@@ -98,7 +98,7 @@ export const Navbar: React.FC = () => {
 				<nav className='hidden group-hover:flex'>
 					<ul
 						className={cn('flex gap-8 *:uppercase text-black', {
-							'text-primary-foreground': pathname === '/' || pathname === '/nomadsland'
+							'text-pale-grey': pathname === '/' || pathname === '/nomadsland'
 						})}
 					>
 						{navLinks.map((item) => (
@@ -109,7 +109,7 @@ export const Navbar: React.FC = () => {
 								<Link
 									href={item.href}
 									className={cn('font-semibold text-lg font-source-code-pro no-underline', {
-										'text-primary-foreground': pathname === '/nomadsland'
+										'text-pale-grey': pathname === '/nomadsland'
 									})}
 									rel='nofollow noopener noreferrer'
 									target={item.href.includes('squareup') ? '_blank' : undefined}
