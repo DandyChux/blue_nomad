@@ -67,7 +67,7 @@ export default async function PostPage({ params }: PageProps) {
 	return (
 		<article className='px-8 md:px-16 lg:px-24 pt-32 pb-12 min-h-dvh text-secondary-foreground'>
 			<nav className='mb-8'>
-				<Link href='/blog' className='hover:underline'>
+				<Link href='/nomadsland' className='hover:underline'>
 					← Back to posts
 				</Link>
 			</nav>
