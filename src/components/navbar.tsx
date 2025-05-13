@@ -42,7 +42,7 @@ export const navLinks: NavItem[] = [
 	},
 	{
 		label: "Nomad's Land",
-		href: '/blog',
+		href: '/nomadsland',
 	},
 ];
 
@@ -59,7 +59,7 @@ export const Navbar: React.FC = () => {
 	return (
 		<header
 			className={
-				'flex items-center justify-between absolute top-0 w-full bg-transparent p-4 md:p-6 z-10'
+				'flex items-center justify-between absolute top-0 w-full bg-transparent p-4 md:p-6 z-1'
 			}
 		>
 			<div className='flex items-center group'>
@@ -69,7 +69,7 @@ export const Navbar: React.FC = () => {
 							<Menu
 								className={cn('!size-6 lg:!size-8 xl:!size-10 text-black hover:cursor-pointer', {
 									'md:text-primary-foreground': pathname === '/',
-									'text-primary-foreground': pathname === '/blog'
+									'text-primary-foreground': pathname === '/nomadsland'
 								})}
 								strokeWidth={2.5}
 							/>
@@ -98,7 +98,7 @@ export const Navbar: React.FC = () => {
 				<nav className='hidden group-hover:flex'>
 					<ul
 						className={cn('flex gap-8 *:uppercase text-black', {
-							'text-primary-foreground': pathname === '/' || pathname === '/blog'
+							'text-primary-foreground': pathname === '/' || pathname === '/nomadsland'
 						})}
 					>
 						{navLinks.map((item) => (
@@ -109,7 +109,7 @@ export const Navbar: React.FC = () => {
 								<Link
 									href={item.href}
 									className={cn('font-semibold text-lg font-source-code-pro no-underline', {
-										'text-primary-foreground': pathname === '/blog'
+										'text-primary-foreground': pathname === '/nomadsland'
 									})}
 									rel='nofollow noopener noreferrer'
 									target={item.href.includes('squareup') ? '_blank' : undefined}
@@ -123,19 +123,19 @@ export const Navbar: React.FC = () => {
 			</div>
 
 			<div className='flex max-w-[500px] w-auto items-center justify-end'>
-				{pathname === '/blog' && (
+				{pathname === '/nomadsland' && (
 					<>
 						<div className="flex items-center mr-2">
 							<SearchBar onSearch={handleSearch} />
 						</div>
 						<Button variant={'ghost'} className={'hidden sm:inline-flex text-primary-foreground hover:text-white hover:bg-black rounded-full hover:cursor-pointer'}>
-							<Link href="https://substack.com/@bluenomadworld" target='_blank' rel='noopener noreferrer' className='no-underline'>
+							<Link href="#subscription-form" target='_blank' rel='noopener noreferrer' className='no-underline'>
 								Get Our Newsletter
 							</Link>
 						</Button>
 					</>
 				)}
-				{pathname !== '/blog' && (
+				{pathname !== '/nomadsland' && (
 					<Link
 						href='/'
 						className={cn('no-underline', {

@@ -45,7 +45,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
 					className="hover:cursor-pointer"
 				>
 					<Search className={cn("h-4 w-4", {
-						"text-white": usePathname() === '/blog'
+						"text-white": usePathname() === '/nomadsland'
 					})} />
 				</Button>
 				<div className={`absolute right-full overflow-hidden transition-all duration-300 ${isExpanded ? "w-28 sm:w-40 md:w-56 pr-2" : "w-0"}`}>
@@ -56,7 +56,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
 						value={searchQuery}
 						onChange={handleInputChange}
 						className={cn("w-full", {
-							'border-white text-white': usePathname() === '/blog'
+							'border-white text-white': usePathname() === '/nomadsland'
 						})}
 					/>
 				</div>

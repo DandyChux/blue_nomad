@@ -35,8 +35,9 @@ export default function About() {
 							alt='Picture of Onyedikachi'
 							sizes='100vw'
 							fill
-							priority
 							className='col-start-1 row-start-2 self-end justify-self-start object-cover'
+							placeholder="blur"
+							blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNmZmZmZmYiPjwvcmVjdD48L3N2Zz4="
 						/>
 					</div>
 
@@ -96,10 +97,12 @@ export default function About() {
 						src={'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/interiors2.webp'}
 						alt='Picture of the studio'
 						className='w-full h-auto'
-						width={0}
-						height={0}
+						width={400}
+						height={600}
 						sizes='100vw'
 						priority
+						placeholder="blur"
+						blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNmZmZmZmYiPjwvcmVjdD48L3N2Zz4="
 					/>
 				</div>
 			</div>
@@ -123,6 +126,8 @@ export default function About() {
 						sizes='100vw'
 						width={400}
 						height={600}
+						placeholder="blur"
+						blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNmZmZmZmYiPjwvcmVjdD48L3N2Zz4="
 						style={{
 							width: '100%',
 							height: 'auto',

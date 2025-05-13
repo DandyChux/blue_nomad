@@ -199,7 +199,6 @@ const TreatmentCard: React.FC<TreatmentCardProps & { imagesLoaded: boolean }> = 
 					src={shouldApplyHover ? hoverImage : defaultImage}
 					alt={title}
 					fill
-					priority
 					className={cn('object-cover h-full w-full', {
 						'object-[5%_35%]': index % 2 === 0,
 					})}

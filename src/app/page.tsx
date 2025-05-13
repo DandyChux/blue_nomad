@@ -1,12 +1,28 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import TreatmentCards from '~/components/treatment-cards';
+// import TreatmentCards from '~/components/treatment-cards';
 import { Button } from '~/components/ui/button';
 import { InfiniteMovingCards, MovingCardProps } from '~/components/ui/infinite-moving-cards'
 import HeroText from '~/assets/MODERN_WELLNESS.png'
 
 import Partners from '~/components/partners';
-import Testimonials from '~/components/testimonials';
+// import Testimonials from '~/components/testimonials';
+import { Skeleton } from '~/components/ui/skeleton';
+import dynamic from 'next/dynamic';
+
+const Testimonials = dynamic(() => import("../components/testimonials"), {
+	loading: () => <Skeleton className="h-40 w-full" />
+})
+
+const TreatmentCards = dynamic(() => import("../components/treatment-cards"), {
+	loading: () => (
+		<div className='flex flex-col md:flex-row items-center'>
+			<Skeleton className="h-40 w-full flex-1" />
+			<Skeleton className="h-40 w-full flex-1" />
+			<Skeleton className="h-40 w-full flex-1" />
+		</div>
+	)
+})
 
 export default function Home() {
 	const pressBrands: MovingCardProps[] = [
@@ -52,6 +68,7 @@ export default function Home() {
 						alt="Background"
 						fill
 						priority
+						fetchPriority='high'
 						placeholder="blur"
 						blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNmZmZmZmYiPjwvcmVjdD48L3N2Zz4="
 						className="object-cover xl:object-cover object-center"
@@ -66,7 +83,7 @@ export default function Home() {
 						<span className='pl-8 md:pl-16'>by worlds</span> <br />
 						<span className='pl-12 md:pl-24'>near, far, and within</span>
 					</p>
-					<Button variant={'outline'} className='uppercase self-start rounded-full h-auto py-2 md:border-primary-foreground md:text-primary-foreground' size={'lg'}>
+					<Button variant={'outline'} className='uppercase self-start rounded-full h-auto py-2 md:border-primary-foreground md:text-primary-foreground hover:border-black' size={'lg'}>
 						<Link href='#treatments'>
 							Discover <br /> skin health
 						</Link>
@@ -94,11 +111,10 @@ export default function Home() {
 						<Image
 							src={'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Christian/Look%204%20139.webp'}
 							alt=''
-							width={180}
-							height={200}
-							sizes='100vw'
+							width={400}
+							height={600}
+							// sizes='100vw'
 							className='w-full h-auto'
-							priority
 						/>
 					</div>
 

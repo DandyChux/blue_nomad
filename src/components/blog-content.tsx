@@ -2,7 +2,7 @@
 
 import { RefObject, useEffect, useRef, useState } from "react"
 import { PostFilter } from "./post-filter"
-import type { Post } from "~/app/blog/types"
+import type { Post } from "~/app/nomadsland/types"
 import { Badge } from "./ui/badge";
 import Link from 'next/link';
 import { Card, CardContent } from "./ui/card";
@@ -69,13 +69,15 @@ function Posts({ posts }: { posts: Post[] }) {
 function PostCard({ post, showDescription = false }: { post: Post, showDescription?: boolean }) {
 	return (
 		<Card className="overflow-hidden transition-transform duration-300 bg-transparent border-none shadow-none rounded-none">
-			<Link href={`/blog/${post.file}`}>
+			<Link href={`/nomadsland/${post.file}`}>
 				<div className="relative aspect-video w-full">
 					<Image
 						src={post.imageUrl}
 						alt={post.title}
 						fill
 						className="object-contain"
+						placeholder="blur"
+						blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNmZmZmZmYiPjwvcmVjdD48L3N2Zz4="
 					/>
 				</div>
 				<CardContent className="pt-4">

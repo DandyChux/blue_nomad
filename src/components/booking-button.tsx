@@ -14,7 +14,7 @@ export const BookingButton = () => {
 		}
 	}
 
-	if (pathname === '/blog') return null
+	if (pathname === '/nomadsland') return null
 
 	return (
 		<div className="fixed bottom-0 right-2 z-50">

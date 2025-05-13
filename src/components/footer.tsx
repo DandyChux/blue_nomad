@@ -119,7 +119,7 @@ export const Footer: React.FC = () => {
 					))}
 				</nav> */}
 
-				<div className='flex flex-col flex-1 space-y-2 mt-10 md:mt-0'>
+				<div id='subscription-form' className='flex flex-col flex-1 space-y-2 mt-10 md:mt-0'>
 					<span className='uppercase font-semibold text-xl lg:text-2xl tracking-wide'>
 						Subscribe for 10% off your first treatment.
 					</span>
@@ -138,7 +138,7 @@ export const Footer: React.FC = () => {
 											<Input
 												placeholder='E-MAIL'
 												className={cn('placeholder:font-semibold placeholder:text-black placeholder:opacity-85 shadow-none border-t-0 border-l-0 border-r-0 rounded-none', {
-													// 'border-white placeholder:text-white': pathname === '/blog' || slug !== undefined
+													// 'border-white placeholder:text-white': pathname === '/nomadsland' || slug !== undefined
 												})}
 												{...field}
 											/>
@@ -150,7 +150,7 @@ export const Footer: React.FC = () => {
 
 							<Button
 								className={cn('rounded-full uppercase mt-4 bg-transparent self-end font-bold', {
-									// 'border-white': pathname === '/blog' || slug !== undefined
+									// 'border-white': pathname === '/nomadsland' || slug !== undefined
 								})}
 								variant={'outline'}
 								size={'xl'}
@@ -203,7 +203,7 @@ export const Footer: React.FC = () => {
 				<div className='relative w-full md:w-[60%]'>
 					<Link href='/'>
 						<Image
-							// src={(pathname === '/blog' || slug !== undefined) ? '/logos/blue-nomad-white.png' : '/logos/blue-nomad.png'}
+							// src={(pathname === '/nomadsland' || slug !== undefined) ? '/logos/blue-nomad-white.png' : '/logos/blue-nomad.png'}
 							src='/logos/blue-nomad.png'
 							alt='Blue Nomad Logo'
 							width={0}
