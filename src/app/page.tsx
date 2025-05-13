@@ -61,7 +61,7 @@ export default function Home() {
 	return (
 		<>
 			{/* Hero Section */}
-			<section className='relative p-0 text-black md:text-primary-foreground'>
+			<section className='relative p-0 text-primary-foreground'>
 				<div className="absolute inset-0 -z-10">
 					<Image
 						src="/studio_background.jpg"
@@ -76,7 +76,7 @@ export default function Home() {
 					/>
 				</div>
 
-				<div className='flex flex-col m-[auto_0] px-8 pt-16 pb-8 gap-8 lg:gap-12 place-self-center'>
+				<div className='flex flex-col m-[auto_0] pl-14 md:pl-8 pt-16 pb-8 gap-8 lg:gap-12 place-self-center'>
 					<p className='uppercase w-full md:w-auto text-2xl lg:text-4xl'>
 						<span>modern wellness</span> <br />
 						<span className='pl-4 md:pl-8'>inspired</span> <br />
