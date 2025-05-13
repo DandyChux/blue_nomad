@@ -98,7 +98,8 @@ export const Navbar: React.FC = () => {
 				<nav className='hidden group-hover:flex'>
 					<ul
 						className={cn('flex gap-8 *:uppercase text-black', {
-							'text-pale-grey': pathname === '/' || pathname === '/nomadsland'
+							'text-pale-grey': pathname === '/nomadsland',
+							'text-primary-foreground': pathname === '/'
 						})}
 					>
 						{navLinks.map((item) => (
