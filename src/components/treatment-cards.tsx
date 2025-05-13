@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { cn } from '~/lib/utils';
 import { Button } from './ui/button';
 import {
@@ -61,34 +61,6 @@ const treatments: TreatmentProps[] = [
 ];
 
 export default function TreatmentCards() {
-	const [imagesLoaded, setImagesLoaded] = useState(false);
-
-	// Preload all images and set imagesLoaded when complete
-	useEffect(() => {
-		const imagesToLoad = [
-			...treatments.map(t => t.defaultImage),
-			...treatments.map(t => t.hoverImage)
-		];
-
-		let loadedCount = 0;
-		const imagePromises = imagesToLoad.map(src => {
-			return new Promise((resolve, reject) => {
-				const img = new globalThis.Image();
-				img.src = src;
-				img.onload = () => {
-					loadedCount++;
-					resolve(true);
-				};
-				img.onerror = reject;
-			});
-		});
-
-		Promise.all(imagePromises)
-			.then(() => setImagesLoaded(true))
-			.catch(err => console.error('Error preloading images:', err));
-
-	}, []);
-
 	return (
 		<div className='flex flex-col items-center'>
 			<div className='grid md:grid-cols-2 lg:grid-cols-3 mx-auto gap-4 p-2 md:p-8'>
@@ -103,7 +75,6 @@ export default function TreatmentCards() {
 						membersOnly={treatment.membersOnly}
 						link={treatment.link}
 						index={index}
-						imagesLoaded={imagesLoaded}
 					/>
 				))}
 			</div>
@@ -124,7 +95,7 @@ export default function TreatmentCards() {
 	);
 }
 
-const TreatmentCard: React.FC<TreatmentCardProps & { imagesLoaded: boolean }> = ({
+const TreatmentCard: React.FC<TreatmentCardProps> = ({
 	description,
 	defaultImage,
 	hoverImage,
@@ -134,15 +105,13 @@ const TreatmentCard: React.FC<TreatmentCardProps & { imagesLoaded: boolean }> = 
 	className,
 	index,
 	link,
-	imagesLoaded,
 }) => {
 	const [isHovered, setIsHovered] = useState(false);
-	const shouldApplyHover = imagesLoaded && isHovered;
 
 	return (
 		<Card
-			onMouseEnter={() => imagesLoaded && setIsHovered(true)}
-			onMouseLeave={() => imagesLoaded && setIsHovered(false)}
+			onMouseEnter={() => setIsHovered(true)}
+			onMouseLeave={() => setIsHovered(false)}
 			className={cn(
 				'relative group rounded-none p-4 border-none flex flex-col',
 				{
@@ -196,9 +165,10 @@ const TreatmentCard: React.FC<TreatmentCardProps & { imagesLoaded: boolean }> = 
 				})}
 			>
 				<Image
-					src={shouldApplyHover ? hoverImage : defaultImage}
+					src={isHovered ? hoverImage : defaultImage}
 					alt={title}
 					fill
+					loading='lazy'
 					className={cn('object-cover h-full w-full', {
 						'object-[5%_35%]': index % 2 === 0,
 					})}

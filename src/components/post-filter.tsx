@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Badge } from "~/components/ui/badge"
 import { Button } from "~/components/ui/button"
-import type { Post } from "~/app/blog/types"
+import type { Post } from "~/app/nomadsland/types"
 import { cn } from "~/lib/utils"
 
 interface PostFilterProps {
