@@ -15,7 +15,8 @@ const nextConfig: NextConfig = {
 				hostname: "blue-nomad.nyc3.cdn.digitaloceanspaces.com",
 				// pathname: '/**/*'
 			}
-		]
+		],
+		unoptimized: true,
 	},
 	headers: async () => {
 		return [
