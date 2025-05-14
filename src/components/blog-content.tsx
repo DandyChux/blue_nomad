@@ -17,10 +17,10 @@ function PostRow({ row, rowIndex }: { row: Post[], rowIndex: number }) {
 		<div
 			ref={rowRef as RefObject<HTMLDivElement>}
 			className={`
-        grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16 mb-16
-        opacity-0 translate-y-8 transition-all duration-[1500ms] ease-in-out
-        ${isRowVisible ? 'opacity-100 translate-y-0' : ''}
-      `}
+				grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16 mb-16
+				opacity-0 translate-y-8 transition-all duration-[1500ms] ease-in-out
+				${isRowVisible ? 'opacity-100 translate-y-0' : ''}
+			`}
 			style={{ transitionDelay: `${rowIndex * 200}ms` }}
 		>
 			{row.map((post, index) => (
@@ -124,7 +124,14 @@ export function FilteredBlogContent({ posts }: { posts: Post[] }) {
 
 		// Post must match both conditions
 		return matchesCategory && matchesSearch;
-	});
+	})
+		// Sort posts by date, most recent first
+		.sort((a, b) => {
+			if (a.date && b.date) {
+				return new Date(b.date).getTime() - new Date(a.date).getTime();
+			}
+			return 0;
+		});
 
 	return (
 		<>
