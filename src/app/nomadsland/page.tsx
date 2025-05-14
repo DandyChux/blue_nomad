@@ -1,6 +1,6 @@
 import type { Post, SanityCategory, SanitySlug } from './types';
 import { postPathsQuery, postsQuery } from '~/sanity/lib/queries';
-import { sanityFetch } from '~/sanity/lib/fetch';
+import { sanityFetch } from '~/sanity/lib/live';
 import { FilteredBlogContent } from '~/components/blog-content';
 import Image from 'next/image';
 
@@ -29,12 +29,12 @@ type SanityPost = {
 
 
 export default async function BlogPage() {
-	const posts = await sanityFetch<SanityPost[]>({
+	const { data: posts } = await sanityFetch({
 		query: postsQuery,
-		tags: ['blog', 'posts']
+		tags: ['blog', 'posts'],
 	})
 
-	const formattedPosts: Post[] = posts.map((post) => ({
+	const formattedPosts: Post[] = posts.map((post: any) => ({
 		title: post.title,
 		file: post.slug.current,
 		description: post.description ?? "",
@@ -47,7 +47,7 @@ export default async function BlogPage() {
 			imageUrl: "/images/blog/elie-profile.jpg",
 		},
 		imageUrl: post.imageUrl ?? "/studio_background.jpg",
-		categories: post.categories.map(category => category.title)
+		categories: post.categories.map((category: any) => category.title)
 	}))
 
 	return (

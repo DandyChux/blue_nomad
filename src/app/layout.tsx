@@ -10,6 +10,7 @@ import { Spectral, Source_Code_Pro } from 'next/font/google'
 import Image from 'next/image';
 
 import './globals.css';
+import { SanityLive } from '~/sanity/lib/live';
 
 // Load Google fonts
 const spectral = Spectral({
@@ -115,14 +116,17 @@ export default async function RootLayout({ children }: PropsWithChildren) {
 						quality={75}
 					/>
 				</div>
+
 				<Providers>
 					<Navbar />
 					<main className='w-full overflow-hidden'>
 						{children}
+						<SanityLive />
 					</main>
 					<BookingButton />
 					<Footer />
 				</Providers>
+
 				<Toaster
 					richColors
 					expand

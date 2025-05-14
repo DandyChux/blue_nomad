@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { client } from '~/sanity/lib/client';
-import { sanityFetch } from '~/sanity/lib/fetch';
+import { sanityFetch } from '~/sanity/lib/live';
 import { urlFor } from '~/sanity/lib/image';
 import { postPathsQuery, postQuery, postsQuery } from '~/sanity/lib/queries';
 import type { FormattedPost as PostType } from '../types';
@@ -26,7 +26,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata(props: PageProps, parent: ResolvingMetadata): Promise<Metadata> {
 	const params = await props.params;
-	const post = await sanityFetch<PostType | undefined>({
+	const { data: post } = await sanityFetch({
 		query: postQuery,
 		params
 	})
@@ -58,11 +58,13 @@ export async function generateMetadata(props: PageProps, parent: ResolvingMetada
 }
 
 export default async function PostPage({ params }: PageProps) {
-	const post = await sanityFetch<PostType>({ query: postQuery, params })
+	const { data: post } = await sanityFetch({ query: postQuery, params })
 
 	if (!post) {
 		notFound();
 	}
+
+	console.log(post)
 
 	return (
 		<article className='px-8 md:px-16 lg:px-24 pt-32 pb-12 min-h-dvh text-secondary-foreground'>
