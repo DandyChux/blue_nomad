@@ -14,6 +14,7 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from './ui/form';
 import { Input } from './ui/input';
 import { usePathname, useParams } from 'next/navigation';
 import { cn } from '~/lib/utils';
+import { usePlausible } from 'next-plausible';
 
 const contactSchema = z.object({
 	email: z.string().email('Invalid email'),
@@ -36,6 +37,7 @@ const accessoryLinks: NavItem[] = [
 
 export const Footer: React.FC = () => {
 	const pathname = usePathname();
+	const plausible = usePlausible();
 	const { slug } = useParams();
 	const year = new Date().getFullYear();
 	const form = useForm<z.infer<typeof contactSchema>>({
@@ -47,6 +49,8 @@ export const Footer: React.FC = () => {
 	const isSubmitting = form.formState.isSubmitting;
 
 	async function onSubmit(data: z.infer<typeof contactSchema>) {
+		plausible('Subscribe', { props: { email: data.email } });
+
 		const mailText = `New subscriber: ${data.email}`;
 		const response = await sendMail({
 			email: data.email,

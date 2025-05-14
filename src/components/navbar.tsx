@@ -16,6 +16,7 @@ import { cn } from '~/lib/utils';
 import { useViewport } from '~/lib/useViewport';
 import { SearchBar } from './search-bar';
 import { useSearch } from '~/lib/contexts/search-context';
+import { usePlausible } from 'next-plausible';
 
 export type NavItem = {
 	label: string;
@@ -48,6 +49,7 @@ export const navLinks: NavItem[] = [
 
 export const Navbar: React.FC = () => {
 	const pathname = usePathname();
+	const plausible = usePlausible();
 	const { width } = useViewport();
 	const { setSearchQuery } = useSearch(); // Use our search context
 
@@ -88,6 +90,13 @@ export const Navbar: React.FC = () => {
 									rel='nofollow noopener noreferrer'
 									target={item.href.includes('squareup') ? '_blank' : undefined}
 									className='font-source-code-pro uppercase text-lg'
+									onClick={() => {
+										if (item.label === 'Gift Card') {
+											plausible('Clicked Gift Card')
+										} else if (item.label === 'Book a Treatment') {
+											plausible('Clicked Treatment Booking')
+										}
+									}}
 								>
 									{item.label}
 								</Link>

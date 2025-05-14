@@ -12,7 +12,7 @@ import imageUrlBuilder from '@sanity/image-url'
 import { ShareLinks } from '~/components/share-links';
 import { Separator } from '~/components/ui/separator';
 
-export const revalidate = 60; // Revalidate every minute
+export const revalidate = 3600 // 1 hour
 
 interface PageProps {
 	params: Promise<{ slug: string }>
