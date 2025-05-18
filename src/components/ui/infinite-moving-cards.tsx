@@ -92,7 +92,7 @@ export const InfiniteMovingCards = ({
 			>
 				{items.map((item, idx) => (
 					<li
-						className='relative w-[300px] max-w-full shrink-0 rounded-2xl px-8 py-6'
+						className='relative md:w-[300px] w-[220px] max-w-full shrink-0 rounded-2xl md:px-8 px-3 md:py-6 py-4'
 						key={item.name}
 					>
 						{/* <Link
@@ -109,14 +109,14 @@ export const InfiniteMovingCards = ({
 								className='user-select-none pointer-events-none absolute -top-0.5 -left-0.5 -z-1 h-[calc(100%_+_4px)] w-[calc(100%_+_4px)]'
 							></div>
 
-							<div className='relative w-full h-40 mb-4 overflow-hidden rounded-lg flex place-items-center aspect-[16/9]'>
+							<div className='relative w-full md:h-40 h-32 mb-4 overflow-hidden rounded-lg flex place-items-center aspect-[4/3]'>
 								<Image
 									src={item.image}
 									alt={`Image for ${item.name}`}
 									className='object-cover object-center mx-auto'
-									width={150}
+									width={125}
 									height={100}
-									sizes="(max-width: 768px) 250px, 350px"
+									sizes="(max-width: 768px) 150px, 275px"
 									loading='lazy'
 									placeholder='blur'
 									blurDataURL='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InRyYW5zcGFyZW50Ij48L3JlY3Q+PHJlY3Qgd2lkdGg9IjYwJSIgaGVpZ2h0PSI2MCUiIHg9IjIwJSIgeT0iMjAlIiBmaWxsPSIjZWVlZWVlIiBvcGFjaXR5PSIwLjQiPjxhbmltYXRlVHJhbnNmb3JtIGF0dHJpYnV0ZU5hbWU9Im9wYWNpdHkiIHZhbHVlcz0iMC4yOzAuNTswLjIiIGR1cj0iMnMiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIj48L2FuaW1hdGVUcmFuc2Zvcm0+PC9yZWN0Pjwvc3ZnPg=='

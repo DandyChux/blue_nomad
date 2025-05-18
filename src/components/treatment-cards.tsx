@@ -34,7 +34,7 @@ const treatments: TreatmentProps[] = [
 		description:
 			'Facial skin therapy combining advanced technology with traditional massage techniques for optimal skin health. From acne care to well-aging, each treatment is customized to your needs.',
 		price: 235,
-		defaultImage: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Johanna/Look%201%20519.webp',
+		defaultImage: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Johanna/Look-1-519.webp',
 		hoverImage: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Johanna/Look%201%20435.webp',
 		link: 'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start',
 	},
@@ -53,7 +53,7 @@ const treatments: TreatmentProps[] = [
 		description:
 			'Experience our signature 60min facial skin therapy monthly, with exclusive access to on-demand skin health guidance.',
 		price: 185,
-		defaultImage: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Ego/Look%205%20306.webp',
+		defaultImage: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Ego/Look-5-306.webp',
 		hoverImage: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Ego/Ego.webp',
 		membersOnly: true,
 		link: 'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start',

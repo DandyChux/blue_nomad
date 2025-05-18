@@ -33,7 +33,7 @@ export default function Home() {
 		},
 		{
 			name: 'Hospitality Design',
-			image: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/HD-logo.jpg',
+			image: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/HD-logo.png',
 			link: 'https://hospitalitydesign.com/news/wellness-sustainability/blue-nomad-new-york/'
 		},
 		{
@@ -61,7 +61,7 @@ export default function Home() {
 	return (
 		<>
 			{/* Hero Section */}
-			<section className='relative p-0 text-primary-foreground'>
+			<section className='relative p-0 text-brand-white'>
 				<div className="absolute inset-0 -z-10">
 					<Image
 						src="/studio_background.jpg"
@@ -83,7 +83,7 @@ export default function Home() {
 						<span className='pl-8 md:pl-16'>by worlds</span> <br />
 						<span className='pl-12 md:pl-24'>near, far, and within</span>
 					</p>
-					<Button variant={'outline'} className='uppercase self-start rounded-full h-auto py-2 md:border-primary-foreground md:text-primary-foreground hover:border-black' size={'lg'}>
+					<Button variant={'outline'} className='uppercase self-start rounded-full h-auto py-2 border-brand-white md:text-brand-white hover:border-black' size={'lg'}>
 						<Link href='#treatments'>
 							Discover <br /> skin health
 						</Link>

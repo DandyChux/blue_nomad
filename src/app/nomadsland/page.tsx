@@ -51,7 +51,7 @@ export default async function BlogPage() {
 	}))
 
 	return (
-		<section className='mx-auto pt-32 px-4 lg:px-10 lg:flex-col text-pale-grey relative'>
+		<section className='mx-auto pt-32 px-4 lg:px-10 lg:flex-col text-brand-white relative'>
 			<div className="absolute inset-0 -z-10">
 				<Image
 					src="/media_section_gradient.png"

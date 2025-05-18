@@ -70,8 +70,7 @@ export const Navbar: React.FC = () => {
 						<Button variant={'ghost'} className='self-start w-auto h-fit'>
 							<Menu
 								className={cn('!size-6 lg:!size-8 xl:!size-10 text-black hover:cursor-pointer', {
-									'md:text-primary-foreground': pathname === '/',
-									'text-pale-grey': pathname === '/nomadsland'
+									'text-brand-white': pathname === '/' || pathname === '/nomadsland'
 								})}
 								strokeWidth={2.5}
 							/>
@@ -107,8 +106,7 @@ export const Navbar: React.FC = () => {
 				<nav className='hidden group-hover:flex'>
 					<ul
 						className={cn('flex gap-8 *:uppercase text-black', {
-							'text-pale-grey': pathname === '/nomadsland',
-							'text-primary-foreground': pathname === '/'
+							'text-brand-white': pathname === '/' || pathname === '/nomadsland'
 						})}
 					>
 						{navLinks.map((item) => (
@@ -119,7 +117,7 @@ export const Navbar: React.FC = () => {
 								<Link
 									href={item.href}
 									className={cn('font-semibold text-lg font-source-code-pro no-underline', {
-										'text-pale-grey': pathname === '/nomadsland'
+										'text-brand-white': pathname === '/' || pathname === '/nomadsland'
 									})}
 									rel='nofollow noopener noreferrer'
 									target={item.href.includes('squareup') ? '_blank' : undefined}
@@ -138,8 +136,11 @@ export const Navbar: React.FC = () => {
 						<div className="flex items-center mr-2">
 							<SearchBar onSearch={handleSearch} />
 						</div>
-						<Button variant={'ghost'} className={'hidden sm:inline-flex text-primary-foreground hover:text-white hover:bg-black rounded-full hover:cursor-pointer'}>
-							<Link href="#subscription-form" target='_blank' rel='noopener noreferrer' className='no-underline'>
+						<Button variant={'ghost'} className={'hidden sm:inline-flex text-brand-white hover:text-white hover:bg-black rounded-full hover:cursor-pointer'}>
+							{/* <Link href="#subscription-form" target='_blank' rel='noopener noreferrer' className='no-underline'>
+								Get Our Newsletter
+							</Link> */}
+							<Link href="#subscription-form" className='no-underline'>
 								Get Our Newsletter
 							</Link>
 						</Button>
@@ -154,11 +155,12 @@ export const Navbar: React.FC = () => {
 						})}
 					>
 						<Image
-							src={pathname === '/' ? (width < 768 ? 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/blue-nomad.png' : 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/blue-nomad-light.png') : 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/blue-nomad.png'}
+							// src={pathname === '/' ? (width < 768 ? 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/blue-nomad.png' : 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/blue-nomad-light.png') : 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/blue-nomad.png'}
+							src={'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/blue-nomad-light.png'}
 							alt='Blue Nomad Logo'
 							width={0}
 							height={0}
-							sizes='100vw'
+							sizes='(max-width: 768px) 300px, (max-width: 1024px) 300px, 400px'
 							priority
 							className='w-full h-auto sm:max-w-[300px]'
 						/>
