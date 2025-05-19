@@ -73,7 +73,7 @@ export default async function PostPage({ params }: PageProps) {
 					← Back to posts
 				</Link>
 			</nav>
-			<h1 className='uppercase mb-8'>{post.title}</h1>
+			<h1 className='uppercase mb-8 leading-[3rem]'>{post.title}</h1>
 			<p>{post.authorName}</p>
 
 			<ShareLinks
@@ -113,7 +113,7 @@ export default async function PostPage({ params }: PageProps) {
 						},
 						block: {
 							normal: ({ children }) => {
-								return <p className="mb-4">{children}</p>
+								return <p className="mb-4 font-[500]">{children}</p>
 							},
 							h1: ({ children }) => {
 								return <h1 className="mb-4 font-extrabold">{children}</h1>
