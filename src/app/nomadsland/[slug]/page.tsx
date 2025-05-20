@@ -19,10 +19,21 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-	const posts = await client.fetch(postPathsQuery)
+	try {
+		const posts = await client.fetch(postPathsQuery);
 
-	return posts
+		// Log all the slugs to check for any unusual patterns
+		console.log('Generated paths:',
+			posts.map((p: any) => p.params.slug).join(', ')
+		);
+
+		return posts;
+	} catch (error) {
+		console.error('Error generating static params:', error);
+		return [];
+	}
 }
+
 
 export async function generateMetadata(props: PageProps, parent: ResolvingMetadata): Promise<Metadata> {
 	const params = await props.params;
@@ -58,13 +69,15 @@ export async function generateMetadata(props: PageProps, parent: ResolvingMetada
 }
 
 export default async function PostPage({ params }: PageProps) {
-	const { data: post } = await sanityFetch({ query: postQuery, params })
+	const { data: post } = await sanityFetch({
+		query:
+			postQuery, params,
+		tags: ['post', `post-${(await params).slug}`]
+	})
 
 	if (!post) {
 		notFound();
 	}
-
-	console.log(post)
 
 	return (
 		<article className='px-8 md:px-16 lg:px-24 pt-32 pb-12 min-h-dvh text-secondary-foreground'>
