@@ -12,7 +12,7 @@ import imageUrlBuilder from '@sanity/image-url'
 import { ShareLinks } from '~/components/share-links';
 import { Separator } from '~/components/ui/separator';
 
-export const revalidate = 3600 // 1 hour
+export const revalidate = 1800 // 30 minutes
 
 interface PageProps {
 	params: Promise<{ slug: string }>
@@ -20,12 +20,18 @@ interface PageProps {
 
 export async function generateStaticParams() {
 	try {
-		const posts = await client.fetch(postPathsQuery);
+		// Add retry logic for robustness
+		const fetchWithRetry = async (retries = 3, delay = 1000) => {
+			try {
+				return await client.fetch(postPathsQuery);
+			} catch (error) {
+				if (retries <= 0) throw error;
+				await new Promise(resolve => setTimeout(resolve, delay));
+				return fetchWithRetry(retries - 1, delay * 2);
+			}
+		};
 
-		// Log all the slugs to check for any unusual patterns
-		console.log('Generated paths:',
-			posts.map((p: any) => p.params.slug).join(', ')
-		);
+		const posts = await fetchWithRetry();
 
 		return posts;
 	} catch (error) {
@@ -33,6 +39,7 @@ export async function generateStaticParams() {
 		return [];
 	}
 }
+
 
 
 export async function generateMetadata(props: PageProps, parent: ResolvingMetadata): Promise<Metadata> {
@@ -69,13 +76,15 @@ export async function generateMetadata(props: PageProps, parent: ResolvingMetada
 }
 
 export default async function PostPage({ params }: PageProps) {
+	const resolvedParams = await params;
 	const { data: post } = await sanityFetch({
-		query:
-			postQuery, params,
-		tags: ['post', `post-${(await params).slug}`]
+		query: postQuery,
+		params: resolvedParams,
+		tags: ['post', `post-${resolvedParams.slug}`]
 	})
 
 	if (!post) {
+		console.log(`Post not found for slug: ${resolvedParams.slug}`);
 		notFound();
 	}
 

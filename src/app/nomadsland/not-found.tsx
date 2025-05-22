@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { buttonVariants } from '~/components/ui/button';
 
 const NomadsLandNotFound: React.FC = () => {
 	return (
@@ -20,7 +21,7 @@ const NomadsLandNotFound: React.FC = () => {
 			<div className="space-y-4">
 				<Link
 					href="/nomadsland"
-					className="inline-block px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors"
+					className={buttonVariants({ variant: "default", className: "rounded-full bg-black text-white border-2 border-black uppercase hover:bg-transparent hover:text-black" })}
 				>
 					Return to Nomad's Land Blog
 				</Link>
@@ -28,7 +29,7 @@ const NomadsLandNotFound: React.FC = () => {
 				<div>
 					<Link
 						href="/"
-						className="text-indigo-600 hover:text-indigo-800 underline"
+						className="underline"
 					>
 						Go Home
 					</Link>
