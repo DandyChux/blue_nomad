@@ -18,13 +18,12 @@
 	font-weight: 400;
 
 	color-scheme: light dark;
-	/* color: rgba(255, 255, 255, 0.87); */
-	/* background-color: #242424; */
 
 	font-synthesis: style weight;
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+	font-display: swap;
 
 	--warm-ivory: oklch(0.94 0.04 83);
 	--cold-ivory: oklch(0.88 0.03 87);
@@ -141,7 +140,7 @@
 	--background-image-hero-section-gradient: url('/hero_section_gradient.png');
 	--background-image-footer-gradient: url('/footer_gradient.png');
 	--background-image-media-section-gradient: url('/media_section_gradient.png');
-	--background-image-background-gradient: url('/background_gradient.png');
+	--background-image-background-gradient: url('/background_gradient.jpg');
 	--background-image-studio-background: url('/studio_background.jpg');
 }
 
@@ -151,7 +150,7 @@
 	}
 
 	body {
-		/* background-image: url('/background_gradient.png');
+		/* background-image: url('/background_gradient.jpg');
 		background-origin: content-box;
 		background-repeat: no-repeat;
 		background-position: 0 100%;

@@ -36,18 +36,14 @@ const harmony = localFont({
 			path: './fonts/Harmony/Web Fonts/harmony-webfont-webfont.woff2',
 			weight: '400',
 			style: 'normal'
-		},
-		{
-			path: './fonts/Harmony/Web Fonts/harmony-webfont-webfont.woff',
-			weight: '400',
-			style: 'normal'
-		},
+		}
 	],
 	variable: '--font-harmony',
 	display: 'swap',
 	weight: '200 900',
 	preload: true,
-	fallback: ['system-ui', 'sans-serif']
+	fallback: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+	adjustFontFallback: 'Arial'
 });
 
 export const metadata: Metadata = {
@@ -107,7 +103,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
 			<body className={`antialiased relative`}>
 				<div className="absolute inset-0 -z-10">
 					<Image
-						src="/background_gradient.png"
+						src="/background_gradient.jpg"
 						alt="Background"
 						fill
 						priority

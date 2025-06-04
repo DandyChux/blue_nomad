@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
 		formats: ['image/webp'],
 		deviceSizes: [320, 480, 640, 750, 828, 1080, 1200, 1920, 2048, 3840],
 		imageSizes: [16, 32, 64, 96, 128, 256, 384, 512, 768, 900, 1024, 1200],
+		minimumCacheTTL: 31536000, // Cache images for 1 year
+		dangerouslyAllowSVG: true,
+		contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
 		remotePatterns: [
 			{
 				hostname: 'cdn.sanity.io',
@@ -18,6 +21,9 @@ const nextConfig: NextConfig = {
 		],
 		// unoptimized: true,
 	},
+	compress: true,
+	poweredByHeader: false,
+	generateEtags: false,
 	headers: async () => {
 		return [
 			{
