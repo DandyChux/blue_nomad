@@ -188,6 +188,7 @@ export const Footer: React.FC = () => {
 							target='_blank'
 							rel='noopener noreferrer nofollow'
 							className='font-bold uppercase font-source-code-pro'
+							onClick={() => plausible('Clicked Instagram Link')}
 						>
 							Instagram
 						</Link>
