@@ -12,7 +12,7 @@ export const postsQuery = groq`*[_type == "post"] {
 		slug,
 		description,
 	},
-	"imageUrl": mainImage.asset->url,
+	"imageUrl": mainImage.asset->url + "?updated=" + mainImage.asset->_updatedAt,
 	"author": author->{
 		name,
 		image->{
