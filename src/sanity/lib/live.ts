@@ -9,5 +9,8 @@ export const { sanityFetch, SanityLive } = defineLive({
 		perspective: "published",
 		timeout: 30000, // 30 seconds
 		ignoreBrowserTokenWarning: true
-	}) as any
+	}) as any,
+	fetchOptions: {
+		revalidate: 60,
+	}
 })
