@@ -125,13 +125,8 @@ export function FilteredBlogContent({ posts }: { posts: Post[] }) {
 		// Post must match both conditions
 		return matchesCategory && matchesSearch;
 	})
-		// Sort posts: featured posts first, then by date (most recent first)
+		// Sort posts by date, most recent first
 		.sort((a, b) => {
-			// If one post is featured and the other is not, featured comes first
-			if (a.featured && !b.featured) return -1;
-			if (!a.featured && b.featured) return 1;
-
-			// If both are featured or both are not featured, sort by date
 			if (a.date && b.date) {
 				return new Date(b.date).getTime() - new Date(a.date).getTime();
 			}
