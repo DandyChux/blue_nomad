@@ -2,7 +2,7 @@
 
 import { MenuIcon as Menu } from 'lucide-react';
 import Link from 'next/link';
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { Button } from './ui/button';
 import {
@@ -52,11 +52,35 @@ export const Navbar: React.FC = () => {
 	const plausible = usePlausible();
 	const { width } = useViewport();
 	const { setSearchQuery } = useSearch(); // Use our search context
+	const [isDesktopMenuOpen, setIsDesktopMenuOpen] = useState(false);
+	const menuRef = useRef<HTMLDivElement>(null);
 
 	// Handle search query changes
 	const handleSearch = (query: string) => {
 		setSearchQuery(query);
 	};
+
+	// Handle click outside to close menu
+	useEffect(() => {
+		const handleClickOutside = (event: MouseEvent) => {
+			if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+				setIsDesktopMenuOpen(false);
+			}
+		};
+
+		if (isDesktopMenuOpen) {
+			document.addEventListener('mousedown', handleClickOutside);
+		}
+
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, [isDesktopMenuOpen]);
+
+	// Close menu when navigating
+	useEffect(() => {
+		setIsDesktopMenuOpen(false);
+	}, [pathname]);
 
 	return (
 		<header
@@ -64,9 +88,10 @@ export const Navbar: React.FC = () => {
 				'flex items-center justify-between absolute top-0 w-full bg-transparent p-4 md:p-6 z-1'
 			}
 		>
-			<div className='flex items-center group'>
+			<div className='flex items-center' ref={menuRef}>
+				{/* Mobile menu (unchanged) */}
 				<Sheet>
-					<SheetTrigger asChild>
+					<SheetTrigger asChild className='md:hidden'>
 						<Button variant={'ghost'} className='self-start w-auto h-fit'>
 							<Menu
 								className={cn('!size-6 lg:!size-8 xl:!size-10 text-black hover:cursor-pointer', {
@@ -103,7 +128,25 @@ export const Navbar: React.FC = () => {
 						</nav>
 					</SheetContent>
 				</Sheet>
-				<nav className='hidden group-hover:flex'>
+
+				{/* Desktop menu toggle button */}
+				<Button
+					variant={'ghost'}
+					className='hidden md:flex self-start w-auto h-fit hover:cursor-pointer'
+					onClick={() => setIsDesktopMenuOpen(!isDesktopMenuOpen)}
+				>
+					<Menu
+						className={cn('!size-6 lg:!size-8 xl:!size-10 text-black', {
+							'text-brand-white': pathname === '/' || pathname === '/nomadsland'
+						})}
+						strokeWidth={2.5}
+					/>
+				</Button>
+
+				{/* Desktop navigation */}
+				<nav className={cn('hidden md:flex ml-8', {
+					'md:hidden': !isDesktopMenuOpen
+				})}>
 					<ul
 						className={cn('flex gap-8 *:uppercase text-black', {
 							'text-brand-white': pathname === '/' || pathname === '/nomadsland'
@@ -121,6 +164,13 @@ export const Navbar: React.FC = () => {
 									})}
 									rel='nofollow noopener noreferrer'
 									target={item.href.includes('squareup') ? '_blank' : undefined}
+									onClick={() => {
+										if (item.label === 'Gift Card') {
+											plausible('Clicked Gift Card')
+										} else if (item.label === 'Book a Treatment') {
+											plausible('Clicked Treatment Booking')
+										}
+									}}
 								>
 									{item.label}
 								</Link>
