@@ -88,6 +88,8 @@ export default async function PostPage({ params }: PageProps) {
 		notFound();
 	}
 
+	const formattedDate = new Date(post.date).toLocaleDateString();
+
 	return (
 		<article className='px-8 md:px-16 lg:px-24 pt-32 pb-12 min-h-dvh text-secondary-foreground'>
 			<nav className='mb-8'>
@@ -97,6 +99,7 @@ export default async function PostPage({ params }: PageProps) {
 			</nav>
 			<h1 className='uppercase mb-8 leading-[3rem]'>{post.title}</h1>
 			<p>{post.authorName}</p>
+			<span>{formattedDate}</span>
 
 			<ShareLinks
 				title={post.title}

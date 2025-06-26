@@ -43,6 +43,7 @@ export const postQuery = groq`*[_type == "post" && slug.current == $slug][0] {
 			}
 		}
 	},
+	"date": _createdAt,
 	"authorName": author->name,
 	"authorImage": author->image,
 }`;
