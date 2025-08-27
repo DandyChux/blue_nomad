@@ -1,9 +1,7 @@
-"use client"
-
 import { useState } from "react"
 import { Badge } from "~/components/ui/badge"
 import { Button } from "~/components/ui/button"
-import type { Post } from "~/app/nomadsland/types"
+import type { Post } from "~/types"
 import { cn } from "~/lib/utils"
 
 interface PostFilterProps {
@@ -32,10 +30,10 @@ export function PostFilter({ posts, selectedCategories, onCategorySelect }: Post
 	// Manual sorting based on the categoryOrder array
 	const allCategories = [...uniqueCategories].sort((a, b) => {
 		const indexA = categoryOrder.findIndex(
-			cat => cat.toLowerCase() === a.toLowerCase()
+			cat => cat.toLowerCase() === a.title.toLowerCase()
 		);
 		const indexB = categoryOrder.findIndex(
-			cat => cat.toLowerCase() === b.toLowerCase()
+			cat => cat.toLowerCase() === b.title.toLowerCase()
 		);
 
 		// If both categories are in our defined order list
@@ -50,7 +48,7 @@ export function PostFilter({ posts, selectedCategories, onCategorySelect }: Post
 		if (indexB !== -1) return 1;
 
 		// Alphabetical sorting for any other categories
-		return a.localeCompare(b);
+		return a.title.localeCompare(b.title);
 	});
 
 	const toggleTag = (tag: string) => {
@@ -74,12 +72,12 @@ export function PostFilter({ posts, selectedCategories, onCategorySelect }: Post
 			})}>
 				{allCategories.map((category) => (
 					<Badge
-						key={category}
-						variant={selectedCategories.includes(category) ? "default" : "ghost"}
+						key={category.title}
+						variant={selectedCategories.includes(category.title) ? "default" : "ghost"}
 						className="cursor-pointer uppercase hover:underline text-sm sm:text-base hover:text-cold-ivory"
-						onClick={() => toggleTag(category)}
+						onClick={() => toggleTag(category.title)}
 					>
-						{category}
+						{category.title}
 					</Badge>
 				))}
 			</div>

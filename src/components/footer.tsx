@@ -1,20 +1,16 @@
-'use client';
-
 import { zodResolver } from '@hookform/resolvers/zod';
-import Image from 'next/image';
-import Link from 'next/link';
+import { Image } from './ui/image';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
-import { sendMail } from '~/app/actions';
+import { sendMail } from '~/lib/api';
 import { NavItem, navLinks } from './navbar';
 import { Button } from './ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from './ui/form';
 import { Input } from './ui/input';
-import { usePathname, useParams } from 'next/navigation';
 import { cn } from '~/lib/utils';
-import { usePlausible } from 'next-plausible';
+import { getRouteApi } from '@tanstack/react-router';
 
 const contactSchema = z.object({
 	email: z.string().email('Invalid email'),
@@ -36,9 +32,6 @@ const accessoryLinks: NavItem[] = [
 ];
 
 export const Footer: React.FC = () => {
-	const pathname = usePathname();
-	const plausible = usePlausible();
-	const { slug } = useParams();
 	const year = new Date().getFullYear();
 	const form = useForm<z.infer<typeof contactSchema>>({
 		resolver: zodResolver(contactSchema),
@@ -49,18 +42,21 @@ export const Footer: React.FC = () => {
 	const isSubmitting = form.formState.isSubmitting;
 
 	async function onSubmit(data: z.infer<typeof contactSchema>) {
-		plausible('Subscribe', { props: { email: data.email } });
+		if (typeof window !== 'undefined' && (window as any).plausible) {
+			(window as any).plausible('Subscribe', { props: { email: data.email } });
+		}
 
 		const mailText = `New subscriber: ${data.email}`;
-		const response = await sendMail({
-			email: data.email,
-			subject: 'New Subscription',
-			text: mailText,
-		});
+		try {
+			const response = await sendMail({
+				email: data.email,
+				subject: 'New Subscription',
+				text: mailText,
+			});
 
-		if (response?.messageId) {
 			toast.success('Thank you for subscribing!');
-		} else {
+		} catch (error) {
+			console.error('Subscription error:', error);
 			toast.error('Failed to subscribe. Please try again.');
 		}
 	}
@@ -71,10 +67,6 @@ export const Footer: React.FC = () => {
 				<Image
 					src="/footer_gradient.png"
 					alt="Background"
-					fill
-					priority
-					placeholder="blur"
-					blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNmZmZmZmYiPjwvcmVjdD48L3N2Zz4="
 					className="object-cover xl:object-cover object-center"
 					sizes="100vw"
 				/>
@@ -96,7 +88,7 @@ export const Footer: React.FC = () => {
 				<div className='flex flex-col flex-1 h-full justify-between'>
 					<nav className='inline-flex flex-col gap-4 tracking-wide'>
 						{navLinks.map((link) => (
-							<Link
+							<a
 								key={link.label}
 								href={link.href}
 								className='uppercase text-lg md:text-xl font-bold'
@@ -104,14 +96,14 @@ export const Footer: React.FC = () => {
 								rel='noopener noreferrer nofollow'
 							>
 								{link.label}
-							</Link>
+							</a>
 						))}
 					</nav>
 				</div>
 
 				{/* <nav className='flex flex-col gap-2 flex-1'>
 					{accessoryLinks.map((link, index) => (
-						<Link
+						<a
 							key={index}
 							href={link.href}
 							// target='_blank'
@@ -175,7 +167,7 @@ export const Footer: React.FC = () => {
 					</span>
 
 					<nav className='flex gap-8'>
-						{/* <Link
+						{/* <a
 							href='https://open.spotify.com/playlist/4XgNSZMlb2nPYlgjRyJphW?si=MfZFdSygTEWVGPij1nHwBQ&pi=u-MDOmpmukRmuB'
 							target='_blank'
 							rel='noopener noreferrer nofollow'
@@ -183,32 +175,30 @@ export const Footer: React.FC = () => {
 						>
 							Spotify
 						</Link> */}
-						<Link
+						<a
 							href='https://www.instagram.com/bluenomadworld'
 							target='_blank'
 							rel='noopener noreferrer nofollow'
-							className='font-bold uppercase font-source-code-pro'
-							onClick={() => plausible('Clicked Instagram Link')}
+							className='font-bold uppercase font-source-code-pro plausible-event-name=Clicked+Instagram+Link'
 						>
 							Instagram
-						</Link>
-						<Link
+						</a>
+						<a
 							href='https://www.tiktok.com/@bluenomadworld?_t=8sLa1tyGeW6&_r=1'
 							target='_blank'
 							rel='noopener noreferrer nofollow'
 							className='font-bold uppercase font-source-code-pro'
 						>
 							TikTok
-						</Link>
+						</a>
 					</nav>
 				</div>
 			</div>
 
 			<div className='flex flex-col lg:flex-row w-full items-center px-8'>
 				<div className='relative w-full md:w-[60%]'>
-					<Link href='/'>
+					<a href='/'>
 						<Image
-							// src={(pathname === '/nomadsland' || slug !== undefined) ? '/logos/blue-nomad-white.png' : '/logos/blue-nomad.png'}
 							src='/logos/blue-nomad.png'
 							alt='Blue Nomad Logo'
 							width={0}
@@ -216,7 +206,7 @@ export const Footer: React.FC = () => {
 							sizes='100vw'
 							className='w-full h-auto'
 						/>
-					</Link>
+					</a>
 				</div>
 				<small className='text-[0.5rem] lg:text-sm mt-2 lg:mt-0 uppercase font-bold place-self-center lg:place-self-end lg:px-20 grow'>
 					&#169;{year} Blue Nomad Labs LLC. All rights reserved.

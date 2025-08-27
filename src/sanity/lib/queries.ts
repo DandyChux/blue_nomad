@@ -1,68 +1,94 @@
-import { groq } from "next-sanity";
-
 // Get all posts
-export const postsQuery = groq`*[_type == "post"] {
-	_createdAt,
-	title,
-	description,
-	slug,
-	mainImage,
-	categories[]->{
-		title,
-		slug,
-		description,
-	},
-	"imageUrl": mainImage.asset->url + "?updated=" + mainImage.asset->_updatedAt,
-	"author": author->{
-		name,
-		image->{
-			...,
-			metadata
-		},
-		bio,
-		slug->{
-			...,
-			metadata
-		}
-	}
-}`;
+export const POSTS_QUERY = `*[_type == "post"] | order(_createdAt desc) {
+  _id,
+  _createdAt,
+  title,
+  "slug": slug.current,
+  description,
+  mainImage,
+  categories[]->{
+    _id,
+    title,
+    "slug": slug.current,
+    description,
+  },
+  "imageUrl": mainImage.asset->url,
+  "author": author->{
+    _id,
+    name,
+    image,
+    bio,
+    "slug": slug.current
+  }
+}`
 
 // Get a single post by slug
-export const postQuery = groq`*[_type == "post" && slug.current == $slug][0] {
-	title,
-	description,
-	mainImage,
-	categories,
-	body[]{
-		...,
-		_type == "image" => {
-			...,
-			asset->{
-				...,
-				metadata
-			}
-		}
-	},
-	"date": _createdAt,
-	"authorName": author->name,
-	"authorImage": author->image,
-}`;
+export const POST_QUERY = `*[_type == "post" && slug.current == $slug][0] {
+  _id,
+  title,
+  "slug": slug.current,
+  description,
+  mainImage,
+  categories[]->{
+    _id,
+    title,
+    "slug": slug.current
+  },
+  body[]{
+    ...,
+    _type == "image" => {
+      ...,
+      asset->{
+        ...,
+        metadata
+      }
+    }
+  },
+  "date": _createdAt,
+  "publishedAt": _createdAt,
+  "author": author->{
+    _id,
+    name,
+    image,
+    bio
+  }
+}`
 
-// Get all post slugs
-export const postPathsQuery = groq`*[_type == "post" && defined(slug.current)][]{
-	"params": { "slug": slug.current }
-}`;
+// Get all categories
+export const CATEGORIES_QUERY = `*[_type == "category"] | order(title asc) {
+  _id,
+  title,
+  "slug": slug.current,
+  description
+}`
 
-// Get 4 most recent posts
-export const recentPostsQuery = groq`*[_type == "post"] | order(date desc) [0...4] {
-	"slug": slug.current,
-	title,
-	description,
-	date,
-	"image": mainImage.asset->url
-}`;
+// Get posts by category
+export const POSTS_BY_CATEGORY_QUERY = `*[_type == "post" && references($categoryId)] | order(_createdAt desc) {
+  _id,
+  _createdAt,
+  title,
+  "slug": slug.current,
+  description,
+  mainImage,
+  categories[]->{
+    _id,
+    title,
+    "slug": slug.current
+  }
+}`
 
-export const postSlugsQuery = groq`*[_type == "post"] {
-	"slug": slug.current,
-	date
-}`;
+// Get recent posts (for homepage or sidebar)
+export const RECENT_POSTS_QUERY = `*[_type == "post"] | order(_createdAt desc) [0...4] {
+  _id,
+  "slug": slug.current,
+  title,
+  description,
+  _createdAt,
+  "imageUrl": mainImage.asset->url
+}`
+
+// For generating sitemap or similar
+export const ALL_POST_SLUGS_QUERY = `*[_type == "post" && defined(slug.current)]{
+  "slug": slug.current,
+  _updatedAt
+}`

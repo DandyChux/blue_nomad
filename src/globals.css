@@ -4,13 +4,13 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* @font-face {
+@font-face {
 	font-family: harmony;
 	src: url("/fonts/Harmony.woff") format("woff");
 	font-style: normal;
 	font-weight: 400;
 	font-display: swap;
-} */
+}
 
 :root {
 	/* font-family: system-ui, Avenir, Helvetica, Arial, sans-serif; */
