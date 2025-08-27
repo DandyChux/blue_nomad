@@ -56,6 +56,11 @@ export default function Home() {
 			image: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/flatiron-logo.svg',
 			link: 'https://flatironnomad.nyc/2025/03/05/february-news-roundup-6/'
 		},
+		{
+			name: 'House and Garden',
+			image: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/house-and-garden.svg',
+			link: 'https://www.houseandgarden.co.za/'
+		}
 	]
 
 	return (

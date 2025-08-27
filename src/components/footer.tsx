@@ -125,7 +125,7 @@ export const Footer: React.FC = () => {
 
 				<div id='subscription-form' className='flex flex-col flex-1 space-y-2 mt-10 md:mt-0'>
 					<span className='uppercase font-semibold text-xl lg:text-2xl tracking-wide'>
-						Subscribe for 10% off your first treatment.
+						Notes from our world, first.
 					</span>
 
 					<Form {...form}>
