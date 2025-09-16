@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation';
 import { usePlausible } from 'next-plausible';
 
 export const BookingButton = () => {
-	const pathname = usePathname();
+	// const pathname = usePathname();
 	const plausible = usePlausible();
 
 	const handleClose = () => {
@@ -21,7 +21,7 @@ export const BookingButton = () => {
 		plausible("Clicked Booking Button")
 	}
 
-	if (pathname === '/nomadsland') return null
+	// if (pathname === '/nomadsland') return null
 
 	return (
 		<div className="fixed bottom-0 right-2 z-50">

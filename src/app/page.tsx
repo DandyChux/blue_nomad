@@ -60,6 +60,11 @@ export default function Home() {
 			name: 'House and Garden',
 			image: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/house-and-garden.svg',
 			link: 'https://www.houseandgarden.co.za/'
+		},
+		{
+			name: 'Archello',
+			image: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/archello.svg',
+			link: 'https://archello.com'
 		}
 	]
 
