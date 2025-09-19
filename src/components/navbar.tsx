@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { ModeToggle } from './mode-toggle'
 import { Menu } from 'lucide-react'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Sheet, SheetContent, SheetTrigger } from '~/components/ui/sheet'
 import { Button } from '~/components/ui/button'
 

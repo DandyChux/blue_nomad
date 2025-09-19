@@ -2,8 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { cn } from '~/lib/utils';
-import Image from 'next/image';
-import Link from 'next/link';
+import { Image } from './image';
 
 export type MovingCardProps = {
 	name: string;
@@ -118,8 +117,6 @@ export const InfiniteMovingCards = ({
 									height={100}
 									sizes="(max-width: 768px) 150px, 275px"
 									loading='lazy'
-									placeholder='blur'
-									blurDataURL='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InRyYW5zcGFyZW50Ij48L3JlY3Q+PHJlY3Qgd2lkdGg9IjYwJSIgaGVpZ2h0PSI2MCUiIHg9IjIwJSIgeT0iMjAlIiBmaWxsPSIjZWVlZWVlIiBvcGFjaXR5PSIwLjQiPjxhbmltYXRlVHJhbnNmb3JtIGF0dHJpYnV0ZU5hbWU9Im9wYWNpdHkiIHZhbHVlcz0iMC4yOzAuNTswLjIiIGR1cj0iMnMiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIj48L2FuaW1hdGVUcmFuc2Zvcm0+PC9yZWN0Pjwvc3ZnPg=='
 								/>
 							</div>
 							{/* <span className='relative z-20 text-sm leading-[1.6] font-normal'>

@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import { Image } from './ui/image';
 import { useViewport } from '~/lib/useViewport';
 import { roundTo } from '~/lib/utils';
 

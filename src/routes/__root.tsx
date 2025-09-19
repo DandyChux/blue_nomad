@@ -1,8 +1,8 @@
 import { createRootRouteWithContext, Outlet } from '@tanstack/react-router'
 import { QueryClient } from '@tanstack/react-query'
-import Navbar from '~/components/navbar'
+import { Navbar } from '~/components/navbar'
 import { Footer } from '~/components/footer'
-import { SanityLive } from '~/sanity/lib/live'
+import { SanityLive } from '~/components/sanity-live'
 import { Toaster } from 'sonner'
 import { BookingButton } from '~/components/booking-button'
 
