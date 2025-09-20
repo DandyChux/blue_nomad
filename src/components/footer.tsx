@@ -7,7 +7,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
-import { sendMail } from '~/app/actions';
+import { addToHubSpot, sendMail } from '~/app/actions';
 import { NavItem, navLinks } from './navbar';
 import { Button } from './ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from './ui/form';
@@ -49,19 +49,41 @@ export const Footer: React.FC = () => {
 	const isSubmitting = form.formState.isSubmitting;
 
 	async function onSubmit(data: z.infer<typeof contactSchema>) {
-		plausible('Subscribe', { props: { email: data.email } });
+		try {
+			// Track the subscription event
+			plausible('Subscribe', { props: { email: data.email } });
 
-		const mailText = `New subscriber: ${data.email}`;
-		const response = await sendMail({
-			email: data.email,
-			subject: 'New Subscription',
-			text: mailText,
-		});
+			// Add contact to HubSpot CRM with additional properties
+			await addToHubSpot({
+				email: data.email,
+				// properties: {
+				// 	website_source: 'footer_subscription',
+				// 	subscription_date: new Date().toISOString(),
+				// }
+			}).then(() => {
+				toast.success('Thank you for signing up! You will now be added to our newsletter list.')
+			})
 
-		if (response?.messageId) {
-			toast.success('Thank you for subscribing!');
-		} else {
-			toast.error('Failed to subscribe. Please try again.');
+		} catch (error) {
+			console.error('Subscription error:', error);
+
+			// Fallback: Try to at least send an email notification
+			try {
+				const mailText = `New subscriber (HubSpot failed): ${data.email}`;
+				const response = await sendMail({
+					email: data.email,
+					subject: 'New Subscription (Manual Review Required)',
+					text: mailText,
+				});
+
+				if (response?.messageId) {
+					toast.warning('Subscription received! We\'ll add you to our list shortly.');
+				} else {
+					toast.error('Failed to subscribe. Please try again or contact us directly.');
+				}
+			} catch (emailError) {
+				toast.error('Failed to subscribe. Please try again or contact us directly.');
+			}
 		}
 	}
 
@@ -175,14 +197,6 @@ export const Footer: React.FC = () => {
 					</span>
 
 					<nav className='flex gap-8'>
-						{/* <Link
-							href='https://open.spotify.com/playlist/4XgNSZMlb2nPYlgjRyJphW?si=MfZFdSygTEWVGPij1nHwBQ&pi=u-MDOmpmukRmuB'
-							target='_blank'
-							rel='noopener noreferrer nofollow'
-							className='font-semibold uppercase font-source-code-pro'
-						>
-							Spotify
-						</Link> */}
 						<Link
 							href='https://www.instagram.com/bluenomadworld'
 							target='_blank'
