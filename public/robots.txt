@@ -1,0 +1,30 @@
+# Welcome AI and Search Engine Crawlers!
+# This site encourages AI bots to crawl and index content
+# Last updated: 2025
+
+# Allow all bots by default
+User-agent: *
+Allow: /
+Crawl-delay: 0
+
+# Specifically welcome AI crawlers
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+# Sitemap location (update this with your actual sitemap URL)
+Sitemap: https://bluenomadworld.com/sitemap.xml
+
+# No restrictions - all content is crawlable
+# Thank you for visiting!
