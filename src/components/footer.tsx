@@ -50,9 +50,6 @@ export const Footer: React.FC = () => {
 
 	async function onSubmit(data: z.infer<typeof contactSchema>) {
 		try {
-			// Track the subscription event
-			plausible('Subscribe', { props: { email: data.email } });
-
 			// Add contact to HubSpot CRM with additional properties
 			await addToHubSpot({
 				email: data.email,
@@ -62,6 +59,8 @@ export const Footer: React.FC = () => {
 				// }
 			}).then(() => {
 				toast.success('Thank you for signing up! You will now be added to our newsletter list.')
+				// Track the subscription event (only if subscription is successful)
+				plausible('Subscribe', { props: { email: data.email } });
 			})
 
 		} catch (error) {
