@@ -113,7 +113,6 @@ export const InfiniteMovingCards = ({
 									className='object-cover object-center mx-auto'
 									width={125}
 									height={100}
-									sizes="(max-width: 768px) 150px, 275px"
 									loading='eager'
 								/>
 							</div>

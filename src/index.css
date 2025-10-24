@@ -150,11 +150,11 @@
 	}
 
 	body {
-		/* background-image: url('/background_gradient.jpg');
+		background-image: url('/background_gradient.jpg');
 		background-origin: content-box;
 		background-repeat: no-repeat;
 		background-position: 0 100%;
-		background-size: cover; */
+		background-size: cover;
 		color: var(--foreground);
 		font-family: var(--font-harmony);
 		overflow-y: auto;

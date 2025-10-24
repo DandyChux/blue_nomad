@@ -19,14 +19,6 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 function RootComponent() {
 	return (
 		<>
-			<Image
-				src="/background_gradient.jpg"
-				alt="Background"
-				className="object-cover w-full h-full"
-				wrapperClassName='absolute inset-0 -z-10'
-				loading='eager'
-			/>
-
 			<Navbar />
 			<main className='w-full overflow-hidden'>
 				<Outlet />
