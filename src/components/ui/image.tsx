@@ -6,6 +6,7 @@ export interface ImageProps
 	extends React.ImgHTMLAttributes<HTMLImageElement> {
 	fallback?: React.ReactNode;
 	wrapperClassName?: string;
+	crossOrigin?: 'anonymous' | 'use-credentials';
 }
 
 export const Image: React.FC<ImageProps> = ({
@@ -14,10 +15,15 @@ export const Image: React.FC<ImageProps> = ({
 	src,
 	className,
 	wrapperClassName,
+	crossOrigin,
 	...props
 }) => {
 	const [status, setStatus] = useState<'loading' | 'loaded' | 'error'>('loading');
 	const imgRef = useRef<HTMLImageElement>(null);
+
+	// Determine if we need CORS based on URL
+	const needsCors = src && (src.startsWith('http://') || src.startsWith('https://')) && !src.includes(window.location.hostname);
+	const effectiveCrossOrigin = crossOrigin ?? (needsCors ? 'anonymous' : undefined);
 
 	useEffect(() => {
 		if (!src) {
@@ -30,6 +36,11 @@ export const Image: React.FC<ImageProps> = ({
 
 		// Create a new image element to preload
 		const img = new window.Image();
+
+		// Set crossOrigin before setting src (only if needed)
+		if (effectiveCrossOrigin) {
+			img.crossOrigin = effectiveCrossOrigin;
+		}
 
 		const handleLoad = () => {
 			setStatus('loaded');
@@ -55,7 +66,7 @@ export const Image: React.FC<ImageProps> = ({
 			img.removeEventListener('load', handleLoad);
 			img.removeEventListener('error', handleError);
 		};
-	}, [src]);
+	}, [src, effectiveCrossOrigin]);
 
 	if (status === 'error') {
 		return <div className={cn("relative", wrapperClassName)}>{fallback}</div>;
@@ -73,6 +84,7 @@ export const Image: React.FC<ImageProps> = ({
 				{...props}
 				src={src}
 				alt={alt}
+				crossOrigin={effectiveCrossOrigin}
 				className={cn(
 					className,
 					status !== 'loaded' && 'invisible'

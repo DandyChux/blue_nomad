@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080'
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
 
 export interface SendMailRequest {
 	email: string
@@ -15,7 +15,7 @@ export interface SubscribeRequest {
 
 class ApiClient {
 	async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
-		const url = `${API_URL}/api${endpoint}`
+		const url = `${API_URL}${endpoint}`
 
 		const config: RequestInit = {
 			...options,
@@ -53,9 +53,9 @@ class ApiClient {
 	}
 }
 
-export const api = new ApiClient()
+export const apiClient = new ApiClient()
 
 // Export a function to replace server actions
 export async function sendMail(data: SendMailRequest) {
-	return api.sendMail(data)
+	return apiClient.sendMail(data)
 }

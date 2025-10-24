@@ -164,7 +164,6 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 				<Image
 					src={isHovered ? hoverImage : defaultImage}
 					alt={title}
-					sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
 					// quality={85}
 					loading='lazy'
 					className={cn('object-cover h-full w-full', {

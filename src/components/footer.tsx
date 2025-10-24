@@ -4,7 +4,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
-import { sendMail, api } from '~/lib/api';
+import { sendMail, apiClient } from '~/lib/api';
 import { NavItem, navLinks } from './navbar';
 import { Button } from './ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from './ui/form';
@@ -43,7 +43,7 @@ export const Footer: React.FC = () => {
 	async function onSubmit(data: z.infer<typeof contactSchema>) {
 
 		try {
-			await api.subscribe(data).then(() => {
+			await apiClient.subscribe(data).then(() => {
 
 				if (typeof window !== 'undefined' && window.plausible) {
 					window.plausible('Subscribe', { props: { email: data.email } });

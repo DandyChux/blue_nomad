@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useEffect, useState } from 'react';
 import { cn } from '~/lib/utils';
 import { Image } from './image';
@@ -116,7 +114,7 @@ export const InfiniteMovingCards = ({
 									width={125}
 									height={100}
 									sizes="(max-width: 768px) 150px, 275px"
-									loading='lazy'
+									loading='eager'
 								/>
 							</div>
 							{/* <span className='relative z-20 text-sm leading-[1.6] font-normal'>

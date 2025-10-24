@@ -1,5 +1,3 @@
-'use client';
-
 import { Image } from './ui/image';
 import { useViewport } from '~/lib/useViewport';
 import { roundTo } from '~/lib/utils';

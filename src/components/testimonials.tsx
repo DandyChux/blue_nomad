@@ -1,15 +1,7 @@
-'use client';
-
 import { Image } from './ui/image';
 import { useViewport } from '~/lib/useViewport';
 import { Button } from './ui/button';
 
-import AndieImage from '~/assets/testimonial/Andie 1.jpeg';
-import GoharImage from '~/assets/testimonial/Gohar.png';
-import KevinImage from '~/assets/testimonial/Kevin.jpeg';
-import MawatleImage from '~/assets/testimonial/Mawatle 1.jpg';
-import RonImage from '~/assets/testimonial/Ron 1.jpeg';
-import SilvanaImage from '~/assets/testimonial/Tobin-162.jpg';
 import { roundTo } from '~/lib/utils';
 
 type TestimonialProps = {
@@ -24,37 +16,37 @@ const testimonials: TestimonialProps[] = [
 		name: 'Andie',
 		profession: 'fashion producer',
 		description: 'Rediscover what feels good',
-		image: AndieImage.src,
+		image: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/testimonial/Andie%201.webp',
 	},
 	{
 		name: 'Gohar',
 		profession: 'artist',
 		description: 'Feel inspired',
-		image: GoharImage.src,
+		image: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/testimonial/Gohar.webp',
 	},
 	{
 		name: 'Kevin',
 		profession: 'model',
 		description: 'Refresh from within',
-		image: KevinImage.src,
+		image: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/testimonial/Kevin.webp',
 	},
 	{
 		name: 'Silvana',
 		profession: 'architect + interior designer',
 		description: 'Relax and unwind',
-		image: SilvanaImage.src,
+		image: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/testimonial/Tobin-162.webp',
 	},
 	{
 		name: 'Mawatle',
 		profession: 'marketer',
 		description: 'Embrace my authentic self',
-		image: MawatleImage.src,
+		image: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/testimonial/Mawatle%201.webp',
 	},
 	{
 		name: 'Ron',
 		profession: 'Tech founder',
 		description: 'Feel energized!',
-		image: RonImage.src,
+		image: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/testimonial/Ron%201.webp',
 	},
 ];
 

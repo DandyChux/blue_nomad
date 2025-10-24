@@ -1,5 +1,3 @@
-'use client';
-
 import { ViewportProvider } from '~/lib/useViewport';
 import { SearchProvider } from '~/lib/contexts/search-context';
 
