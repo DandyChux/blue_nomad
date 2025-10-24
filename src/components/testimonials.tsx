@@ -1,7 +1,6 @@
 'use client';
 
-import Image from 'next/image';
-import Link from 'next/link';
+import { Image } from './ui/image';
 import { useViewport } from '~/lib/useViewport';
 import { Button } from './ui/button';
 
@@ -84,9 +83,9 @@ export default function Testimonials() {
 						size='xl'
 						className='h-auto uppercase rounded-full py-2 px-12 mt-6 hidden md:block'
 					>
-						<Link href='#treatments'>
+						<a href='#treatments'>
 							Your <br /> Turn
-						</Link>
+						</a>
 					</Button>
 				</div>
 
@@ -120,10 +119,7 @@ export default function Testimonials() {
 										style={{
 											objectFit: 'cover',
 										}}
-										fill
 										loading='lazy'
-										placeholder='blur'
-										blurDataURL='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InRyYW5zcGFyZW50Ij48L3JlY3Q+PHJlY3Qgd2lkdGg9IjYwJSIgaGVpZ2h0PSI2MCUiIHg9IjIwJSIgeT0iMjAlIiBmaWxsPSIjZWVlZWVlIiBvcGFjaXR5PSIwLjQiPjxhbmltYXRlVHJhbnNmb3JtIGF0dHJpYnV0ZU5hbWU9Im9wYWNpdHkiIHZhbHVlcz0iMC4yOzAuNTswLjIiIGR1cj0iMnMiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIj48L2FuaW1hdGVUcmFuc2Zvcm0+PC9yZWN0Pjwvc3ZnPg=='
 									/>
 								</div>
 								<figcaption className='font-[700] uppercase mt-5 font-source-code-pro'>
@@ -157,14 +153,10 @@ export default function Testimonials() {
 									<Image
 										src={testimonial.image}
 										alt={`Picture of ${testimonial.name}`}
-										fill
 										sizes="(max-width: 768px) 125px, 125px"
 										style={{
 											objectFit: 'cover',
 										}}
-										loading='lazy'
-										placeholder='blur'
-										blurDataURL='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InRyYW5zcGFyZW50Ij48L3JlY3Q+PHJlY3Qgd2lkdGg9IjYwJSIgaGVpZ2h0PSI2MCUiIHg9IjIwJSIgeT0iMjAlIiBmaWxsPSIjZWVlZWVlIiBvcGFjaXR5PSIwLjQiPjxhbmltYXRlVHJhbnNmb3JtIGF0dHJpYnV0ZU5hbWU9Im9wYWNpdHkiIHZhbHVlcz0iMC4yOzAuNTswLjIiIGR1cj0iMnMiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIj48L2FuaW1hdGVUcmFuc2Zvcm0+PC9yZWN0Pjwvc3ZnPg=='
 									/>
 								</div>
 								<figcaption className='font-[700] uppercase text-center font-source-code-pro'>
@@ -183,9 +175,9 @@ export default function Testimonials() {
 					size='xl'
 					className='h-auto uppercase rounded-full py-2 px-12 mt-6'
 				>
-					<Link href='#treatments'>
+					<a href='#treatments'>
 						Your <br /> Turn
-					</Link>
+					</a>
 				</Button>
 			</div>
 		</>

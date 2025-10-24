@@ -1,7 +1,5 @@
-"use client"
-
 import { Share2 } from 'lucide-react';
-import { usePathname } from 'next/navigation';
+import { useLocation } from '@tanstack/react-router';
 import { Button } from '~/components/ui/button'; // Assuming you're using a UI library
 import { cn } from '~/lib/utils';
 
@@ -11,7 +9,7 @@ interface ShareLinksProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export function ShareLinks({ title, description = '', ...props }: ShareLinksProps) {
-	const pathname = usePathname();
+	const { pathname } = useLocation();
 	const fullUrl = typeof window !== 'undefined'
 		? `${window.location.origin}${pathname}`
 		: '';

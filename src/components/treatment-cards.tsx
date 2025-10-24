@@ -1,7 +1,4 @@
-'use client';
-
-import Image from 'next/image';
-import Link from 'next/link';
+import { Image } from './ui/image';
 import React, { useState } from 'react';
 import { cn } from '~/lib/utils';
 import { Button } from './ui/button';
@@ -80,7 +77,7 @@ export default function TreatmentCards() {
 			</div>
 
 			<Button className='uppercase mt-6' size={'xl'} variant={'outline'}>
-				<Link
+				<a
 					href={
 						'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start'
 					}
@@ -89,7 +86,7 @@ export default function TreatmentCards() {
 				>
 					Book a <br />
 					Treatment
-				</Link>
+				</a>
 			</Button>
 		</div>
 	);
@@ -167,7 +164,6 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 				<Image
 					src={isHovered ? hoverImage : defaultImage}
 					alt={title}
-					fill
 					sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
 					// quality={85}
 					loading='lazy'

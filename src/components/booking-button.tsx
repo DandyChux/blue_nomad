@@ -1,14 +1,10 @@
-"use client"
-
 import React from 'react';
-import Link from 'next/link';
 import { Button } from './ui/button';
-import { usePathname } from 'next/navigation';
-import { usePlausible } from 'next-plausible';
+import { useLocation } from '@tanstack/react-router';
 
 export const BookingButton = () => {
-	// const pathname = usePathname();
-	const plausible = usePlausible();
+	const location = useLocation();
+	const pathname = location.pathname;
 
 	const handleClose = () => {
 		const button = document.querySelector('#booking-button');
@@ -18,7 +14,9 @@ export const BookingButton = () => {
 	}
 
 	const handleClick = () => {
-		plausible("Clicked Booking Button")
+		if (typeof window !== 'undefined' && (window as any).plausible) {
+			(window as any).plausible('Clicked Booking Button');
+		}
 	}
 
 	// if (pathname === '/nomadsland') return null
@@ -34,14 +32,14 @@ export const BookingButton = () => {
 					X
 				</button>
 				<Button onClick={handleClick} className="rounded-full bg-black text-white border-2 border-black uppercase hover:bg-transparent hover:text-black" size={'xl'} id='booking-button'>
-					<Link
+					<a
 						href="https://book.squareup.com/appointments/augj56g525h4rw/location/LSP68REJT9SVH/services"
 						target="_blank"
 						rel="noopener noreferrer"
 						className='no-underline'
 					>
 						Begin with a <br /> consultation
-					</Link>
+					</a>
 				</Button>
 			</div>
 		</div>

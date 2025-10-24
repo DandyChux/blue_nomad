@@ -1,9 +1,6 @@
-"use client"
-
 import { MenuIcon as Menu } from 'lucide-react';
-import Link from 'next/link';
 import React, { useState, useRef, useEffect } from 'react';
-import Image from 'next/image';
+import { Image } from './ui/image';
 import { Button } from './ui/button';
 import {
 	Sheet,
@@ -11,12 +8,11 @@ import {
 	SheetTrigger,
 	SheetTitle,
 } from './ui/sheet';
-import { usePathname } from 'next/navigation';
+import { Link, useLocation, useNavigate } from '@tanstack/react-router';
 import { cn } from '~/lib/utils';
 import { useViewport } from '~/lib/useViewport';
 import { SearchBar } from './search-bar';
 import { useSearch } from '~/lib/contexts/search-context';
-import { usePlausible } from 'next-plausible';
 
 export type NavItem = {
 	label: string;
@@ -48,16 +44,20 @@ export const navLinks: NavItem[] = [
 ];
 
 export const Navbar: React.FC = () => {
-	const pathname = usePathname();
-	const plausible = usePlausible();
+	const { pathname } = useLocation();
 	const { width } = useViewport();
-	const { setSearchQuery } = useSearch(); // Use our search context
+	const navigate = useNavigate();
 	const [isDesktopMenuOpen, setIsDesktopMenuOpen] = useState(false);
 	const menuRef = useRef<HTMLDivElement>(null);
 
 	// Handle search query changes
 	const handleSearch = (query: string) => {
-		setSearchQuery(query);
+		navigate({
+			from: '/nomadsland',
+			search: {
+				search: query
+			}
+		})
 	};
 
 	// Handle click outside to close menu
@@ -110,15 +110,16 @@ export const Navbar: React.FC = () => {
 							{navLinks.map((item) => (
 								<Link
 									key={item.label}
-									href={item.href}
-									rel='nofollow noopener noreferrer'
+									to={item.href}
+									rel={item.href.includes('squareup') ? 'noopener noreferrer nofollow' : undefined}
 									target={item.href.includes('squareup') ? '_blank' : undefined}
 									className='font-source-code-pro uppercase text-lg'
 									onClick={() => {
 										if (item.label === 'Gift Card') {
-											plausible('Clicked Gift Card')
+											window.plausible?.('Clicked Gift Card')
 										} else if (item.label === 'Book a Treatment') {
-											plausible('Clicked Treatment Booking')
+											window.plausible?.('Clicked Treatment Booking')
+
 										}
 									}}
 								>
@@ -158,7 +159,7 @@ export const Navbar: React.FC = () => {
 								className='motion-safe:hover:underline motion-safe:hover:underline-offset-2 duration-300 ease-in-out'
 							>
 								<Link
-									href={item.href}
+									to={item.href}
 									className={cn('font-semibold text-lg font-source-code-pro no-underline', {
 										'text-brand-white': pathname === '/' || pathname === '/nomadsland'
 									})}
@@ -166,9 +167,9 @@ export const Navbar: React.FC = () => {
 									target={item.href.includes('squareup') ? '_blank' : undefined}
 									onClick={() => {
 										if (item.label === 'Gift Card') {
-											plausible('Clicked Gift Card')
+											window.plausible?.('Clicked Gift Card')
 										} else if (item.label === 'Book a Treatment') {
-											plausible('Clicked Treatment Booking')
+											window.plausible?.('Clicked Treatment Booking')
 										}
 									}}
 								>
@@ -190,14 +191,14 @@ export const Navbar: React.FC = () => {
 							{/* <Link href="#subscription-form" target='_blank' rel='noopener noreferrer' className='no-underline'>
 								Get Our Newsletter
 							</Link> */}
-							<Link href="#subscription-form" className='no-underline'>
+							<a href="#subscription-form" className='no-underline'>
 								Get Our Newsletter
-							</Link>
+							</a>
 						</Button>
 					</>
 				)}
 				{pathname !== '/nomadsland' && (
-					<Link
+					<a
 						href='/'
 						className={cn('no-underline', {
 							'block': pathname === '/',
@@ -211,10 +212,10 @@ export const Navbar: React.FC = () => {
 							width={0}
 							height={0}
 							sizes='(max-width: 768px) 300px, (max-width: 1024px) 300px, 400px'
-							priority
+							fetchPriority='high'
 							className='w-full h-auto sm:max-w-[300px]'
 						/>
-					</Link>
+					</a>
 				)}
 			</div>
 		</header>

@@ -1,14 +1,11 @@
-"use client"
-
-import { RefObject, useEffect, useRef, useState } from "react"
+import { RefObject, useState } from "react"
 import { PostFilter } from "./post-filter"
-import type { Post } from "~/app/nomadsland/types"
+import type { Post } from "~/types"
 import { Badge } from "./ui/badge";
-import Link from 'next/link';
 import { Card, CardContent } from "./ui/card";
-import Image from "next/image";
-import { useSearch } from "~/lib/contexts/search-context";
+import { Image } from "./ui/image";
 import { useIntersectionObserver } from "~/lib/useIntersectionObserver";
+import { getRouteApi } from "@tanstack/react-router";
 
 function PostRow({ row, rowIndex }: { row: Post[], rowIndex: number }) {
 	const [rowRef, isRowVisible] = useIntersectionObserver();
@@ -69,20 +66,17 @@ function Posts({ posts }: { posts: Post[] }) {
 function PostCard({ post, showDescription = false }: { post: Post, showDescription?: boolean }) {
 	return (
 		<Card className="overflow-hidden transition-transform duration-300 bg-transparent border-none shadow-none rounded-none">
-			<Link href={`/nomadsland/${post.file}`}>
+			<a href={`/nomadsland/${post.slug}`}>
 				<div className="relative aspect-video w-full">
 					<Image
 						src={post.imageUrl}
 						alt={post.title}
-						fill
 						className="object-contain"
-						placeholder="blur"
-						blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNmZmZmZmYiPjwvcmVjdD48L3N2Zz4="
 					/>
 				</div>
 				<CardContent className="pt-4">
 					<div className='inline-flex items-center gap-x-4'>
-						{post.categories.map((category, index) => (
+						{post.categories?.map((category, index) => (
 							<Badge key={index} variant={'ghost'} className='lowercase text-sm text-brand-white hover:text-white'>
 								{category}
 							</Badge>
@@ -102,25 +96,27 @@ function PostCard({ post, showDescription = false }: { post: Post, showDescripti
 						</p>
 					)}
 				</CardContent>
-			</Link>
+			</a>
 		</Card>
 	);
 }
 
 export function FilteredBlogContent({ posts }: { posts: Post[] }) {
 	const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-	const { searchQuery } = useSearch();
+	const routeApi = getRouteApi('/nomadsland/')
+	// const { searchQuery } = useSearch();
+	const { search } = routeApi.useSearch();
 
 	// Filter posts based on both category and search query
 	const filteredPosts = posts.filter((post) => {
 		// Check if post matches selected categories (if any are selected)
 		const matchesCategory = selectedCategories.length === 0 ||
-			post.categories.some(category => selectedCategories.includes(category));
+			post.categories?.some(category => selectedCategories.includes(category));
 
 		// Check if post matches search query (if there is one)
-		const matchesSearch = !searchQuery ||
-			post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-			post.description.toLowerCase().includes(searchQuery.toLowerCase());
+		const matchesSearch = !search ||
+			post.title?.toLowerCase().includes(search.toLowerCase()) ||
+			post.description?.toLowerCase().includes(search.toLowerCase());
 
 		// Post must match both conditions
 		return matchesCategory && matchesSearch;

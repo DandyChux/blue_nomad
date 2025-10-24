@@ -1,9 +1,5 @@
-"use client"
-
-import { useState } from "react"
 import { Badge } from "~/components/ui/badge"
-import { Button } from "~/components/ui/button"
-import type { Post } from "~/app/nomadsland/types"
+import type { Post } from "~/types"
 import { cn } from "~/lib/utils"
 
 interface PostFilterProps {
@@ -24,12 +20,13 @@ export function PostFilter({ posts, selectedCategories, onCategorySelect }: Post
 	];
 
 	// Extract all unique categories from posts
-	let uniqueCategories = posts
+	const uniqueCategories = posts
 		.flatMap((post) => post.categories || [])
 		.filter(Boolean)
 		.filter((tag, index, self) => index === self.findIndex((t) => t === tag));
 
 	// Manual sorting based on the categoryOrder array
+	console.log('Categories: ', uniqueCategories)
 	const allCategories = [...uniqueCategories].sort((a, b) => {
 		const indexA = categoryOrder.findIndex(
 			cat => cat.toLowerCase() === a.toLowerCase()
