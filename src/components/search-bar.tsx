@@ -1,11 +1,9 @@
-"use client"
-
 import { useState } from "react"
 import { Input } from "~/components/ui/input"
 import { Button } from "~/components/ui/button"
 import { Search } from "lucide-react"
 import { cn } from "~/lib/utils"
-import { usePathname } from "next/navigation"
+import { useLocation } from "@tanstack/react-router"
 
 interface SearchBarProps {
 	onSearch: (query: string) => void
@@ -14,6 +12,7 @@ interface SearchBarProps {
 export function SearchBar({ onSearch }: SearchBarProps) {
 	const [searchQuery, setSearchQuery] = useState<string>("")
 	const [isExpanded, setIsExpanded] = useState<boolean>(false)
+	const { pathname } = useLocation()
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault()
@@ -45,7 +44,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
 					className="hover:cursor-pointer"
 				>
 					<Search className={cn("h-4 w-4", {
-						"text-white": usePathname() === '/nomadsland'
+						"text-white": pathname === '/nomadsland'
 					})} />
 				</Button>
 				<div className={`absolute right-full overflow-hidden transition-all duration-300 ${isExpanded ? "w-28 sm:w-40 md:w-56 pr-2" : "w-0"}`}>
@@ -56,7 +55,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
 						value={searchQuery}
 						onChange={handleInputChange}
 						className={cn("w-full", {
-							'border-white text-white': usePathname() === '/nomadsland'
+							'border-white text-white': pathname === '/nomadsland'
 						})}
 					/>
 				</div>

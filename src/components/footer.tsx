@@ -4,13 +4,12 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
-import { sendMail } from '~/lib/api';
+import { sendMail, api } from '~/lib/api';
 import { NavItem, navLinks } from './navbar';
 import { Button } from './ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from './ui/form';
 import { Input } from './ui/input';
 import { cn } from '~/lib/utils';
-import { getRouteApi } from '@tanstack/react-router';
 
 const contactSchema = z.object({
 	email: z.string().email('Invalid email'),
@@ -42,36 +41,43 @@ export const Footer: React.FC = () => {
 	const isSubmitting = form.formState.isSubmitting;
 
 	async function onSubmit(data: z.infer<typeof contactSchema>) {
-		if (typeof window !== 'undefined' && (window as any).plausible) {
-			(window as any).plausible('Subscribe', { props: { email: data.email } });
-		}
 
-		const mailText = `New subscriber: ${data.email}`;
 		try {
-			const response = await sendMail({
-				email: data.email,
-				subject: 'New Subscription',
-				text: mailText,
-			});
+			await api.subscribe(data).then(() => {
+
+				if (typeof window !== 'undefined' && window.plausible) {
+					window.plausible('Subscribe', { props: { email: data.email } });
+				}
+
+				toast.success('Thank you for signing up! You will now be added to our newsletter list.')
+
+			})
 
 			toast.success('Thank you for subscribing!');
 		} catch (error) {
 			console.error('Subscription error:', error);
-			toast.error('Failed to subscribe. Please try again.');
+
+			try {
+				const mailText = `New subscriber (HubSpot failed): ${data.email}`;
+				const response = await sendMail({
+					email: data.email,
+					subject: 'New Subscription (Manual Review Required)',
+					text: mailText,
+				});
+
+				if (response?.message) {
+					toast.warning('Subscription received! We\'ll add you to our list shortly.');
+				} else {
+					toast.error('Failed to subscribe. Please try again or contact us directly.');
+				}
+			} catch (_) {
+				toast.error('Failed to subscribe. Please try again or contact us directly.');
+			}
 		}
 	}
 
 	return (
-		<footer className={cn('flex flex-col px-2 space-y-6 relative')}>
-			<div className="absolute inset-0 -z-10">
-				<Image
-					src="/footer_gradient.png"
-					alt="Background"
-					className="object-cover xl:object-cover object-center"
-					sizes="100vw"
-				/>
-			</div>
-
+		<footer className={cn('flex flex-col px-2 pb-2 space-y-6 relative overflow-hidden bg-footer-gradient bg-cover bg-center bg-no-repeat')}>
 			<div className='flex flex-col lg:flex-row space-y-14 lg:space-y-0 px-8 md:px-12 lg:px-20 py-4 md:py-8 lg:py-16'>
 				<div className='flex-1 flex flex-col space-y-4'>
 					<h2 className='uppercase text-xl'>Our Studio</h2>

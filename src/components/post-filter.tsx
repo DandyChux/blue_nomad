@@ -1,6 +1,4 @@
-import { useState } from "react"
 import { Badge } from "~/components/ui/badge"
-import { Button } from "~/components/ui/button"
 import type { Post } from "~/types"
 import { cn } from "~/lib/utils"
 
@@ -22,18 +20,19 @@ export function PostFilter({ posts, selectedCategories, onCategorySelect }: Post
 	];
 
 	// Extract all unique categories from posts
-	let uniqueCategories = posts
+	const uniqueCategories = posts
 		.flatMap((post) => post.categories || [])
 		.filter(Boolean)
 		.filter((tag, index, self) => index === self.findIndex((t) => t === tag));
 
 	// Manual sorting based on the categoryOrder array
+	console.log('Categories: ', uniqueCategories)
 	const allCategories = [...uniqueCategories].sort((a, b) => {
 		const indexA = categoryOrder.findIndex(
-			cat => cat.toLowerCase() === a.title.toLowerCase()
+			cat => cat.toLowerCase() === a.toLowerCase()
 		);
 		const indexB = categoryOrder.findIndex(
-			cat => cat.toLowerCase() === b.title.toLowerCase()
+			cat => cat.toLowerCase() === b.toLowerCase()
 		);
 
 		// If both categories are in our defined order list
@@ -48,7 +47,7 @@ export function PostFilter({ posts, selectedCategories, onCategorySelect }: Post
 		if (indexB !== -1) return 1;
 
 		// Alphabetical sorting for any other categories
-		return a.title.localeCompare(b.title);
+		return a.localeCompare(b);
 	});
 
 	const toggleTag = (tag: string) => {
@@ -72,12 +71,12 @@ export function PostFilter({ posts, selectedCategories, onCategorySelect }: Post
 			})}>
 				{allCategories.map((category) => (
 					<Badge
-						key={category.title}
-						variant={selectedCategories.includes(category.title) ? "default" : "ghost"}
+						key={category}
+						variant={selectedCategories.includes(category) ? "default" : "ghost"}
 						className="cursor-pointer uppercase hover:underline text-sm sm:text-base hover:text-cold-ivory"
-						onClick={() => toggleTag(category.title)}
+						onClick={() => toggleTag(category)}
 					>
-						{category.title}
+						{category}
 					</Badge>
 				))}
 			</div>

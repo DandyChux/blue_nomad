@@ -5,6 +5,7 @@ import { Skeleton } from './skeleton';
 export interface ImageProps
 	extends React.ImgHTMLAttributes<HTMLImageElement> {
 	fallback?: React.ReactNode;
+	wrapperClassName?: string;
 }
 
 export const Image: React.FC<ImageProps> = ({
@@ -12,6 +13,7 @@ export const Image: React.FC<ImageProps> = ({
 	alt,
 	src,
 	className,
+	wrapperClassName,
 	...props
 }) => {
 	const [status, setStatus] = useState<'loading' | 'loaded' | 'error'>('loading');
@@ -55,8 +57,12 @@ export const Image: React.FC<ImageProps> = ({
 		};
 	}, [src]);
 
+	if (status === 'error') {
+		return <div className={cn("relative", wrapperClassName)}>{fallback}</div>;
+	}
+
 	return (
-		<div className={cn("relative", className)}>
+		<div className={cn("relative", wrapperClassName)}>
 			{status !== 'loaded' && (
 				<div className="absolute inset-0">
 					{fallback}
@@ -71,7 +77,6 @@ export const Image: React.FC<ImageProps> = ({
 					className,
 					status !== 'loaded' && 'invisible'
 				)}
-				// Keep these as backup, but the main loading logic is in useEffect
 				onLoad={() => setStatus('loaded')}
 				onError={() => setStatus('error')}
 			/>

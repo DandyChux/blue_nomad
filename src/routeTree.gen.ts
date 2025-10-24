@@ -9,8 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TermsRouteImport } from './routes/terms'
-import { Route as PolicyRouteImport } from './routes/policy'
+import { Route as TermsAndConditionsRouteImport } from './routes/terms-and-conditions'
+import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as ErrorRouteImport } from './routes/error'
 import { Route as AboutRouteImport } from './routes/about'
@@ -19,14 +19,14 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as NomadslandIndexRouteImport } from './routes/nomadsland/index'
 import { Route as NomadslandSlugRouteImport } from './routes/nomadsland/$slug'
 
-const TermsRoute = TermsRouteImport.update({
-  id: '/terms',
-  path: '/terms',
+const TermsAndConditionsRoute = TermsAndConditionsRouteImport.update({
+  id: '/terms-and-conditions',
+  path: '/terms-and-conditions',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PolicyRoute = PolicyRouteImport.update({
-  id: '/policy',
-  path: '/policy',
+const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FaqRoute = FaqRouteImport.update({
@@ -71,8 +71,8 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/error': typeof ErrorRoute
   '/faq': typeof FaqRoute
-  '/policy': typeof PolicyRoute
-  '/terms': typeof TermsRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/nomadsland/$slug': typeof NomadslandSlugRoute
   '/nomadsland': typeof NomadslandIndexRoute
 }
@@ -82,8 +82,8 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/error': typeof ErrorRoute
   '/faq': typeof FaqRoute
-  '/policy': typeof PolicyRoute
-  '/terms': typeof TermsRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/nomadsland/$slug': typeof NomadslandSlugRoute
   '/nomadsland': typeof NomadslandIndexRoute
 }
@@ -94,8 +94,8 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/error': typeof ErrorRoute
   '/faq': typeof FaqRoute
-  '/policy': typeof PolicyRoute
-  '/terms': typeof TermsRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/nomadsland/$slug': typeof NomadslandSlugRoute
   '/nomadsland/': typeof NomadslandIndexRoute
 }
@@ -107,8 +107,8 @@ export interface FileRouteTypes {
     | '/about'
     | '/error'
     | '/faq'
-    | '/policy'
-    | '/terms'
+    | '/privacy-policy'
+    | '/terms-and-conditions'
     | '/nomadsland/$slug'
     | '/nomadsland'
   fileRoutesByTo: FileRoutesByTo
@@ -118,8 +118,8 @@ export interface FileRouteTypes {
     | '/about'
     | '/error'
     | '/faq'
-    | '/policy'
-    | '/terms'
+    | '/privacy-policy'
+    | '/terms-and-conditions'
     | '/nomadsland/$slug'
     | '/nomadsland'
   id:
@@ -129,8 +129,8 @@ export interface FileRouteTypes {
     | '/about'
     | '/error'
     | '/faq'
-    | '/policy'
-    | '/terms'
+    | '/privacy-policy'
+    | '/terms-and-conditions'
     | '/nomadsland/$slug'
     | '/nomadsland/'
   fileRoutesById: FileRoutesById
@@ -141,26 +141,26 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   ErrorRoute: typeof ErrorRoute
   FaqRoute: typeof FaqRoute
-  PolicyRoute: typeof PolicyRoute
-  TermsRoute: typeof TermsRoute
+  PrivacyPolicyRoute: typeof PrivacyPolicyRoute
+  TermsAndConditionsRoute: typeof TermsAndConditionsRoute
   NomadslandSlugRoute: typeof NomadslandSlugRoute
   NomadslandIndexRoute: typeof NomadslandIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/terms': {
-      id: '/terms'
-      path: '/terms'
-      fullPath: '/terms'
-      preLoaderRoute: typeof TermsRouteImport
+    '/terms-and-conditions': {
+      id: '/terms-and-conditions'
+      path: '/terms-and-conditions'
+      fullPath: '/terms-and-conditions'
+      preLoaderRoute: typeof TermsAndConditionsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/policy': {
-      id: '/policy'
-      path: '/policy'
-      fullPath: '/policy'
-      preLoaderRoute: typeof PolicyRouteImport
+    '/privacy-policy': {
+      id: '/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof PrivacyPolicyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/faq': {
@@ -221,8 +221,8 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   ErrorRoute: ErrorRoute,
   FaqRoute: FaqRoute,
-  PolicyRoute: PolicyRoute,
-  TermsRoute: TermsRoute,
+  PrivacyPolicyRoute: PrivacyPolicyRoute,
+  TermsAndConditionsRoute: TermsAndConditionsRoute,
   NomadslandSlugRoute: NomadslandSlugRoute,
   NomadslandIndexRoute: NomadslandIndexRoute,
 }

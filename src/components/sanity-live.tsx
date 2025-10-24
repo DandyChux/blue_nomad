@@ -1,14 +1,14 @@
 import type { LiveEventMessage, LiveEventRestart, LiveEventWelcome } from '@sanity/client'
 import { CorsOriginError } from '@sanity/client'
-import { useNavigate, useRouter, useRouterState, useSearch } from '@tanstack/react-router'
-import { useEffect } from 'react'
-// import { useEffectEvent } from 'use-effect-event'
+import { useRouter, useRouterState } from '@tanstack/react-router'
+import { useEffect, useCallback, useRef } from 'react'
 import { client } from '~/sanity/lib/client'
 
 export function SanityLive() {
 	const selected = useRouterState({ select: (state) => state.matches })
-	const lastLiveEventId = useSearch({ from: '__root__', select: (state) => state.lastLiveEventId })
-	const navigate = useNavigate({ from: '/' })
+	const router = useRouter()
+	const lastLiveEventIdRef = useRef<string | undefined>(undefined)
+
 	const allTags = selected.flatMap((match) => {
 		if (
 			typeof match.loaderData === 'object' &&
@@ -20,42 +20,29 @@ export function SanityLive() {
 		return []
 	})
 
-	const router = useRouter()
-	const handleLiveEvent = (event: LiveEventMessage | LiveEventRestart | LiveEventWelcome) => {
+	const handleLiveEvent = useCallback((event: LiveEventMessage | LiveEventRestart | LiveEventWelcome) => {
 		if (event.type === 'welcome') {
 			console.info('Sanity is live with automatic invalidation of published content')
-			navigate({
-				search: (prev) => ({
-					...prev,
-					lastLiveEventId:
-						// @ts-expect-error - @TODO upgrade `@sanity/client` with the id of welcome events
-						event.id,
-				}),
-				replace: true,
-				resetScroll: false,
-			})
+			// @ts-expect-error - @TODO upgrade `@sanity/client` with the id of welcome events
+			lastLiveEventIdRef.current = event.id
 		} else if (event.type === 'message') {
 			if (event.tags.some((tag) => allTags.includes(tag))) {
-				navigate({
-					search: (prev) => ({ ...prev, lastLiveEventId: event.id }),
-					replace: true,
-					resetScroll: false,
-				})
+				console.log('Sanity content updated, invalidating cache', event.tags)
+				lastLiveEventIdRef.current = event.id
+				// Only invalidate the router, don't update URL
+				router.invalidate()
 			} else {
 				console.log('no match', event.tags, { allTags })
 			}
 		} else if (event.type === 'restart') {
-			if (lastLiveEventId) {
-				navigate({
-					search: (prev) => ({ ...prev, lastLiveEventId: undefined }),
-					replace: true,
-					resetScroll: false,
-				})
-			} else {
-				router.invalidate()
+			console.log('Sanity live connection restarted, invalidating cache')
+			if (lastLiveEventIdRef.current) {
+				lastLiveEventIdRef.current = undefined
 			}
+			// Invalidate to refresh content after restart
+			router.invalidate()
 		}
-	}
+	}, [router, allTags])
 
 	useEffect(() => {
 		const subscription = client.live.events().subscribe({
@@ -77,7 +64,7 @@ export function SanityLive() {
 			},
 		})
 		return () => subscription.unsubscribe()
-	}, [])
+	}, [handleLiveEvent])
 
 	return null
 }

@@ -82,8 +82,7 @@ export default function Partners() {
 						src={centralLogo.src}
 						alt={centralLogo.alt}
 						width={300}
-						height={300}
-						className='w-auto h-auto'
+						className='h-auto aspect-auto'
 					/>
 				</div>
 
@@ -115,8 +114,7 @@ export default function Partners() {
 									src={logo.src}
 									alt={logo.alt}
 									width={175}
-									height={75}
-									className='w-[75%] h-auto'
+									className='h-auto aspect-auto'
 								/>
 							</div>
 						</div>
@@ -132,8 +130,7 @@ export default function Partners() {
 						src={centralLogo.src}
 						alt={centralLogo.alt}
 						width={200}
-						height={200}
-						className='w-full h-auto'
+						className='h-auto aspect-auto'
 					/>
 				</div>
 				{/* Surrounding Images */}
@@ -143,8 +140,7 @@ export default function Partners() {
 							src={logo.src}
 							alt={logo.alt}
 							width={75}
-							height={75}
-							className='w-full h-auto'
+							className='h-auto aspect-auto'
 						/>
 					</div>
 				))}

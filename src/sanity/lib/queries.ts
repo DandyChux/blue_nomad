@@ -5,7 +5,6 @@ export const POSTS_QUERY = `*[_type == "post"] | order(_createdAt desc) {
   title,
   "slug": slug.current,
   description,
-  mainImage,
   categories[]->{
     _id,
     title,

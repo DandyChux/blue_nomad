@@ -159,6 +159,9 @@
 		font-family: var(--font-harmony);
 		overflow-y: auto;
 		scroll-behavior: smooth;
+		position: relative;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
 	}
 
 	main section {

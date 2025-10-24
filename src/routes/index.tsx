@@ -55,17 +55,7 @@ function HomePage() {
 	return (
 		<>
 			{/* Hero Section */}
-			<section className='relative p-0 text-brand-white'>
-				<div className="absolute inset-0 -z-10">
-					<Image
-						src="/studio_background.jpg"
-						alt="Background"
-						fetchPriority='high'
-						className="object-cover xl:object-cover object-center"
-						sizes="100vw"
-					/>
-				</div>
-
+			<section className='relative p-0 text-brand-white bg-studio-background bg-center bg-cover bg-no-repeat'>
 				<div className='flex flex-col m-[auto_0] pl-14 md:pl-8 pt-16 pb-8 gap-8 lg:gap-12 place-self-center'>
 					<p className='uppercase w-full md:w-auto text-2xl lg:text-4xl'>
 						<span>modern wellness</span> <br />
@@ -87,10 +77,7 @@ function HomePage() {
 					<Image
 						src={'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Christian/Look%204%20139.webp'}
 						alt=''
-						width={400}
-						height={600}
-						sizes="(max-width: 768px) 100vw, 400px"
-						className='w-full h-auto'
+						className='w-full h-auto object-cover'
 					/>
 				</div>
 

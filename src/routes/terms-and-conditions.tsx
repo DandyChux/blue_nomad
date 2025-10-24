@@ -1,3 +1,9 @@
+import { createFileRoute } from '@tanstack/react-router'
+
+export const Route = createFileRoute('/terms-and-conditions')({
+	component: RouteComponent,
+})
+
 type Conditions = {
 	title: string;
 	content: string[];
@@ -93,7 +99,7 @@ const conditions: Conditions[] = [
 	},
 ];
 
-export default function TermsAndConditions() {
+function RouteComponent() {
 	return (
 		<section className='lg:flex-col pt-32'>
 			<h1>Terms and Conditions</h1>
@@ -111,5 +117,5 @@ export default function TermsAndConditions() {
 				))}
 			</ol>
 		</section>
-	);
+	)
 }

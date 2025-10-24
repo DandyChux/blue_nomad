@@ -1,3 +1,9 @@
+import { createFileRoute } from '@tanstack/react-router'
+
+export const Route = createFileRoute('/privacy-policy')({
+	component: RouteComponent,
+})
+
 type PrivacyPolicy = {
 	title: string;
 	content: string;
@@ -40,7 +46,7 @@ const policies: PrivacyPolicy[] = [
 	},
 ];
 
-export default function PrivacyPolicy() {
+function RouteComponent() {
 	return (
 		<section className='lg:flex-col pt-32'>
 			<h1>Privacy Policy</h1>
@@ -54,5 +60,5 @@ export default function PrivacyPolicy() {
 				))}
 			</ol>
 		</section>
-	);
+	)
 }

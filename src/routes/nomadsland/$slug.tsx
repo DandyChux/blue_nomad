@@ -1,20 +1,12 @@
 import { createFileRoute, notFound } from '@tanstack/react-router'
-import { useSuspenseQuery } from '@tanstack/react-query'
 import { client } from '~/sanity/lib/client'
 import { POST_QUERY } from '~/sanity/lib/queries'
-import { FilteredBlogContent as BlogContent } from '~/components/blog-content'
-// import ShareLinks from '~/components/share-links'
 import { ShareLinks } from '~/components/share-links'
-import type { Post } from '~/types'
 import PortableText from '~/components/portable-text'
 import { urlFor } from '~/sanity/lib/image'
 import { Image } from '~/components/ui/image'
-import z from 'zod'
 
 export const Route = createFileRoute('/nomadsland/$slug')({
-	validateSearch: z.object({
-		slug: z.string()
-	}),
 	loader: async ({ params: { slug }, context: { queryClient } }) => {
 		const post = await queryClient.fetchQuery({
 			queryKey: ['post', slug],
@@ -32,6 +24,7 @@ export const Route = createFileRoute('/nomadsland/$slug')({
 
 function BlogPostPage() {
 	const post = Route.useLoaderData();
+	console.log(post)
 
 	const formattedDate = new Date(post.date).toLocaleDateString();
 
@@ -104,19 +97,16 @@ function BlogPostPage() {
 							},
 						},
 						list: {
-							ordered: ({ children }) => {
-								return <ol className="mb-6">{children}</ol>
+							number: ({ children }) => {
+								return <ol className="mb-4 list-decimal list-inside">{children}</ol>
 							},
-							unordered: ({ children }) => {
-								return <ul className="mb-6">{children}</ul>
+							bullet: ({ children }) => {
+								return <ul className="mb-4 list-disc list-inside">{children}</ul>
 							}
 						},
 						listItem: ({ children }) => {
-							return <li className="mb-2 list-disc list">{children}</li>
+							return <li className="mb-2">{children}</li>
 						},
-						// hardBreak: () => {
-						// 	return <Separator className="my-4" />;
-						// },
 					}}
 				/>
 			</div>

@@ -28,25 +28,13 @@ export type SanityImage = {
 }
 
 export type SanityPost = {
+	_id: string;
 	title: string;
 	description: string | null;
-	slug: SanitySlug;
-	categories: SanityCategory[];
-	mainImage: {
-		_type: 'image';
-		alt: string;
-		asset: {
-			_ref: string
-			_type: 'reference'
-		}
-	} | null;
+	slug: string;
+	categories: Category[];
 	imageUrl: string | null;
-	author: {
-		name: string;
-		bio: string | null;
-		image: string | null;
-		slug: string | null;
-	} | null,
+	author: Author | null;
 	_createdAt: string;
 };
 
@@ -81,12 +69,11 @@ export type PortableTextContent = Array<PortableTextBlock | PortableTextImage | 
 
 // Domain types
 export type Author = {
-	_id: string
-	_type: 'author'
-	name: string
-	slug: string
-	image?: SanityImage
-	bio?: string
+	_id: string;
+	name: string;
+	slug: string;
+	image?: SanityImage;
+	bio: string | null;
 }
 
 export type Category = {
@@ -98,25 +85,21 @@ export type Category = {
 }
 
 export type Post = {
-	_id: string
-	_type: 'post'
-	_createdAt: string
-	_updatedAt?: string
 	title: string
 	slug: string
 	description?: string
 	mainImage?: SanityImage
 	imageUrl?: string // Resolved image URL from query
-	categories?: Category[]
-	author?: Author
+	categories?: string[]
+	author: Author | null
 	body?: PortableTextContent
 	publishedAt?: string
-	date?: string // Alias for _createdAt in some queries
+	date?: string
 }
 
 // API Response types
-export type PostsResponse = Post[]
-export type PostResponse = Post | null
+export type PostsResponse = SanityPost[]
+export type PostResponse = SanityPost | null
 export type CategoriesResponse = Category[]
 
 // Form types for email/contact
@@ -144,4 +127,3 @@ export type PostFilterProps = {
 
 // Legacy type mappings (for easier migration)
 export type FormattedPost = Post
-export type SanityCategory = Category

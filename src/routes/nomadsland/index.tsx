@@ -1,14 +1,18 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useSuspenseQuery } from '@tanstack/react-query'
 import { client } from '~/sanity/lib/client'
-import { POSTS_QUERY, CATEGORIES_QUERY } from '~/sanity/lib/queries'
-import { useState } from 'react'
+import { POSTS_QUERY } from '~/sanity/lib/queries'
 import { FilteredBlogContent } from '~/components/blog-content'
-import type { Post, Category, SanitySlug, SanityCategory } from '~/types'
+import type { Post, SanityPost } from '~/types'
 import { Image } from '~/components/ui/image'
-import { sanityFetch } from '~/sanity/lib/live'
+import z from 'zod'
+
+const blogSearchSchema = z.object({
+	search: z.string().optional(),
+
+})
 
 export const Route = createFileRoute('/nomadsland/')({
+	validateSearch: blogSearchSchema,
 	loader: async ({ context: { queryClient } }) => {
 		// await Promise.all([
 		// 	queryClient.ensureQueryData({
@@ -22,7 +26,7 @@ export const Route = createFileRoute('/nomadsland/')({
 		// ])
 		const posts = await queryClient.fetchQuery({
 			queryKey: ['blog', 'posts'],
-			queryFn: () => client.fetch(POSTS_QUERY),
+			queryFn: () => client.fetch<SanityPost[]>(POSTS_QUERY),
 		})
 
 		if (!posts) {
@@ -37,33 +41,21 @@ export const Route = createFileRoute('/nomadsland/')({
 function BlogPage() {
 	const posts = Route.useLoaderData();
 
-	const formattedPosts: Post[] = posts.map((post: any) => ({
+	console.log('Original Posts:', posts)
+	const formattedPosts: Post[] = posts.map((post) => ({
 		title: post.title,
-		file: post.slug.current,
+		slug: post.slug,
 		description: post.description ?? "",
 		date: new Date(post._createdAt).toLocaleDateString(),
-		datetime: post._createdAt,
-		author: {
-			name: post.author?.name ?? "Blue Nomad",
-			role: "Founder",
-			href: "#",
-			imageUrl: "/images/blog/elie-profile.jpg",
-		},
+		author: post.author,
 		imageUrl: post.imageUrl ?? "/studio_background.jpg",
-		categories: post.categories.map((category: any) => category.title)
+		categories: post.categories?.map((category) => category.title)
 	}))
 
-	return (
-		<section className='mx-auto pt-32 px-4 lg:px-10 lg:flex-col text-brand-white relative'>
-			<div className="absolute inset-0 -z-10">
-				<Image
-					src="/media_section_gradient.png"
-					alt="Background"
-					className="object-cover object-center"
-					sizes="100vw"
-				/>
-			</div>
+	console.log('Formatted Posts:', formattedPosts)
 
+	return (
+		<section className='mx-auto pt-32 px-4 lg:px-10 lg:flex-col text-brand-white relative bg-media-section-gradient bg-center bg-cover bg-no-repeat'>
 			<FilteredBlogContent posts={formattedPosts} />
 		</section>
 	)

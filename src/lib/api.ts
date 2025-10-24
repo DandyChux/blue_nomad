@@ -1,9 +1,5 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080'
 
-export interface SubscribeRequest {
-	email: string
-}
-
 export interface SendMailRequest {
 	email: string
 	sendTo?: string
@@ -12,8 +8,13 @@ export interface SendMailRequest {
 	html?: string
 }
 
+export interface SubscribeRequest {
+	email: string;
+	properties?: Record<string, any>;
+}
+
 class ApiClient {
-	private async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
+	async request<T>(endpoint: string, options?: RequestInit): Promise<T> {
 		const url = `${API_URL}/api${endpoint}`
 
 		const config: RequestInit = {
@@ -33,6 +34,10 @@ class ApiClient {
 		return response.json()
 	}
 
+	async health() {
+		return this.request<{ status: string }>('/health')
+	}
+
 	async subscribe(data: SubscribeRequest) {
 		return this.request('/subscribe', {
 			method: 'POST',
@@ -41,14 +46,10 @@ class ApiClient {
 	}
 
 	async sendMail(data: SendMailRequest) {
-		return this.request('/send-mail', {
+		return this.request<{ message: string, to: string }>('/send-mail', {
 			method: 'POST',
 			body: JSON.stringify(data),
 		})
-	}
-
-	async health() {
-		return this.request<{ status: string }>('/health')
 	}
 }
 

@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query'
 import { sanityFetch } from '~/sanity/lib/live'
 import * as queries from '~/sanity/lib/queries'
-import type { Post, Category } from '~/app/nomadsland/types'
+import type { Post, Category } from '~/types'
 
 // Fetch all posts
 export function usePosts(options?: UseQueryOptions<Post[]>) {
