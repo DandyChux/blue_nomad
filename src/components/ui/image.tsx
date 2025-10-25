@@ -84,7 +84,6 @@ export const Image: React.FC<ImageProps> = ({
 				{...props}
 				src={src}
 				alt={alt}
-				crossOrigin={effectiveCrossOrigin}
 				className={cn(
 					className,
 					status !== 'loaded' && 'invisible'
