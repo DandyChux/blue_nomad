@@ -164,11 +164,11 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 				<Image
 					src={isHovered ? hoverImage : defaultImage}
 					alt={title}
-					// quality={85}
 					loading='eager'
 					className={cn('object-cover h-full w-full', {
 						'object-[5%_35%]': index % 2 === 0,
 					})}
+					wrapperClassName='w-full h-full'
 				/>
 			</CardContent>
 		</Card>
