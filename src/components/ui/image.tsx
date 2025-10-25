@@ -22,8 +22,9 @@ export const Image: React.FC<ImageProps> = ({
 	const imgRef = useRef<HTMLImageElement>(null);
 
 	// Determine if we need CORS based on URL
-	const needsCors = src && (src.startsWith('http://') || src.startsWith('https://')) && !src.includes(window.location.hostname);
-	const effectiveCrossOrigin = crossOrigin ?? (needsCors ? 'anonymous' : undefined);
+	// const needsCors = src && (src.startsWith('http://') || src.startsWith('https://')) && !src.includes(window.location.hostname);
+	// const effectiveCrossOrigin = crossOrigin ?? (needsCors ? 'anonymous' : undefined);
+	const effectiveCrossOrigin = crossOrigin;
 
 	useEffect(() => {
 		if (!src) {
