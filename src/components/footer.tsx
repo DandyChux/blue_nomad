@@ -88,7 +88,7 @@ export const Footer: React.FC = () => {
 
 	return (
 		<footer className={cn('flex flex-col px-2 space-y-6 relative')}>
-			<div className="absolute inset-0 -z-10">
+			<div className="absolute inset-0 m-0 -z-10">
 				<Image
 					src="/footer_gradient.png"
 					alt="Background"
@@ -235,6 +235,11 @@ export const Footer: React.FC = () => {
 					&#169;{year} Blue Nomad Labs LLC. All rights reserved.
 				</small>
 			</div>
+			<address>
+				<p className='text-sm text-center text-muted-foreground'>
+					Created by <a href='https://ceokoroji.dev' className='underline'>Chukwuma Okoroji</a> 🖤
+				</p>
+			</address>
 		</footer>
 	);
 };
