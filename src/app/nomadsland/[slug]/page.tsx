@@ -164,12 +164,12 @@ export default async function PostPage({ params }: PageProps) {
 						},
 						list: {
 							bullet: ({ children }: any) => (
-								<ul className="my-5 ml-10 list-disc tracking-[0.005em] text-base text-[#333a4a]">
+								<ul className="my-5 ml-10 list-disc tracking-[0.005em] text-base">
 									{children}
 								</ul>
 							),
 							number: ({ children }: any) => (
-								<ol className="my-5 ml-10 list-decimal tracking-[0.005em] text-base text-[#333a4a]">
+								<ol className="my-5 ml-10 list-decimal tracking-[0.005em] text-base">
 									{children}
 								</ol>
 							),
