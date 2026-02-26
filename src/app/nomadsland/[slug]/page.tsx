@@ -163,12 +163,22 @@ export default async function PostPage({ params }: PageProps) {
 							},
 						},
 						list: {
-							ordered: ({ children }) => {
-								return <ol className="mb-6 pl-4">{children}</ol>
-							},
-							unordered: ({ children }) => {
-								return <ul className="mb-6 pl-4">{children}</ul>
-							}
+							bullet: ({ children }: any) => (
+								<ul className="my-5 ml-10 list-disc tracking-[0.005em] text-base text-[#333a4a]">
+									{children}
+								</ul>
+							),
+							number: ({ children }: any) => (
+								<ol className="my-5 ml-10 list-decimal tracking-[0.005em] text-base text-[#333a4a]">
+									{children}
+								</ol>
+							),
+							ordered: ({ children }) => (
+								<ol className="mb-6 pl-4">{children}</ol>
+							),
+							unordered: ({ children }) => (
+								<ul className="mb-6 pl-4">{children}</ul>
+							)
 						},
 						listItem: ({ children }) => {
 							return <li className="mb-2 list-disc list-inside">{children}</li>
