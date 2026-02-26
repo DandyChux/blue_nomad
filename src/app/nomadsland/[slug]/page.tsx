@@ -164,10 +164,10 @@ export default async function PostPage({ params }: PageProps) {
 						},
 						list: {
 							ordered: ({ children }) => {
-								return <ol className="mb-6">{children}</ol>
+								return <ol className="mb-6 pl-4">{children}</ol>
 							},
 							unordered: ({ children }) => {
-								return <ul className="mb-6">{children}</ul>
+								return <ul className="mb-6 pl-4">{children}</ul>
 							}
 						},
 						listItem: ({ children }) => {
