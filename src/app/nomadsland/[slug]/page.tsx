@@ -97,7 +97,7 @@ export default async function PostPage({ params }: PageProps) {
 					← Back to posts
 				</Link>
 			</nav>
-			<h1 className='uppercase mb-8 leading-[3rem]'>{post.title}</h1>
+			<h1 className='uppercase mb-8 leading-12'>{post.title}</h1>
 			<p>{post.authorName}</p>
 			<span>{formattedDate}</span>
 
@@ -109,7 +109,7 @@ export default async function PostPage({ params }: PageProps) {
 
 			{/* <p>{post.description}</p> */}
 			{post.mainImage ? (
-				<div className='mb-8 relative aspect-[4/3] max-w-[750px] mx-auto'>
+				<div className='mb-8 relative aspect-4/3 max-w-[750px] mx-auto'>
 					<Image
 						src={urlFor(post.mainImage).width(800).url()}
 						alt={post.mainImage.alt || ''}
@@ -138,7 +138,10 @@ export default async function PostPage({ params }: PageProps) {
 						},
 						block: {
 							normal: ({ children }) => {
-								return <p className="mb-4 font-[500]">{children}</p>
+								return <p className="mb-4 font-medium">{children}</p>
+							},
+							quote: ({ children }) => {
+								return <blockquote className="mb-4 font-medium">{children}</blockquote>
 							},
 							h1: ({ children }) => {
 								return <h1 className="mb-4 font-extrabold">{children}</h1>
@@ -170,9 +173,26 @@ export default async function PostPage({ params }: PageProps) {
 						listItem: ({ children }) => {
 							return <li className="mb-2 list-disc list">{children}</li>
 						},
-						// hardBreak: () => {
-						// 	return <Separator className="my-4" />;
-						// },
+						hardBreak: () => {
+							return <br className="mb-4" />;
+						},
+						marks: {
+							link: ({ children, value }) => {
+								const rel = !value.href.startsWith('/') ? 'noreferrer noopener' : undefined
+								return (
+									<a href={value.href} target='_blank' rel={rel}>
+										{children}
+									</a>
+								)
+							},
+							internalLink: ({ children, value }) => {
+								return (
+									<a href={value.href}>
+										{children}
+									</a>
+								)
+							},
+						}
 					}}
 				/>
 			</div>
