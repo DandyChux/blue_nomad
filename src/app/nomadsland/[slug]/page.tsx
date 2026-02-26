@@ -171,7 +171,7 @@ export default async function PostPage({ params }: PageProps) {
 							}
 						},
 						listItem: ({ children }) => {
-							return <li className="mb-2 list-disc list">{children}</li>
+							return <li className="mb-2 list-disc list-inside">{children}</li>
 						},
 						hardBreak: () => {
 							return <br className="mb-4" />;
