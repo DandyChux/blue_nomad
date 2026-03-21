@@ -39,19 +39,19 @@ const treatments: TreatmentProps[] = [
 		link: 'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start',
 	},
 	{
-		title: 'AcuTherapy 50min',
+		title: 'LED SkinBoost 30min',
 		description:
-			"*Coming Soon* Precision acupuncture to promote relaxation, reduce tension, optimize skin health and total body well-being. Fine needles help alleviate discomfort and encourage the body's natural healing.",
-		price: 225,
+			"Targeted express treatment for long-term skin vitality. LED light therapy paired with hydration and a power cleanse to reduce inflammation and boost collagen. Complimentary for members.",
+		price: 130,
 		defaultImage: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Mel/Look%202%20233.webp',
 		hoverImage: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Mel/Look%202%20145.webp',
 		link: 'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start',
-		// membersOnly: true,
+		memberComplimentary: true,
 	},
 	{
 		title: 'Facial ST Membership',
 		description:
-			'Experience our signature 60min facial skin therapy monthly, with exclusive access to on-demand skin health guidance.',
+			'Experience our signature 60-minute facial skin therapy monthly, exclusive access to on-demand skin health guidance, and a complimentary LED SkinBoost between sessions.',
 		price: 185,
 		defaultImage: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Ego/Look-5-306.webp',
 		hoverImage: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Ego/Ego.webp',
@@ -155,11 +155,11 @@ const TreatmentCard: React.FC<TreatmentCardProps> = ({
 					{description}{' '}
 					{membersOnly
 						? 'Cancel anytime after the first three (3) months.'
-						: ''}
+						: null}
 				</CardDescription>
 			</CardHeader>
 			<CardContent
-				className={cn('p-0 flex-1 relative w-full aspect-[4/3]', {
+				className={cn('p-0 flex-1 relative w-full aspect-4/3', {
 					'order-1': index % 2 !== 0,
 					'order-2': index % 2 === 0,
 				})}

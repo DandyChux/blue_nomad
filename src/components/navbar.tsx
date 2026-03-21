@@ -38,6 +38,10 @@ export const navLinks: NavItem[] = [
 		// href: '/booking'
 	},
 	{
+		label: 'Shop',
+		href: 'https://bluenomadworld.square.site/'
+	},
+	{
 		label: 'Gift Card',
 		href: 'https://app.squareup.com/gift/ML665NPQYDHTJ/order',
 	},
