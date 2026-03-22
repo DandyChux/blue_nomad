@@ -64,6 +64,16 @@ export const Navbar: React.FC = () => {
 		setSearchQuery(query);
 	};
 
+	const isExternalUrl = (url: string): boolean => {
+		try {
+			const parsedUrl = new URL(url, window.location.origin);
+			return parsedUrl.origin !== window.location.origin;
+		} catch {
+			return false;
+		}
+	};
+
+
 	// Handle click outside to close menu
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
@@ -116,7 +126,7 @@ export const Navbar: React.FC = () => {
 									key={item.label}
 									href={item.href}
 									rel='nofollow noopener noreferrer'
-									target={item.href.includes('squareup') ? '_blank' : undefined}
+									target={isExternalUrl(item.href) ? '_blank' : undefined}
 									className='font-source-code-pro uppercase text-lg'
 									onClick={() => {
 										if (item.label === 'Gift Card') {
@@ -167,7 +177,7 @@ export const Navbar: React.FC = () => {
 										'text-brand-white': pathname === '/' || pathname === '/nomadsland'
 									})}
 									rel='nofollow noopener noreferrer'
-									target={item.href.includes('squareup') ? '_blank' : undefined}
+									target={isExternalUrl(item.href) ? '_blank' : undefined}
 									onClick={() => {
 										if (item.label === 'Gift Card') {
 											plausible('Clicked Gift Card')
@@ -191,9 +201,6 @@ export const Navbar: React.FC = () => {
 							<SearchBar onSearch={handleSearch} />
 						</div>
 						<Button variant={'ghost'} className={'hidden sm:inline-flex text-brand-white hover:text-white hover:bg-black rounded-full hover:cursor-pointer'}>
-							{/* <Link href="#subscription-form" target='_blank' rel='noopener noreferrer' className='no-underline'>
-								Get Our Newsletter
-							</Link> */}
 							<Link href="#subscription-form" className='no-underline'>
 								Get Our Newsletter
 							</Link>
