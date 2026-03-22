@@ -46,7 +46,6 @@ const treatments: TreatmentProps[] = [
 		defaultImage: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Mel/Look%202%20233.webp',
 		hoverImage: 'https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Mel/Look%202%20145.webp',
 		link: 'https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start',
-		memberComplimentary: true,
 	},
 	{
 		title: 'Facial ST Membership',
