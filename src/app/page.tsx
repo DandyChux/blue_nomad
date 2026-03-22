@@ -1,28 +1,12 @@
 import Image from 'next/image';
 import Link from 'next/link';
-// import TreatmentCards from '~/components/treatment-cards';
+import TreatmentCards from '~/components/treatment-cards';
 import { Button } from '~/components/ui/button';
 import { InfiniteMovingCards, MovingCardProps } from '~/components/ui/infinite-moving-cards'
 import HeroText from '~/assets/MODERN_WELLNESS.png'
 
 import Partners from '~/components/partners';
-// import Testimonials from '~/components/testimonials';
-import { Skeleton } from '~/components/ui/skeleton';
-import dynamic from 'next/dynamic';
-
-const Testimonials = dynamic(() => import("../components/testimonials"), {
-	loading: () => <Skeleton className="h-40 w-full" />
-})
-
-const TreatmentCards = dynamic(() => import("../components/treatment-cards"), {
-	loading: () => (
-		<div className='flex flex-col md:flex-row items-center'>
-			<Skeleton className="h-40 w-full flex-1" />
-			<Skeleton className="h-40 w-full flex-1" />
-			<Skeleton className="h-40 w-full flex-1" />
-		</div>
-	)
-})
+import Testimonials from '~/components/testimonials';
 
 export default function Home() {
 	const pressBrands: MovingCardProps[] = [
