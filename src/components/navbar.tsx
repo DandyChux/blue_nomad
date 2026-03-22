@@ -65,13 +65,9 @@ export const Navbar: React.FC = () => {
 	};
 
 	const isExternalUrl = (url: string): boolean => {
-		try {
-			const parsedUrl = new URL(url, window.location.origin);
-			return parsedUrl.origin !== window.location.origin;
-		} catch {
-			return false;
-		}
+		return url.startsWith('http://') || url.startsWith('https://');
 	};
+
 
 
 	// Handle click outside to close menu
