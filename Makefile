@@ -5,7 +5,7 @@
 
 start-server:
 	@echo "Starting server..."
-	@cd api && air -c air.toml
+	@air -c air.toml
 
 start-db:
 	@echo "Starting database..."
@@ -14,7 +14,7 @@ start-db:
 # Build the application
 build:
 	@echo "Building application..."
-	@cd api && go build -o bin/server ./main.go
+	@go build -o bin/server ./main.go
 
 # Clean build artifacts
 clean:
