@@ -115,22 +115,20 @@
 	<!-- Stacked layout for mobile -->
 	<div class="flex flex-col items-center gap-4 mt-10 md:hidden">
 		<div>
-			<img
+			<enhanced:img
 				src={centralLogo.src}
 				alt={centralLogo.alt}
-				width="200"
+				width="250"
 				height="200"
-				class="w-full h-auto"
 			/>
 		</div>
 		{#each surroundingLogos as logo (logo.alt)}
 			<div>
-				<img
+				<enhanced:img
 					src={logo.src}
 					alt={logo.alt}
-					width="75"
+					width="125"
 					height="75"
-					class="w-full h-auto"
 					loading="lazy"
 				/>
 			</div>
