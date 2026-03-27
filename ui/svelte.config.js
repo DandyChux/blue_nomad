@@ -21,7 +21,12 @@ const config = {
 			pages: 'build',
 			assets: 'build',
 			fallback: 'index.html'
-		})
+		}),
+		prerender: {
+			handleUnseenRoutes: ({ routes }) => {
+				console.warn('The following routes were not prerendered: ', routes)
+			}
+		}
 	}
 };
 

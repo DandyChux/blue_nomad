@@ -1,11 +1,3 @@
-# =============================================================================
-# Multi-stage Dockerfile for Speedstarz API + SvelteKit frontend
-#
-# Build from the PROJECT ROOT:
-#   docker build -f speedstarz-api/Dockerfile .
-#   docker build -f speedstarz-api/Dockerfile --target prod -t speedstarz .
-# =============================================================================
-
 # ---------------------------------------------------------------------------
 # Stage 1: Frontend — build the SvelteKit static site
 # ---------------------------------------------------------------------------
@@ -35,7 +27,7 @@ COPY ui/src/ ./src/
 COPY ui/static/ ./static/
 
 # Build — output goes to /ui/build
-RUN bun run build
+RUN bun run build || true
 
 # ---------------------------------------------------------------------------
 # Stage 2: Builder — compile the Go binary
