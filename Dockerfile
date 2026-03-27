@@ -43,8 +43,8 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 
-COPY cmd/ .
-COPY internal/ .
+COPY cmd/server/ ./cmd/
+COPY internal/ ./internal/
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o blue_nomad ./cmd/server
 
 # ---------------------------------------------------------------------------
@@ -62,6 +62,8 @@ COPY --from=frontend /ui/build ./static/
 
 # Tell the Go server where to find static files
 ENV STATIC_DIR=./static
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD curl -f http://localhost:8080/healthcheck || exit 1
 
 EXPOSE 8080
 CMD ["./blue_nomad"]
