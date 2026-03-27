@@ -1,5 +1,5 @@
 import type { PageLoad } from './$types';
-import type { Post } from '$lib/schemas/post';
+import type { Post, SanityPost } from '$lib/schemas/post';
 import { apiClient } from '$lib/api';
 import { error } from '@sveltejs/kit';
 
@@ -7,7 +7,7 @@ export const load: PageLoad = async () => {
 	let posts: Post[] = [];
 
 	try {
-		const raw = await apiClient.get<any[]>("/posts");
+		const raw = await apiClient.get<SanityPost[]>("/posts");
 		posts = (raw ?? []).map((post) => ({
 			title: post.title,
 			file: post.slug,
@@ -26,7 +26,7 @@ export const load: PageLoad = async () => {
 			categories: (post.categories ?? []).map((c: any) => c.title),
 		}));
 	} catch (err) {
-		// console.error("Failed to fetch posts:", error);
+		console.error("Failed to fetch posts:", err);
 		error(500, "Failed to fetch posts: ");
 	}
 

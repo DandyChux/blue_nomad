@@ -1,13 +1,5 @@
-<script lang="ts">
-	import "./layout.css";
-	import favicon from "$lib/assets/icon.ico";
-	import Navbar from "$lib/components/navbar.svelte";
-	import Footer from "$lib/components/footer.svelte";
-	import BookingButton from "$lib/components/booking-button.svelte";
-
-	let { children } = $props();
-
-	const SITE_TITLE = "BLUE NOMAD: A Private Skin Health Studio in NYC";
+<script lang="ts" module>
+	export const SITE_TITLE = "BLUE NOMAD: A Private Skin Health Studio in NYC";
 
 	/**
 	 * Helper function to generate page titles with the site title appended.
@@ -16,6 +8,16 @@
 	 * @returns The full page title with the site title appended.
 	 */
 	export const pageTitle = (page: string) => `${page} | ${SITE_TITLE}`;
+</script>
+
+<script lang="ts">
+	import "./layout.css";
+	import favicon from "$lib/assets/icon.ico";
+	import Navbar from "$lib/components/navbar.svelte";
+	import Footer from "$lib/components/footer.svelte";
+	import BookingButton from "$lib/components/booking-button.svelte";
+
+	let { children } = $props();
 </script>
 
 <svelte:head>

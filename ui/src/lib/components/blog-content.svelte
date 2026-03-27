@@ -2,6 +2,7 @@
 	import { Badge } from "$lib/components/ui/badge";
 	import { Card, CardContent } from "$lib/components/ui/card";
 	import type { Post } from "$lib/schemas/post";
+	import { page } from "$app/state";
 
 	let {
 		posts,
@@ -10,7 +11,7 @@
 	} = $props();
 
 	let selectedCategories = $state<string[]>([]);
-	let searchQuery = $state("");
+	let searchQuery = $derived(page.url.searchParams.get("q") ?? "");
 
 	let allCategories = $derived(
 		[...new Set(posts.flatMap((p) => p.categories))].sort(),
@@ -81,10 +82,6 @@
 			},
 		};
 	}
-
-	export function setSearchQuery(query: string) {
-		searchQuery = query;
-	}
 </script>
 
 <div class="text-center">
@@ -94,27 +91,26 @@
 	<div
 		class="flex flex-col md:flex-row items-center md:justify-center my-6 mx-auto space-x-6"
 	>
-		<div class="flex flex-wrap gap-2 justify-center">
+		<div class="flex flex-wrap items-center justify-center gap-2">
 			{#each allCategories as category (category)}
-				<button
-					class="px-4 py-1.5 rounded-full text-sm font-medium uppercase font-source-code-pro border transition-colors {selectedCategories.includes(
-						category,
-					)
-						? 'bg-brand-white text-black border-brand-white'
-						: 'bg-transparent text-brand-white border-brand-white/50 hover:border-brand-white'}"
+				<Badge
+					class="cursor-pointer uppercase hover:underline text-sm sm:text-base hover:bg-transparent hover:text-cold-ivory rounded-md h-auto"
+					variant={selectedCategories.includes(category)
+						? "default"
+						: "ghost"}
 					onclick={() => toggleCategory(category)}
 				>
 					{category}
-				</button>
+				</Badge>
 			{/each}
-			{#if selectedCategories.length > 0}
+			<!-- {#if selectedCategories.length > 0}
 				<button
-					class="px-4 py-1.5 rounded-full text-sm font-medium uppercase font-source-code-pro text-brand-white/70 hover:text-brand-white transition-colors"
+					class="px-4 py-1.5 rounded-full text-sm font-medium uppercase font-harmony text-brand-white/70 hover:text-brand-white transition-colors"
 					onclick={() => (selectedCategories = [])}
 				>
 					Clear filters
 				</button>
-			{/if}
+			{/if} -->
 		</div>
 	</div>
 </div>

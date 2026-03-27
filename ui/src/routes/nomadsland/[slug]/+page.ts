@@ -1,11 +1,11 @@
 import type { PageLoad } from './$types';
-import type { SanityPost } from '$lib/schemas/post';
+import type { SanityPostDetail } from '$lib/schemas/post';
 import { apiClient, ApiError } from '$lib/api';
 import { error } from '@sveltejs/kit';
 
 export const load: PageLoad = async ({ params }) => {
 	try {
-		const post = await apiClient.get<SanityPost>(`/api/posts/${params.slug}`);
+		const post = await apiClient.get<SanityPostDetail>(`/posts/${params.slug}`);
 
 		return {
 			post

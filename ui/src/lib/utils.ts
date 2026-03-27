@@ -10,6 +10,22 @@ export function roundTo(num: number, decimals: number): number {
 	return Math.round(num * multiplier) / multiplier;
 }
 
+// export function debounce<T extends (...args: any[]) => void>(func: T, wait: number): T {
+// 	let timeout: ReturnType<typeof setTimeout>;
+// 	return ((...args: Parameters<T>) => {
+// 		clearTimeout(timeout);
+// 		timeout = setTimeout(() => func(...args), wait);
+// 	}) as T;
+// }
+export function debounce(callback: Function, wait: number = 300) {
+	let timeout: ReturnType<typeof setTimeout>;
+
+	return (...args: any[]) => {
+		clearTimeout(timeout);
+		timeout = setTimeout(() => callback(...args), wait);
+	}
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type WithoutChild<T> = T extends { child?: any } ? Omit<T, "child"> : T;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

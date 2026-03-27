@@ -30,7 +30,7 @@
 				href="https://book.squareup.com/appointments/augj56g525h4rw/location/LSP68REJT9SVH/services"
 				class={buttonVariants({
 					variant: "default",
-					class: "rounded-full no-underline bg-black text-white border-2 border-black uppercase font-source-code-pro font-bold hover:bg-transparent hover:text-black",
+					class: "rounded-full no-underline bg-black text-white border-2 border-black uppercase font-source-code-pro font-bold hover:bg-transparent hover:text-black h-auto",
 					size: "xl",
 				})}
 				onclick={handleClick}

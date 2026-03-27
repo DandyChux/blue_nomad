@@ -53,7 +53,7 @@ function buildUrl(endpoint: string, params?: Record<string, string | number | bo
 
 	// Combine base URL and endpoint directly to preserve path components like /v1.0
 	const fullUrl = `${BASE_URL}${normalizedEndpoint}`;
-	const url = new URL(fullUrl);
+	const url = new URL(fullUrl, window.location.origin);
 
 	if (params) {
 		Object.entries(params).forEach(([key, value]) => {

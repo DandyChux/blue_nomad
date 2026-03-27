@@ -7,6 +7,7 @@
 	import TreatmentCards from "$lib/components/treatment-cards.svelte";
 	import Partners from "$lib/components/partners.svelte";
 	import Testimonials from "$lib/components/testimonials.svelte";
+	import { SITE_TITLE } from "./+layout.svelte";
 
 	const pressBrands: MovingCardProps[] = [
 		{
@@ -52,17 +53,14 @@
 	];
 </script>
 
-<!-- Hero Section -->
-<section class="relative p-0 text-brand-white">
-	<div class="absolute inset-0 -z-10">
-		<enhanced:img
-			src={StudioBackground}
-			alt="Background"
-			class="object-cover xl:object-cover object-center w-full h-full"
-			fetchpriority="high"
-		/>
-	</div>
+<svelte:head>
+	<title>{SITE_TITLE}</title>
+</svelte:head>
 
+<!-- Hero Section -->
+<section
+	class="relative p-0 text-brand-white bg-studio-background bg-cover bg-no-repeat bg-center"
+>
 	<div
 		class="flex flex-col m-[auto_0] pl-14 md:pl-8 pt-16 pb-8 gap-8 lg:gap-12 place-self-center"
 	>
@@ -74,7 +72,7 @@
 		</p>
 		<Button
 			variant="outline"
-			class="uppercase self-start rounded-full h-auto py-2 border-brand-white md:text-brand-white hover:border-black"
+			class="uppercase self-start rounded-full h-auto py-2 px-8 border-brand-white md:text-brand-white hover:border-black text-center font-source-code-pro"
 			size="lg"
 			href="#treatments"
 		>
@@ -111,11 +109,11 @@
 
 		<Button
 			variant="link"
-			size="xl"
 			href="/about"
 			class={buttonVariants({
 				variant: "outline",
-				class: "uppercase rounded-full",
+				class: "uppercase rounded-full h-auto text-center font-source-code-pro tracking-tight",
+				size: "xl",
 			})}
 		>
 			Our <br /> story

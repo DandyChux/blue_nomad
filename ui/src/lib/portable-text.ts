@@ -15,7 +15,7 @@ const components: PortableTextComponents = {
 
 	block: {
 		normal: ({ children }) => `<p class="mb-4 font-medium">${children}</p>`,
-		blockquote: ({ children }) => `<blockquote class="mb-4 font-medium">${children}</blockquote>`,
+		blockquote: ({ children }) => `<blockquote class="mb-4">${children}</blockquote>`,
 		h1: ({ children }) => `<h1 class="mb-4 font-extrabold">${children}</h1>`,
 		h2: ({ children }) => `<h2 class="mb-4 font-extrabold">${children}</h2>`,
 		h3: ({ children }) => `<h3 class="mb-4 font-extrabold">${children}</h3>`,

@@ -13,6 +13,7 @@
 	import { page } from "$app/state";
 	import { onMount } from "svelte";
 	import { trackEvent } from "$lib/analytics.svelte";
+	import SearchBar from "./search-bar.svelte";
 
 	export const navLinks: NavItem[] = [
 		{ label: "Home", href: "/" },
@@ -37,6 +38,8 @@
 			trackEvent("Clicked Gift Card");
 		} else if (label === "Book a Treatment") {
 			trackEvent("Clicked Treatment Booking");
+		} else if (label === "Shop") {
+			trackEvent("Clicked Shop");
 		}
 	}
 
@@ -105,7 +108,7 @@
 			<!-- {#if isDesktopMenuOpen}
 				<MenuIcon
 					class={cn(
-						"!size-6 lg:!size-8 xl:!size-10 text-black  -rotate-90",
+						"!size-6 lg:!size-8 xl:!size-10 text-black -rotate-90",
 						{
 							"text-brand-white": isLightPage,
 						},
@@ -170,11 +173,10 @@
 
 	<div class="flex max-w-[500px] w-auto items-center justify-end">
 		{#if pathname === "/nomadsland"}
-			<!-- Search bar placeholder — build SearchBar component when ready -->
-			<!-- <div class="flex items-center mr-2"><SearchBar /></div> -->
+			<div class="flex items-center mr-2"><SearchBar /></div>
 			<Button
 				variant="ghost"
-				class="hidden sm:inline-flex text-brand-white hover:text-white hover:bg-black rounded-full hover:cursor-pointer"
+				class="hidden sm:inline-flex text-brand-white hover:text-white hover:bg-black rounded-full hover:cursor-pointer font-source-code-pro"
 				href="#subscription-form"
 			>
 				Get Our Newsletter

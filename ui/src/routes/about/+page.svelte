@@ -41,7 +41,6 @@
 					src="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Onyedika/Onyedika11902.webp"
 					alt="Onyedikachi, founder of Blue Nomad"
 					class="col-start-1 row-start-2 self-end justify-self-start object-cover w-full h-full"
-					loading="lazy"
 				/>
 			</div>
 
