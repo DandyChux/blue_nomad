@@ -18,21 +18,21 @@ RUN npm install -g bun
 
 # Copy dependency manifests first (better layer caching)
 COPY ui/package.json ui/bun.lock ./
-
-# Install frontend dependencies
-RUN bun install --frozen-lockfile
-
-# Generate SvelteKit types and .svelte-kit directory first
-RUN bun run sync && bun run generate
-
-# Copy the frontend source needed for the build
-COPY ui/src/ ./src/
-COPY ui/static/ ./static/
 COPY ui/svelte.config.js ./
 COPY ui/vite.config.ts ./
 COPY ui/tsconfig.json ./
 COPY ui/components.json ./
-COPY ui/.svelte-kit/ ./.svelte-kit/
+
+# Install frontend dependencies
+RUN bun install --frozen-lockfile
+
+# Generate SvelteKit types and .svelte-kit directory (required for build)
+# The "prepare" script runs svelte-kit sync which generates the needed files
+RUN bun run prepare
+
+# Copy the frontend source needed for the build
+COPY ui/src/ ./src/
+COPY ui/static/ ./static/
 
 # Build — output goes to /ui/build
 RUN bun run build
