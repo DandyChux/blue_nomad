@@ -43,7 +43,7 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 
-COPY cmd/server/ ./cmd/
+COPY cmd/ ./cmd/
 COPY internal/ ./internal/
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o blue_nomad ./cmd/server
 
