@@ -8,7 +8,7 @@ import (
 func CorsMiddleware(next http.Handler) http.Handler {
 	allowedOrigins := os.Getenv("ALLOWED_ORIGINS")
 	if allowedOrigins == "" {
-		allowedOrigins = "*"
+		allowedOrigins = "https://bluenomadworld.com"
 	}
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

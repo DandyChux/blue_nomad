@@ -70,7 +70,7 @@ func (rw *responseWriter) WriteHeader(code int) {
 
 func main() {
 	// Load environment variables
-	err := godotenv.Load()
+	err := godotenv.Load(".env")
 	if err != nil {
 		log.Println("No .env file found")
 	}
@@ -94,10 +94,21 @@ func main() {
 		os.Getenv("SANITY_API_TOKEN"),
 	)
 
+	squareClient := services.NewSquareClient(
+		os.Getenv("SQUARE_API_KEY"),
+		"2026-01-22",
+	)
+
 	// ── Initialize handlers ────────────────────────────────────────────────
 	newsletterHandler := handlers.NewNewsletterHandler()
-	webhookHandler := handlers.NewWebhookHandler(os.Getenv("WEBHOOK_SECRET"), sanityClient)
+	webhookHandler := handlers.NewWebhookHandler(
+		os.Getenv("WEBHOOK_SECRET"),
+		os.Getenv("SQUARE_WEBHOOK_SIGNATURE_KEY"),
+		os.Getenv("SQUARE_WEBHOOK_URL"),
+		sanityClient,
+	)
 	postHandler := handlers.NewPostHandler(sanityClient)
+	shopHandler := handlers.NewShopHandler(squareClient)
 
 	// ── API routes ────────────────────────────────────────────────
 	api := http.NewServeMux()
@@ -117,6 +128,10 @@ func main() {
 	// Webhooks & cache
 	api.HandleFunc("POST /revalidate", webhookHandler.Revalidate)
 	api.HandleFunc("GET /cache/status", webhookHandler.LastInvalidation)
+
+	// Shop
+	api.HandleFunc("GET /shop/catalog", shopHandler.GetCatalog)
+	api.HandleFunc("POST /checkout", shopHandler.CreateCheckoutLink)
 
 	// ── Static frontend files ───────────────────────────────────────────
 	staticDir := os.Getenv("STATIC_DIR")

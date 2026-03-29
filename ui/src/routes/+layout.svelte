@@ -16,8 +16,16 @@
 	import Navbar from "$lib/components/navbar.svelte";
 	import Footer from "$lib/components/footer.svelte";
 	import BookingButton from "$lib/components/booking-button.svelte";
+	import { initCart } from "$lib/context/cart.svelte";
+	import CartDrawer from "$lib/components/cart-drawer.svelte";
+	import { initBooking } from "$lib/context/booking.svelte";
+	import BookingDrawer from "$lib/components/booking-drawer.svelte";
 
 	let { children } = $props();
+
+	// Initialize the cart context
+	initCart();
+	initBooking();
 </script>
 
 <svelte:head>
@@ -69,5 +77,7 @@
 	{@render children()}
 </main>
 
-<BookingButton />
 <Footer />
+<BookingButton />
+<CartDrawer />
+<BookingDrawer />

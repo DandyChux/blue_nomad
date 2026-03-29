@@ -6,14 +6,16 @@
 </script>
 
 <script lang="ts">
-	import { MenuIcon } from "@lucide/svelte";
+	import { MenuIcon, ShoppingCart } from "@lucide/svelte";
 	import { Button } from "$lib/components/ui/button";
 	import * as Sheet from "$lib/components/ui/sheet";
 	import { cn, generateSrcSet } from "$lib/utils";
 	import { page } from "$app/state";
-	import { onMount } from "svelte";
 	import { trackEvent } from "$lib/analytics.svelte";
 	import SearchBar from "./search-bar.svelte";
+	import { getCart } from "$lib/context/cart.svelte";
+
+	const cart = getCart();
 
 	export const navLinks: NavItem[] = [
 		{ label: "Home", href: "/" },
@@ -22,7 +24,7 @@
 			label: "Book a Treatment",
 			href: "https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start",
 		},
-		{ label: "Shop", href: "https://bluenomadworld.square.site/" },
+		{ label: "Shop", href: "/shop" },
 		{
 			label: "Gift Card",
 			href: "https://app.squareup.com/gift/ML665NPQYDHTJ/order",
@@ -124,7 +126,7 @@
 				/>
 			{/if} -->
 			<MenuIcon
-				class={cn("!size-6 lg:!size-8 xl:!size-10 text-black", {
+				class={cn("size-6! lg:size-8! xl:size-10! text-black", {
 					"text-brand-white": isLightPage,
 				})}
 				strokeWidth={2.5}
@@ -172,6 +174,11 @@
 	</div>
 
 	<div class="flex max-w-[500px] w-auto items-center justify-end">
+		{#if pathname === "/shop"}
+			<Button onclick={() => cart.toggle()} variant="outline">
+				Cart ({cart.items.length})
+			</Button>
+		{/if}
 		{#if pathname === "/nomadsland"}
 			<div class="flex items-center mr-2"><SearchBar /></div>
 			<Button

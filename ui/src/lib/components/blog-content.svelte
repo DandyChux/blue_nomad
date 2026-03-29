@@ -172,7 +172,7 @@
 				{#each rows as row, rowIndex (rowIndex)}
 					<div
 						use:observeRow
-						class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16 mb-16 opacity-0 translate-y-8 transition-all duration-[1500ms] ease-in-out"
+						class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16 mb-16 opacity-0 translate-y-8 transition-all duration-1500 ease-in-out"
 						style:transition-delay="{rowIndex * 200}ms"
 					>
 						{#each row as post, index (post.title)}

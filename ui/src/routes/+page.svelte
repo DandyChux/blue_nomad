@@ -3,7 +3,6 @@
 	import InfiniteMovingCards, {
 		type MovingCardProps,
 	} from "$lib/components/infinite-moving-cards.svelte";
-	import StudioBackground from "$lib/assets/studio_background.jpg?enhanced";
 	import TreatmentCards from "$lib/components/treatment-cards.svelte";
 	import Partners from "$lib/components/partners.svelte";
 	import Testimonials from "$lib/components/testimonials.svelte";

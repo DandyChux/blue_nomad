@@ -1,9 +1,10 @@
 <script>
 	import { generateSrcSet } from "$lib/utils";
+	import { pageTitle } from "../+layout.svelte";
 </script>
 
 <svelte:head>
-	<title>Our Story | BLUE NOMAD: A Private Skin Health Studio in NYC</title>
+	<title>{pageTitle("Our Story")}</title>
 </svelte:head>
 
 <section class="gap-4 lg:gap-32 lg:flex-col pt-40">

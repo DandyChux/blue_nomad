@@ -1,7 +1,9 @@
-<script>
+<script lang="ts">
 	import { trackEvent } from "$lib/analytics.svelte";
 	import Button, { buttonVariants } from "./ui/button/button.svelte";
+	import { getBooking } from "$lib/context/booking.svelte"; // 1. Import state
 
+	const booking = getBooking(); // Grab the state instance
 	let hidden = $state(false);
 
 	function handleClose() {
@@ -10,6 +12,7 @@
 
 	function handleClick() {
 		trackEvent("Clicked Booking Button");
+		booking.open(); // 2. Trigger the drawer to slide out!
 	}
 </script>
 
@@ -25,17 +28,13 @@
 			</button>
 
 			<Button
-				variant="link"
 				id="booking-button"
-				href="https://book.squareup.com/appointments/augj56g525h4rw/location/LSP68REJT9SVH/services"
 				class={buttonVariants({
 					variant: "default",
 					class: "rounded-full no-underline bg-black text-white border-2 border-black uppercase font-source-code-pro font-bold hover:bg-transparent hover:text-black h-auto",
 					size: "xl",
 				})}
 				onclick={handleClick}
-				rel="noopener noreferrer"
-				target="_blank"
 			>
 				Begin with a <br /> consultation
 			</Button>
