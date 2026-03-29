@@ -3,6 +3,7 @@
 	import { Card, CardContent } from "$lib/components/ui/card";
 	import type { Post } from "$lib/schemas/post";
 	import { page } from "$app/state";
+	import { generateSrcSet } from "$lib/utils";
 
 	let {
 		posts,
@@ -13,8 +14,39 @@
 	let selectedCategories = $state<string[]>([]);
 	let searchQuery = $derived(page.url.searchParams.get("q") ?? "");
 
+	// Define exact category order
+	const categoryOrder = [
+		"Skin",
+		"Scent & Body",
+		"Self",
+		"Culture",
+		"People & Community",
+		"Place",
+	];
+
+	let uniqueCategories = $derived([
+		...new Set(posts.flatMap((p) => p.categories || []).filter(Boolean)),
+	]);
 	let allCategories = $derived(
-		[...new Set(posts.flatMap((p) => p.categories))].sort(),
+		uniqueCategories.sort((a, b) => {
+			const indexA = categoryOrder.findIndex(
+				(cat) => cat.toLocaleLowerCase() === a.toLowerCase(),
+			);
+			const indexB = categoryOrder.findIndex(
+				(cat) => cat.toLocaleLowerCase() === b.toLowerCase(),
+			);
+
+			// If both categories are in the defined list, sort by their order
+			if (indexA !== -1 && indexB !== -1) {
+				return indexA - indexB;
+			}
+
+			// If only a is in the defined list, it comes first
+			if (indexA !== -1) return -1;
+			if (indexB !== -1) return 1;
+
+			return a.localeCompare(b);
+		}),
 	);
 
 	let filteredPosts = $derived(
@@ -84,8 +116,13 @@
 	}
 </script>
 
+<!-- Preload LCP image if exists -->
+{#if posts.length > 0 && posts[0].imageUrl}
+	<link rel="preload" as="image" href={posts[0].imageUrl} />
+{/if}
+
 <div class="text-center">
-	<h1 class="mb-8 uppercase">Nomad's <span class="italic">L</span>and</h1>
+	<h1 class="mb-8 uppercase">Nomad's <em>L</em>and</h1>
 
 	<!-- Category filters -->
 	<div
@@ -149,9 +186,16 @@
 										>
 											<img
 												src={post.imageUrl}
+												srcset={generateSrcSet(
+													post.imageUrl,
+													[400, 800, 1200, 1600],
+													"webp",
+													85,
+												)}
 												alt={post.title}
 												class="object-contain w-full h-full"
 												loading="lazy"
+												sizes="(max-width: 640px) 100vw, (max-width: 1024px) 70vw, (max-width: 1280px) 50vw, 33vw"
 											/>
 										</div>
 										<CardContent class="pt-4">

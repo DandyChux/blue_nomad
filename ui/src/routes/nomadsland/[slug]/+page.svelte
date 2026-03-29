@@ -2,6 +2,7 @@
 	import { renderPortableText } from "$lib/portable-text";
 	import ShareLinks from "$lib/components/share-links.svelte";
 	import { pageTitle } from "../../+layout.svelte";
+	import { generateSrcSet } from "$lib/utils.js";
 
 	let { data } = $props();
 	let post = $derived(data.post);
@@ -24,7 +25,7 @@
 		class="px-8 md:px-16 lg:px-24 pt-32 pb-12 min-h-dvh text-secondary-foreground"
 	>
 		<nav class="mb-8">
-			<a href="/nomadsland" class="hover:underline"> ← Back to posts </a>
+			<a href="/nomadsland" class="hover:underline">← Back to posts</a>
 		</nav>
 		<h1 class="uppercase mb-8 leading-12">{post.title}</h1>
 		<p>{post.authorName}</p>
@@ -38,12 +39,19 @@
 
 		{#if post.mainImage}
 			<div class="mb-8 relative aspect-4/3 max-w-[750px] mx-auto">
-				<enhanced:img
-					src={`${post.mainImage.asset.url}?w=800`}
+				<img
+					src={`${post.mainImage.asset.url}`}
+					srcset={generateSrcSet(
+						post.mainImage.asset.url,
+						[400, 800, 1200, 1600],
+						"webp",
+						85,
+					)}
 					alt={post.mainImage.alt || ""}
 					class="object-contain h-full w-full rounded-md"
 					fetchpriority="high"
 					placeholder="blur"
+					sizes="(max-width: 640px) 100vw, (max-width: 1024px) 70vw, (max-width: 1280px) 50vw, 33vw"
 				/>
 			</div>
 		{/if}

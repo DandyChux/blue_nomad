@@ -128,7 +128,7 @@ func main() {
 	// ── Root mux ───────────────────────────────────────────
 	rootMux := http.NewServeMux()
 	rootMux.Handle("/api/", http.StripPrefix("/api", api))
-	rootMux.Handle("/", newSPAFileServer(staticDir))
+	rootMux.Handle("/", middleware.StaticCacheMiddleware(newSPAFileServer(staticDir)))
 
 	// Wrap the root mux with middleware
 	handler := middleware.Logger(rootMux)

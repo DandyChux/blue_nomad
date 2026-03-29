@@ -67,3 +67,14 @@ func Logger(next http.Handler) http.Handler {
 		}
 	})
 }
+
+// Stack composes middleware left-to-right so they execute in the order listed.
+// Usage: Stack(requireAuth, RequireAdmin)(handler)
+// func Stack(middlewares ...func(http.Handler) http.Handler) func(http.Handler) http.Handler {
+// 		return func(next http.Handler) http.Handler {
+// 			for i := len(middlewares) - 1; i >= 0; i-- {
+// 				next = middlewares[i](next)
+// 			}
+// 			return next
+// 		}
+// }

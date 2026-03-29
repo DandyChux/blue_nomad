@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Button } from "$lib/components/ui/button";
 	import { Input } from "$lib/components/ui/input";
-	import { cn } from "$lib/utils";
+	import { cn, generateSrcSet } from "$lib/utils";
 	import apiClient from "$lib/api";
 	import { toast } from "svelte-sonner";
 	import FooterGradient from "$lib/assets/footer_gradient.png";
@@ -111,7 +111,8 @@
 				class="uppercase not-italic font-bold font-source-code-pro"
 			>
 				Blue Nomad <br />
-				1123 Broadway, #1014 <br />
+				1123 Broadway, #1014
+				<br />
 				New York, NY 10010
 			</address>
 			<p class="uppercase font-bold font-source-code-pro">
@@ -209,9 +210,16 @@
 		<div class="relative w-full md:w-[60%]">
 			<a href="/">
 				<img
-					src="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/blue-nomad.svg"
+					src={"https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/blue-nomad.svg"}
+					srcset={generateSrcSet(
+						"https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/blue-nomad.svg",
+						[400, 800, 1200, 1600],
+						"webp",
+						85,
+					)}
 					alt="Blue Nomad Logo"
 					class="w-full h-auto"
+					sizes="(max-width: 640px) 100vw, (max-width: 1024px) 70vw, (max-width: 1280px) 50vw, 33vw"
 				/>
 			</a>
 		</div>
@@ -224,9 +232,10 @@
 
 	<address>
 		<p class="text-sm text-center text-muted-foreground">
-			Created by <a href="https://ceokoroji.dev" class="underline"
-				>Chukwuma Okoroji</a
-			> 🖤
+			Created by <a href="https://ceokoroji.dev" class="underline">
+				Chukwuma Okoroji
+			</a>
+			 🖤
 		</p>
 	</address>
 </footer>

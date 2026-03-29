@@ -8,6 +8,7 @@
 	import Partners from "$lib/components/partners.svelte";
 	import Testimonials from "$lib/components/testimonials.svelte";
 	import { SITE_TITLE } from "./+layout.svelte";
+	import { generateSrcSet } from "$lib/utils";
 
 	const pressBrands: MovingCardProps[] = [
 		{
@@ -65,18 +66,38 @@
 		class="flex flex-col m-[auto_0] pl-14 md:pl-8 pt-16 pb-8 gap-8 lg:gap-12 place-self-center"
 	>
 		<p class="uppercase w-full md:w-auto text-2xl lg:text-4xl">
-			<span>modern wellness</span> <br />
-			<span class="pl-4 md:pl-8">inspired</span> <br />
-			<span class="pl-8 md:pl-16">by worlds</span> <br />
+			<span>modern wellness</span>
+			<br />
+			<span class="pl-4 md:pl-8">inspired</span>
+			<br />
+			<span class="pl-8 md:pl-16">by worlds</span>
+			<br />
 			<span class="pl-12 md:pl-24">near, far, and within</span>
 		</p>
+		<!-- <div
+			class="flex flex-col text-2xl lg:text-4xl uppercase"
+			style="--indent: 1.5rem"
+		>
+			<p>modern wellness</p>
+			<p style="margin-inline-start: calc(var(--indent) + 8px)">
+				inspired
+			</p>
+			<p style="margin-inline-start: calc(var(--indent) + 36px)">
+				by worlds
+			</p>
+			<p style="margin-inline-start: calc(var(--indent) + 48px)">
+				near, far, and within
+			</p>
+		</div> -->
+
 		<Button
 			variant="outline"
 			class="uppercase self-start rounded-full h-auto py-2 px-8 border-brand-white md:text-brand-white hover:border-black text-center font-source-code-pro"
 			size="lg"
 			href="#treatments"
 		>
-			Discover <br /> skin health
+			Discover <br />
+			skin health
 		</Button>
 	</div>
 </section>
@@ -86,25 +107,34 @@
 	<div class="relative flex-1">
 		<img
 			src="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Christian/Look%204%20139.webp"
+			srcset={generateSrcSet(
+				"https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Christian/Look%204%20139.webp",
+				[400, 800, 1200, 1600],
+				"webp",
+				85,
+			)}
 			alt=""
 			width="400"
 			height="600"
 			class="w-full h-auto"
 			loading="lazy"
+			sizes="(max-width: 640px) 100vw, (max-width: 1024px) 70vw, (max-width: 1280px) 50vw, 33vw"
 		/>
 	</div>
 
 	<div class="flex-[1_1_30%] flex flex-col items-center gap-10 mt-6">
 		<p class="text-center text-xl lg:text-3xl">
-			Reimagining wellness by creating <br /> distinctive experiences,
-			guiding curious <br /> minds on transformative journeys <br />
+			Reimagining wellness by creating <br />
+			distinctive experiences, guiding curious
+			<br />
+			minds on transformative journeys
+			<br />
 			from urban alcoves to distant escapes.
 		</p>
 
 		<p class="uppercase text-center text-3xl lg:text-6xl max-w-[750px]">
-			For the curious & discernin<span
-				class="lowercase text-[2.5rem] lg:text-8xl">g</span
-			>
+			For the curious & discernin
+			<span class="lowercase text-[2.5rem] lg:text-8xl">g</span>
 		</p>
 
 		<Button
@@ -116,7 +146,8 @@
 				size: "xl",
 			})}
 		>
-			Our <br /> story
+			Our <br />
+			story
 		</Button>
 	</div>
 </section>
@@ -144,11 +175,13 @@
 			</p>
 			<p>
 				That are efficacious, cultured, and
-				<span class="lowercase lg:text-6xl">g</span>enuine-each
+				<span class="lowercase lg:text-6xl">g</span>
+				enuine-each
 			</p>
 			<p>with an ethos that</p>
 			<p class="pl-[40%] lg:pl-[25%]">
-				<span class="lowercase lg:text-6xl">g</span>oes skin deep.
+				<span class="lowercase lg:text-6xl">g</span>
+				oes skin deep.
 			</p>
 		</blockquote>
 
@@ -160,12 +193,12 @@
 			</p>
 			<p>
 				That are efficacious, cultured, and
-				<span class="lowercase text-xl lg:text-6xl">g</span>enuine-each
-				with an ethos that
+				<span class="lowercase text-xl lg:text-6xl">g</span>
+				enuine-each with an ethos that
 			</p>
 			<p class="pl-[40%] lg:pl-[25%]">
-				<span class="lowercase text-xl lg:text-6xl">g</span>oes skin
-				deep.
+				<span class="lowercase text-xl lg:text-6xl">g</span>
+				oes skin deep.
 			</p>
 		</blockquote>
 
@@ -179,10 +212,17 @@
 			<a href="/about">
 				<img
 					src="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Onyedika/Founder.webp"
+					srcset={generateSrcSet(
+						"https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Onyedika/Founder.webp",
+						[250, 500, 750, 1000],
+						"webp",
+						85,
+					)}
 					alt="Onyedikachi"
 					width="250"
 					height="300"
 					loading="lazy"
+					sizes="(max-width: 640px) 100vw, (max-width: 1024px) 70vw, (max-width: 1280px) 50vw, 33vw"
 				/>
 			</a>
 		</figcaption>

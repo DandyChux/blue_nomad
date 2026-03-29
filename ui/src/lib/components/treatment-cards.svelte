@@ -1,6 +1,6 @@
 <script lang="ts">
 	import * as Card from "./ui/card";
-	import { cn } from "$lib/utils";
+	import { cn, generateSrcSet } from "$lib/utils";
 	import { Button, buttonVariants } from "./ui/button";
 
 	type TreatmentProps = {
@@ -96,21 +96,33 @@
 				>
 					<img
 						src={treatment.defaultImage}
+						srcset={generateSrcSet(
+							treatment.defaultImage,
+							[400, 800, 1200, 1600],
+							"webp",
+							85,
+						)}
 						alt={treatment.title}
-						loading="lazy"
 						class={cn(
 							"object-cover size-full absolute inset-0 transition-opacity duration-300 group-hover/card:opacity-0",
 							isEven && "object-[5%_35%]",
 						)}
+						sizes="(max-width: 640px) 100vw, (max-width: 1024px) 70vw, (max-width: 1280px) 50vw, 33vw"
 					/>
 					<img
 						src={treatment.hoverImage}
+						srcset={generateSrcSet(
+							treatment.hoverImage,
+							[400, 800, 1200, 1600],
+							"webp",
+							85,
+						)}
 						alt={`${treatment.title} - alternate view`}
-						loading="lazy"
 						class={cn(
 							"object-cover size-full absolute inset-0 transition-opacity duration-300 opacity-0 group-hover/card:opacity-100",
 							isEven && "object-[5%_35%]",
 						)}
+						sizes="(max-width: 640px) 100vw, (max-width: 1024px) 70vw, (max-width: 1280px) 50vw, 33vw"
 					/>
 				</Card.Content>
 			</Card.Root>

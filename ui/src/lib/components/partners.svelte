@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { roundTo } from "$lib/utils";
+	import { generateSrcSet, roundTo } from "$lib/utils";
 
 	type LogoProps = {
 		src: string;
@@ -82,11 +82,18 @@
 		<div
 			class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
 		>
-			<enhanced:img
+			<img
 				src={centralLogo.src}
+				srcset={generateSrcSet(
+					centralLogo.src,
+					[400, 800, 1200, 1600],
+					"webp",
+					85,
+				)}
 				alt={centralLogo.alt}
 				width="300"
 				height="300"
+				sizes="(max-width: 640px) 100vw, (max-width: 1024px) 70vw, (max-width: 1280px) 50vw, 33vw"
 			/>
 		</div>
 
@@ -100,12 +107,19 @@
 					class="flex items-center justify-center"
 					style:transform="translate(-50%, -50%)"
 				>
-					<enhanced:img
+					<img
 						src={logo.src}
+						srcset={generateSrcSet(
+							logo.src,
+							[400, 800, 1200, 1600],
+							"webp",
+							85,
+						)}
 						alt={logo.alt}
 						width="175"
 						height="75"
 						loading="lazy"
+						sizes="(max-width: 640px) 100vw, (max-width: 1024px) 70vw, (max-width: 1280px) 50vw, 33vw"
 					/>
 				</div>
 			</div>
@@ -115,8 +129,14 @@
 	<!-- Stacked layout for mobile -->
 	<div class="flex flex-col items-center gap-4 mt-10 md:hidden">
 		<div>
-			<enhanced:img
+			<img
 				src={centralLogo.src}
+				srcset={generateSrcSet(
+					centralLogo.src,
+					[400, 800, 1200, 1600],
+					"webp",
+					85,
+				)}
 				alt={centralLogo.alt}
 				width="250"
 				height="200"
@@ -124,8 +144,14 @@
 		</div>
 		{#each surroundingLogos as logo (logo.alt)}
 			<div>
-				<enhanced:img
+				<img
 					src={logo.src}
+					srcset={generateSrcSet(
+						logo.src,
+						[400, 800, 1200, 1600],
+						"webp",
+						85,
+					)}
 					alt={logo.alt}
 					width="125"
 					height="75"

@@ -27,7 +27,12 @@ const config = {
 				console.warn('The following routes were not prerendered: ', routes)
 			}
 		}
-	}
+	},
+	// vitePlugin: {
+	// 	image: {
+	// 		formats: ['webp', 'avif']
+	// 	}
+	// }
 };
 
 export default config;

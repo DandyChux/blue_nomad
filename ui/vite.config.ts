@@ -9,6 +9,10 @@ export default defineConfig({
 		tailwindcss(),
 		sveltekit(),
 	],
+	build: {
+		minify: true,
+		reportCompressedSize: true
+	},
 	server: {
 		proxy: {
 			'/api': {

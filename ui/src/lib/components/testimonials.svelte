@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Button } from "./ui/button";
-	import { roundTo } from "$lib/utils";
+	import { generateSrcSet, roundTo } from "$lib/utils";
 
 	type TestimonialProps = {
 		name: string;
@@ -85,7 +85,10 @@
 					size="xl"
 					class="h-auto uppercase rounded-full py-2 px-10 mt-4 pointer-events-auto"
 				>
-					<a href="#treatments">Your <br /> Turn</a>
+					<a href="#treatments">
+						Your <br />
+						Turn
+					</a>
 				</Button>
 			</div>
 
@@ -108,10 +111,17 @@
 						>
 							<img
 								src={testimonial.image}
+								srcset={generateSrcSet(
+									testimonial.image,
+									[400, 800, 1200, 1600],
+									"webp",
+									85,
+								)}
 								alt={`Picture of ${testimonial.name}`}
 								class="object-cover size-full"
 								loading="lazy"
 								placeholder="blur"
+								sizes="(max-width: 640px) 100vw, (max-width: 1024px) 70vw, (max-width: 1280px) 50vw, 33vw"
 							/>
 						</div>
 
@@ -148,10 +158,17 @@
 							>
 								<img
 									src={testimonial.image}
+									srcset={generateSrcSet(
+										testimonial.image,
+										[400, 800, 1200, 1600],
+										"webp",
+										85,
+									)}
 									alt={`Picture of ${testimonial.name}`}
 									class="object-cover size-full"
 									loading="lazy"
 									placeholder="blur"
+									sizes="(max-width: 640px) 100vw, (max-width: 1024px) 70vw, (max-width: 1280px) 50vw, 33vw"
 								/>
 							</div>
 
@@ -178,7 +195,8 @@
 				target="_blank"
 				rel="noopener noreferrer"
 			>
-				Your <br /> Turn
+				Your <br />
+				Turn
 			</Button>
 		</div>
 	{/if}

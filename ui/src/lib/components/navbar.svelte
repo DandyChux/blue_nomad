@@ -9,7 +9,7 @@
 	import { MenuIcon } from "@lucide/svelte";
 	import { Button } from "$lib/components/ui/button";
 	import * as Sheet from "$lib/components/ui/sheet";
-	import { cn } from "$lib/utils";
+	import { cn, generateSrcSet } from "$lib/utils";
 	import { page } from "$app/state";
 	import { onMount } from "svelte";
 	import { trackEvent } from "$lib/analytics.svelte";
@@ -185,8 +185,15 @@
 			<a href="/" class="no-underline block">
 				<img
 					src="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/blue-nomad-light.png"
+					srcset={generateSrcSet(
+						"https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/blue-nomad-light.png",
+						[400, 800, 1200, 1600],
+						"webp",
+						85,
+					)}
 					alt="Blue Nomad Logo"
 					class="w-full h-auto sm:max-w-[300px]"
+					sizes="(max-width: 640px) 100vw, (max-width: 1024px) 70vw, (max-width: 1280px) 50vw, 33vw"
 				/>
 			</a>
 		{/if}
