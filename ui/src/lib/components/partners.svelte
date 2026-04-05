@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { generateSrcSet, roundTo } from "$lib/utils";
+	import { Button, buttonVariants } from "./ui/button";
 
 	type LogoProps = {
 		src: string;

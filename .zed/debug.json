@@ -6,9 +6,19 @@
 	{
 		"label": "Launch Go (Delve)",
 		"adapter": "Delve",
-		"program": "${ZED_WORKTREE_ROOT}/api/main.go",
+		"program": "${ZED_WORKTREE_ROOT}/cmd/server/main.go",
 		"request": "launch",
 		"mode": "debug",
-		"cwd": "${ZED_WORKTREE_ROOT}/api"
-	}
+		"cwd": "${ZED_WORKTREE_ROOT}/cmd/server",
+	},
+	// {
+	//    "adapter": "JavaScript",
+	//    "label": "Debug in Chrome",
+	//    "type": "chrome",
+	//    "request": "launch",
+	//    "url": "http://localhost:9339/",
+	//    "webRoot": "$ZED_WORKTREE_ROOT/src",
+	//    "console": "integratedTerminal",
+	//    "skipFiles": ["<node_internals>/**"]
+	//  }
 ]

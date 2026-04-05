@@ -7,6 +7,7 @@
 	import * as Pagination from "$lib/components/ui/pagination";
 	import * as Select from "$lib/components/ui/select";
 	import * as Empty from "$lib/components/ui/empty";
+	import * as Accordion from "$lib/components/ui/accordion";
 	import ProductCard from "$lib/components/product-card.svelte";
 	import { debounce, cn } from "$lib/utils";
 
@@ -101,7 +102,7 @@
 	>
 		<div>
 			<h1 class="uppercase text-3xl lg:text-5xl mb-2">Shop</h1>
-			<p class="text-lg text-gray-600 font-source-code-pro">
+			<p class="text-lg font-source-code-pro">
 				Complimentary Shipping on US Orders $150+
 			</p>
 		</div>
@@ -112,7 +113,7 @@
 				value={searchQuery}
 				oninput={(e) => debouncedSearch(e.currentTarget.value)}
 				placeholder="SEARCH PRODUCTS..."
-				class="w-full border-b border-black py-2 rounded-none bg-transparent uppercase font-source-code-pro text-sm focus-visible:ring-0 focus-visible:outline-none placeholder:text-gray-400 border-x-0 border-t-0 shadow-none px-0"
+				class="w-full border-b border-black py-2 rounded-none bg-transparent uppercase font-source-code-pro text-sm focus-visible:ring-0 focus-visible:outline-none border-x-0 border-t-0 shadow-none px-0"
 			/>
 		</div>
 	</div>
@@ -120,44 +121,40 @@
 	<div
 		class="flex flex-col lg:grid lg:grid-cols-[16rem_1fr] lg:items-start gap-12 w-full"
 	>
-		<aside class="flex flex-col gap-8">
-			<div class="flex flex-col gap-4">
-				<h3 class="font-medium text-sm">Browse by category</h3>
-				<div class="flex flex-col gap-3 font-source-code-pro text-sm">
-					<button
-						class={cn(
-							"text-left hover:underline",
-							!activeCategory && "font-bold underline",
-						)}
-						onclick={() => updateFilter("category", null)}
+		<aside class="flex flex-col gap-8 font-source-code-pro text-sm">
+			<!-- <h3 class="font-medium text-sm">Browse by category</h3> -->
+			<Accordion.Root type="multiple">
+				<Accordion.Item value="category">
+					<Accordion.Trigger class="font-semibold text-sm"
+						>Browse by category</Accordion.Trigger
 					>
-						All Items
-					</button>
-					{#each data.categories as category (category.id)}
-						<button
-							class={cn(
-								"text-left hover:underline",
-								activeCategory === category.id &&
-									"font-bold underline",
-							)}
-							onclick={() =>
-								updateFilter("category", category.id)}
-						>
-							{category.name}
-						</button>
-					{/each}
-				</div>
-			</div>
+					<Accordion.Content class="flex flex-col gap-3">
+						{#each data.categories as category (category.id)}
+							<button
+								class={cn(
+									"text-left hover:underline",
+									activeCategory === category.id &&
+										"font-bold underline",
+								)}
+								onclick={() =>
+									updateFilter("category", category.id)}
+							>
+								{category.name}
+							</button>
+						{/each}
+					</Accordion.Content>
+				</Accordion.Item>
+			</Accordion.Root>
 
 			<hr class="border-gray-200" />
 
-			<div class="flex flex-col gap-4">
+			<!-- <div class="flex flex-col gap-4">
 				<h3 class="font-medium text-sm">Price range ($)</h3>
 				<div class="flex items-center gap-4">
 					<div class="flex flex-col gap-1 w-full">
 						<label
 							for="min-price"
-							class="text-xs text-gray-500 font-source-code-pro"
+							class="text-xs  font-source-code-pro"
 							>Min price</label
 						>
 						<Input
@@ -174,7 +171,7 @@
 					<div class="flex flex-col gap-1 w-full">
 						<label
 							for="max-price"
-							class="text-xs text-gray-500 font-source-code-pro"
+							class="text-xs  font-source-code-pro"
 							>Max price</label
 						>
 						<Input
@@ -190,31 +187,35 @@
 				</div>
 			</div>
 
-			<hr class="border-gray-200" />
+			<hr class="border-gray-200" /> -->
 
-			<div class="flex flex-col gap-4">
-				<h3 class="font-medium text-sm">Availability</h3>
-				<div class="flex items-center space-x-2">
-					<Checkbox
-						id="in-stock"
-						checked={inStockOnly}
-						onCheckedChange={(v) => updateFilter("in_stock", v)}
-						class="rounded-none"
-					/>
-					<Label
-						for="in-stock"
-						class="font-source-code-pro font-normal text-sm cursor-pointer"
-						>In stock</Label
+			<Accordion.Root type="multiple">
+				<Accordion.Item value="availability">
+					<Accordion.Trigger class="font-semibold text-sm"
+						>Availability</Accordion.Trigger
 					>
-				</div>
-			</div>
+					<Accordion.Content class="flex items-center space-x-2">
+						<Checkbox
+							id="in-stock"
+							checked={inStockOnly}
+							onCheckedChange={(v) => updateFilter("in_stock", v)}
+							class="rounded-none"
+						/>
+						<Label
+							for="in-stock"
+							class="font-source-code-pro font-normal text-sm cursor-pointer"
+							>In stock</Label
+						>
+					</Accordion.Content>
+				</Accordion.Item>
+			</Accordion.Root>
 		</aside>
 
 		<div class="w-full flex flex-col min-h-[800px]">
 			<div
 				class="flex justify-between items-center mb-8 border-b border-gray-100 pb-4"
 			>
-				<p class="text-gray-500 text-sm font-source-code-pro">
+				<p class=" text-sm font-source-code-pro">
 					Showing {paginatedProducts.length > 0
 						? (currentPage - 1) * perPage + 1
 						: 0} -
@@ -223,7 +224,7 @@
 				</p>
 
 				<div class="flex items-center gap-3">
-					<span class="text-sm font-source-code-pro text-gray-500"
+					<span class="text-sm font-source-code-pro"
 						>Items per page:</span
 					>
 					<Select.Root
@@ -271,7 +272,7 @@
 								</svg>
 							</Empty.Media>
 							<Empty.Title
-								class="uppercase font-source-code-pro text-gray-500 font-normal tracking-widest text-sm"
+								class="uppercase font-source-code-pro  font-normal tracking-widest text-sm"
 							>
 								No products match your filters.
 							</Empty.Title>
@@ -280,7 +281,7 @@
 				</div>
 			{:else}
 				<div
-					class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-12 mb-16 content-start flex-grow"
+					class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 mb-16 content-start flex-grow h-[calc(100vh-400px)] overflow-y-auto"
 				>
 					{#each paginatedProducts as product (product.id)}
 						<ProductCard {product} />

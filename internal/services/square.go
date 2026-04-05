@@ -14,11 +14,6 @@ import (
 	"github.com/google/uuid"
 )
 
-// const (
-// 	squareBaseURL = os.Getenv("SQUARE_BASE_URL")
-// 	squareVersion = "2026-01-22"
-// )
-
 // SwuareClient wraps HTTP calls to the Square REST API
 type SquareClient struct {
 	http       *HTTPClient
@@ -40,6 +35,23 @@ type CheckoutItem struct {
 // CheckoutRequest represents the payload from the SvelteKit frontend
 type CheckoutRequest struct {
 	Items []CheckoutItem `json:"items"`
+}
+
+// SearchAvailabilityRequest for headless booking
+type SearchAvailabilityRequest struct {
+	ServiceVariationID string `json:"service_variation_id"`
+	StartAt            string `json:"start_at"`
+	EndAt              string `json:"end_at"`
+}
+
+// CreateBookingRequest for headless booking
+type CreateBookingRequest struct {
+	ServiceVariationID string `json:"service_variation_id"`
+	StartAt            string `json:"start_at"`
+	GivenName          string `json:"given_name"`
+	FamilyName         string `json:"family_name"`
+	EmailAddress       string `json:"email_address"`
+	PhoneNumber        string `json:"phone_number"`
 }
 
 // NewSquareClient initializes a new Square API client
@@ -68,59 +80,49 @@ func NewSquareClient(accessToken, version string) *SquareClient {
 	}
 }
 
-// GetCatalogItems fetches all items, categories, and images from the Square catalog.
-// It handles pagination to ensure no objects are left behind on subsequent pages.
 func (s *SquareClient) GetCatalogItems(ctx context.Context) (json.RawMessage, error) {
+	return s.fetchCatalogTypes(ctx, "ITEM,CATEGORY,IMAGE")
+}
+
+// GetBookingServices fetches all appointment services from the catalog
+func (s *SquareClient) GetBookingServices(ctx context.Context) (json.RawMessage, error) {
+	return s.fetchCatalogTypes(ctx, "ITEM,IMAGE")
+}
+
+// Internal helper to handle Square's catalog pagination
+func (s *SquareClient) fetchCatalogTypes(ctx context.Context, types string) (json.RawMessage, error) {
 	var allObjects []interface{}
 	var cursor string
 
-	// Loop until Square stops returning a cursor
 	for {
-		queryParams := map[string]string{
-			"types": "ITEM,CATEGORY,IMAGE",
-		}
-
-		// If we have a cursor from a previous page, add it to the query
+		queryParams := map[string]string{"types": types}
 		if cursor != "" {
 			queryParams["cursor"] = cursor
 		}
 
 		resp, err := s.http.Get(ctx, "/v2/catalog/list", queryParams)
 		if err != nil {
-			return nil, fmt.Errorf("square catalog query failed: %w", err)
+			return nil, err
 		}
 
-		// Parse just enough of the response to grab the objects and the next cursor
 		var page struct {
 			Objects []interface{} `json:"objects"`
 			Cursor  string        `json:"cursor"`
 		}
 
 		if err := json.Unmarshal(resp.Body, &page); err != nil {
-			return nil, fmt.Errorf("failed to parse catalog page: %w", err)
+			return nil, err
 		}
 
-		// Append this page's objects to our master list
 		allObjects = append(allObjects, page.Objects...)
-
-		// If the cursor is empty, we've hit the last page! Break the loop.
 		if page.Cursor == "" {
 			break
 		}
 		cursor = page.Cursor
 	}
 
-	// Package everything back into the exact JSON shape SvelteKit is expecting
-	finalResponse := map[string]interface{}{
-		"objects": allObjects,
-	}
-
-	finalJSON, err := json.Marshal(finalResponse)
-	if err != nil {
-		return nil, fmt.Errorf("failed to re-marshal combined catalog: %w", err)
-	}
-
-	return finalJSON, nil
+	finalResponse := map[string]interface{}{"objects": allObjects}
+	return json.Marshal(finalResponse)
 }
 
 // ProcessPayment sends a payment request to Square.
@@ -199,6 +201,76 @@ func (s *SquareClient) CreatePaymentLink(ctx context.Context, cartData CheckoutR
 	}
 
 	return result.PaymentLink.URL, nil
+}
+
+// --- Booking Methods ---
+
+// SearchAvailability queries Square for open slots
+func (s *SquareClient) SearchAvailability(ctx context.Context, req SearchAvailabilityRequest) (json.RawMessage, error) {
+	payload := map[string]interface{}{
+		"query": map[string]interface{}{
+			"filter": map[string]interface{}{
+				"start_at_range": map[string]interface{}{
+					"start_at": req.StartAt,
+					"end_at":   req.EndAt,
+				},
+				"location_id": s.locationID,
+				"segment_filters": []map[string]interface{}{
+					{"service_variation_id": req.ServiceVariationID},
+				},
+			},
+		},
+	}
+
+	payloadBytes, _ := json.Marshal(payload)
+	resp, err := s.http.Post(ctx, "/v2/bookings/availability/search", bytes.NewReader(payloadBytes))
+	if err != nil {
+		return nil, err
+	}
+
+	return resp.Body, nil
+}
+
+// CreateBooking creates a customer and then reserves the appointment
+func (s *SquareClient) CreateBooking(ctx context.Context, req CreateBookingRequest) error {
+	// 1. Create/Find Customer
+	customerPayload := map[string]interface{}{
+		"idempotency_key": generateIdempotencyKey(),
+		"given_name":      req.GivenName,
+		"family_name":     req.FamilyName,
+		"email_address":   req.EmailAddress,
+		"phone_number":    req.PhoneNumber,
+	}
+
+	custBytes, _ := json.Marshal(customerPayload)
+	custResp, err := s.http.Post(ctx, "/v2/customers", bytes.NewReader(custBytes))
+	if err != nil {
+		return fmt.Errorf("customer creation failed: %w", err)
+	}
+
+	var custResult struct {
+		Customer struct {
+			ID string `json:"id"`
+		} `json:"customer"`
+	}
+	json.Unmarshal(custResp.Body, &custResult)
+
+	// 2. Create Booking
+	bookingPayload := map[string]interface{}{
+		"idempotency_key": generateIdempotencyKey(),
+		"booking": map[string]interface{}{
+			"start_at":    req.StartAt,
+			"location_id": s.locationID,
+			"customer_id": custResult.Customer.ID,
+			"appointment_segments": []map[string]interface{}{
+				{"service_variation_id": req.ServiceVariationID},
+			},
+		},
+	}
+
+	bookBytes, _ := json.Marshal(bookingPayload)
+	_, err = s.http.Post(ctx, "/v2/bookings", bytes.NewReader(bookBytes))
+	return err
 }
 
 // --- Helper Functions ---

@@ -27,7 +27,9 @@
 </script>
 
 <div class="flex flex-col h-full group">
-	<div class="relative w-full aspect-4/5 bg-gray-100 mb-6 overflow-hidden">
+	<div
+		class="relative w-full aspect-4/5 bg-gray-100 mb-6 overflow-hidden rounded-lg"
+	>
 		<img
 			src={imageUrl}
 			srcset={generateSrcSet(imageUrl || "")}
@@ -45,7 +47,7 @@
 			<span class="font-source-code-pro">${price}</span>
 		</div>
 
-		<p class="text-gray-600 text-sm line-clamp-2 mb-6">
+		<p class="text-foreground/80 text-sm line-clamp-2 mb-6">
 			{itemData.description}
 		</p>
 

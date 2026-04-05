@@ -37,14 +37,12 @@
 
 		<h1 class="uppercase text-4xl lg:text-5xl tracking-tight">Thank you</h1>
 
-		<p class="text-lg lg:text-xl text-gray-600 mb-2">
+		<p class="text-lg lg:text-xl mb-2">
 			Your order has been received. A confirmation email with your receipt
 			and shipping details will arrive shortly.
 		</p>
 
-		<p
-			class="font-source-code-pro text-sm uppercase tracking-widest text-gray-400 mb-8"
-		>
+		<p class="font-source-code-pro text-sm uppercase tracking-widest mb-8">
 			Your journey to skin health awaits
 		</p>
 

@@ -18,10 +18,7 @@ export class CartState {
 	// Total price derived from state
 	total = $derived(this.items.reduce((sum, item) => sum + item.price, 0));
 
-	add(
-		product: Extract<CatalogItem, { type: "ITEM" }>,
-		variation: CatalogVariation,
-	) {
+	add(product: CatalogItem, variation: CatalogVariation) {
 		// Square uses cents (e.g., 1500 = $15.00)
 		const priceCents =
 			variation.item_variation_data?.price_money?.amount || 0;

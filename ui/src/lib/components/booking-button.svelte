@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { trackEvent } from "$lib/analytics.svelte";
 	import Button, { buttonVariants } from "./ui/button/button.svelte";
-	import { getBooking } from "$lib/context/booking.svelte"; // 1. Import state
+	import { getBooking } from "$lib/context/booking.svelte";
 
-	const booking = getBooking(); // Grab the state instance
+	const booking = getBooking();
 	let hidden = $state(false);
 
 	function handleClose() {
@@ -12,7 +12,7 @@
 
 	function handleClick() {
 		trackEvent("Clicked Booking Button");
-		booking.open(); // 2. Trigger the drawer to slide out!
+		booking.open();
 	}
 </script>
 

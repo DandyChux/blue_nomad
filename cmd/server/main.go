@@ -70,9 +70,9 @@ func (rw *responseWriter) WriteHeader(code int) {
 
 func main() {
 	// Load environment variables
-	err := godotenv.Load(".env")
+	err := godotenv.Load()
 	if err != nil {
-		log.Println("No .env file found")
+		log.Println("No .env file found, using environment variables")
 	}
 
 	// ── Configure structured logging ────────────────────────────────────────────────
@@ -109,6 +109,7 @@ func main() {
 	)
 	postHandler := handlers.NewPostHandler(sanityClient)
 	shopHandler := handlers.NewShopHandler(squareClient)
+	bookingHandler := handlers.NewBookingHandler(squareClient)
 
 	// ── API routes ────────────────────────────────────────────────
 	api := http.NewServeMux()
@@ -132,6 +133,11 @@ func main() {
 	// Shop
 	api.HandleFunc("GET /shop/catalog", shopHandler.GetCatalog)
 	api.HandleFunc("POST /checkout", shopHandler.CreateCheckoutLink)
+
+	// Booking
+	api.HandleFunc("GET /booking/services", bookingHandler.GetServices)
+	api.HandleFunc("POST /booking/availability", bookingHandler.GetAvailability)
+	api.HandleFunc("POST /booking/create", bookingHandler.CreateBooking)
 
 	// ── Static frontend files ───────────────────────────────────────────
 	staticDir := os.Getenv("STATIC_DIR")

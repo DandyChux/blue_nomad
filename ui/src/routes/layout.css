@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @plugin 'tailwindcss-animate';
 
@@ -33,7 +33,7 @@
 	--background: oklch(0.9 0.03 80);
 	--foreground: oklch(0 0 0);
 	--card: oklch(0.25 0.04 155);
-	--card-foreground: oklch(0.2 0.02 60);
+	--card-foreground: oklch(0.94 0.04 83);
 	--popover: oklch(1 0 0);
 	--popover-foreground: oklch(0.2 0.02 60);
 	--primary: oklch(0.25 0.02 75);
@@ -132,16 +132,16 @@
 
 @theme {
 	/* Fonts */
-	--font-harmony: 'Harmony', sans-serif;
-	--font-source-code-pro: 'Source Code Pro', monospace;
-	--font-spectral: 'Spectral', serif;
+	--font-harmony: "Harmony", sans-serif;
+	--font-source-code-pro: "Source Code Pro", monospace;
+	--font-spectral: "Spectral", serif;
 
 	/* Backgrounds */
-	--background-image-hero-section-gradient: url('../lib/assets/hero_section_gradient.png');
-	--background-image-footer-gradient: url('../lib/assets/footer_gradient.png');
-	--background-image-media-section-gradient: url('../lib/assets/media_section_gradient.png');
-	--background-image-background-gradient: url('../lib/assets/background_gradient.jpg');
-	--background-image-studio-background: url('../lib/assets/studio_background.jpg');
+	--background-image-hero-section-gradient: url("../lib/assets/hero_section_gradient.png");
+	--background-image-footer-gradient: url("../lib/assets/footer_gradient.png");
+	--background-image-media-section-gradient: url("../lib/assets/media_section_gradient.png");
+	--background-image-background-gradient: url("../lib/assets/background_gradient.jpg");
+	--background-image-studio-background: url("../lib/assets/studio_background.jpg");
 }
 
 @layer base {
@@ -274,7 +274,8 @@
 }
 
 @theme inline {
-	--animate-scroll: scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite;
+	--animate-scroll: scroll var(--animation-duration, 40s)
+		var(--animation-direction, forwards) linear infinite;
 
 	@keyframes scroll {
 		to {
@@ -284,24 +285,40 @@
 }
 
 @custom-variant data-open {
+	&:where([data-state="open"]),
+	&:where([data-open]:not([data-open="false"])) {
+		@slot;
+	}
 	&:where([data-state="open"]), &:where([data-open]:not([data-open="false"])) {
 		@slot;
 	}
 }
 
 @custom-variant data-closed {
+	&:where([data-state="closed"]),
+	&:where([data-closed]:not([data-closed="false"])) {
+		@slot;
+	}
 	&:where([data-state="closed"]), &:where([data-closed]:not([data-closed="false"])) {
 		@slot;
 	}
 }
 
 @custom-variant data-checked {
+	&:where([data-state="checked"]),
+	&:where([data-checked]:not([data-checked="false"])) {
+		@slot;
+	}
 	&:where([data-state="checked"]), &:where([data-checked]:not([data-checked="false"])) {
 		@slot;
 	}
 }
 
 @custom-variant data-unchecked {
+	&:where([data-state="unchecked"]),
+	&:where([data-unchecked]:not([data-unchecked="false"])) {
+		@slot;
+	}
 	&:where([data-state="unchecked"]), &:where([data-unchecked]:not([data-unchecked="false"])) {
 		@slot;
 	}
@@ -314,12 +331,20 @@
 }
 
 @custom-variant data-disabled {
+	&:where([data-disabled="true"]),
+	&:where([data-disabled]:not([data-disabled="false"])) {
+		@slot;
+	}
 	&:where([data-disabled="true"]), &:where([data-disabled]:not([data-disabled="false"])) {
 		@slot;
 	}
 }
 
 @custom-variant data-active {
+	&:where([data-state="active"]),
+	&:where([data-active]:not([data-active="false"])) {
+		@slot;
+	}
 	&:where([data-state="active"]), &:where([data-active]:not([data-active="false"])) {
 		@slot;
 	}

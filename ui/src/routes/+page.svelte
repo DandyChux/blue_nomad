@@ -159,6 +159,17 @@
 	</p>
 	<TreatmentCards />
 	<Partners />
+	<Button
+		class={buttonVariants({
+			variant: "outline",
+			class: "uppercase mt-20 lg:mt-36 rounded-full text-center font-bold h-auto place-self-center",
+			size: "xl",
+		})}
+		variant="link"
+		href="/shop"
+	>
+		Explore Shop
+	</Button>
 </section>
 
 <!-- Testimonial Section -->

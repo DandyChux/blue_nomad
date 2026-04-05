@@ -5,26 +5,7 @@
 	import apiClient from "$lib/api";
 	import { toast } from "svelte-sonner";
 	import FooterGradient from "$lib/assets/footer_gradient.png";
-
-	type NavItem = {
-		label: string;
-		href: string;
-	};
-
-	const navLinks: NavItem[] = [
-		{ label: "Home", href: "/" },
-		{ label: "Our Story", href: "/about" },
-		{
-			label: "Book a Treatment",
-			href: "https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start",
-		},
-		{ label: "Shop", href: "https://bluenomadworld.square.site/" },
-		{
-			label: "Gift Card",
-			href: "https://app.squareup.com/gift/ML665NPQYDHTJ/order",
-		},
-		{ label: "Nomad's Land", href: "/nomadsland" },
-	];
+	import { navLinks } from "$lib/components/navbar.svelte";
 
 	const isExternal = (url: string) =>
 		url.startsWith("http://") || url.startsWith("https://");
@@ -232,10 +213,10 @@
 
 	<address>
 		<p class="text-sm text-center text-muted-foreground">
-			Created by <a href="https://ceokoroji.dev" class="underline">
+			Developed by <a href="https://ceokoroji.dev" class="underline">
 				Chukwuma Okoroji
 			</a>
-			 🖤
+			🖤
 		</p>
 	</address>
 </footer>

@@ -80,4 +80,3 @@
 <Footer />
 <BookingButton />
 <CartDrawer />
-<BookingDrawer />

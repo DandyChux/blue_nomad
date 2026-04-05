@@ -1,8 +1,5 @@
 import type { PageLoad } from "./$types";
-import type {
-	CatalogItem as CatalogObject,
-	CatalogListResponse,
-} from "$lib/schemas";
+import type { CatalogItem, CatalogListResponse } from "$lib/schemas";
 import { apiClient, ApiError } from "$lib/api";
 import { error } from "@sveltejs/kit";
 
@@ -24,8 +21,6 @@ export const load: PageLoad = async ({ params }) => {
 				id: cat.id,
 				name: cat.category_data?.name || "Unknown Category",
 			}));
-
-		type CatalogItem = Extract<CatalogObject, { type: "ITEM" }>;
 
 		const products = allObjects
 			.filter((obj): obj is CatalogItem => {

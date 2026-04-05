@@ -11,17 +11,6 @@ start-db:
 	@echo "Starting database..."
 	@docker compose up -d redis
 
-# Build the application
-build:
-	@echo "Building application..."
-	@go build -o bin/server ./main.go
-
-# Clean build artifacts
-clean:
-	@echo "Cleaning..."
-	@rm -rf bin/
-	@rm -rf web/
-
 # Run tests
 test:
 	@echo "Running tests..."
@@ -32,3 +21,17 @@ deps:
 	@echo "Installing dependencies..."
 	@go mod tidy
 	@go mod download
+
+all: build
+
+frontend:
+	@echo "Building frontend..."
+	cd ui && bun install && bun run build
+
+build: frontend
+	@echo "Building backend..."
+	go build -o bin/blue_nomad ./cmd/server/main.go
+
+clean:
+	@echo "Cleaning..."
+	rm -rf node_modules ui/build bin

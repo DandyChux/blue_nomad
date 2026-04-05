@@ -40,6 +40,7 @@ export const CatalogItemDataSchema = z.object({
 	),
 	ecom_available: z.boolean(),
 	ecom_visibility: z.enum(["VISIBLE", "UNINDEXED", "UNAVAILABLE"]),
+	product_type: z.string(),
 });
 
 export const CatalogCategoryDataSchema = z.object({
@@ -120,8 +121,77 @@ export const PaymentResponseSchema = z.object({
 	}),
 });
 
-// Export inferred TypeScript types for your Svelte components
+// --- BOOKING SCHEMAS ---
+
+/**
+ * Represents a single available time slot returned by Square.
+ */
+export const AvailabilitySlotSchema = z.object({
+	start_at: z.string(), // RFC3339 format
+	location_id: z.string(),
+	appointment_segments: z
+		.array(
+			z.object({
+				duration_minutes: z.number().int(),
+				service_variation_id: z.string(),
+				team_member_id: z.string(),
+			}),
+		)
+		.optional(),
+});
+
+/**
+ * Response from POST /api/booking/availability
+ */
+export const SearchAvailabilityResponseSchema = z.object({
+	availabilities: z.array(AvailabilitySlotSchema).default([]),
+});
+
+/**
+ * Payload for POST /api/booking/create
+ */
+export const CreateBookingRequestSchema = z.object({
+	service_variation_id: z.string().min(1, "Service variation is required"),
+	start_at: z.string().min(1, "Please select a time slot"),
+	given_name: z.string().min(1, "First name is required"),
+	family_name: z.string().min(1, "Last name is required"),
+	email_address: z.email("Please enter a valid email"),
+	phone_number: z.string().optional(),
+});
+
+/**
+ * Simplified Booking response from Square
+ */
+export const BookingSchema = z.object({
+	id: z.string(),
+	status: z.enum([
+		"PENDING",
+		"ACCEPTED",
+		"CANCELLED_BY_CUSTOMER",
+		"CANCELLED_BY_SELLER",
+		"DECLINED",
+	]),
+	start_at: z.string(),
+	location_id: z.string(),
+	customer_id: z.string(),
+});
+
+export const CreateBookingResponseSchema = z.object({
+	booking: BookingSchema.optional(),
+	status: z.string().optional(),
+	message: z.string().optional(),
+});
+
+// --- TYPES ---
+export type AvailabilitySlot = z.infer<typeof AvailabilitySlotSchema>;
+export type SearchAvailabilityResponse = z.infer<
+	typeof SearchAvailabilityResponseSchema
+>;
+export type CreateBookingRequest = z.infer<typeof CreateBookingRequestSchema>;
+export type CreateBookingResponse = z.infer<typeof CreateBookingResponseSchema>;
 export type CatalogListResponse = z.infer<typeof CatalogListResponseSchema>;
-export type CatalogItem = z.infer<typeof CatalogObjectSchema>;
+export type CatalogObject = z.infer<typeof CatalogObjectSchema>;
+export type CatalogItem = Extract<CatalogObject, { type: "ITEM" }>;
+export type CatalogCategory = Extract<CatalogObject, { type: "CATEGORY" }>;
 export type CatalogVariation = z.infer<typeof CatalogItemVariationSchema>;
 export type PaymentResponse = z.infer<typeof PaymentResponseSchema>;

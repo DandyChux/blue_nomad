@@ -3,6 +3,7 @@
 	import { Button } from "$lib/components/ui/button";
 	import * as Sheet from "$lib/components/ui/sheet";
 	import apiClient from "$lib/api";
+	import { goto } from "$app/navigation";
 
 	const cart = getCart();
 	let isCheckingOut = $state(false);
@@ -17,16 +18,14 @@
 				items: cart.items,
 			});
 
-			// Assuming your Go backend responds with { "url": "https://square..." }
 			if (response.url) {
-				window.location.href = response.url;
+				window.location = response.url;
 			} else {
 				console.error("No URL returned from Go backend");
 				alert("Checkout failed. Please try again.");
 			}
 		} catch (error) {
 			console.error("Checkout error:", error);
-			alert("Something went wrong connecting to checkout.");
 		} finally {
 			isCheckingOut = false;
 		}
@@ -47,7 +46,7 @@
 		<div class="flex-grow overflow-y-auto p-6 flex flex-col gap-6">
 			{#if cart.items.length === 0}
 				<div
-					class="h-full flex flex-col items-center justify-center text-center text-gray-500"
+					class="h-full flex flex-col items-center justify-center text-center"
 				>
 					<p class="uppercase font-source-code-pro mb-4">
 						Your bag is empty.
@@ -75,13 +74,13 @@
 										>${item.price.toFixed(2)}</span
 									>
 								</div>
-								<p class="text-xs text-gray-500 mt-1">
+								<p class="text-xs mt-1">
 									{item.variationName}
 								</p>
 							</div>
 
 							<button
-								class="text-xs uppercase text-left text-gray-400 hover:text-black transition-colors self-start underline underline-offset-4"
+								class="text-xs uppercase text-left hover:text-black transition-colors self-start underline underline-offset-4"
 								onclick={() => cart.remove(item.cartItemId)}
 							>
 								Remove
@@ -108,14 +107,12 @@
 				<Button
 					class="w-full uppercase rounded-full h-12 bg-black text-white hover:bg-black/80 font-source-code-pro tracking-tight"
 					href="/checkout"
-					onclick={() => handleCheckout}
+					onclick={handleCheckout}
 					disabled={isCheckingOut}
 				>
 					{isCheckingOut ? "Preparing bag..." : "Checkout"}
 				</Button>
-				<p
-					class="text-center text-xs text-gray-500 mt-4 font-source-code-pro w-full"
-				>
+				<p class="text-center text-xs mt-4 font-source-code-pro w-full">
 					Shipping & taxes calculated at checkout.
 				</p>
 			</Sheet.Footer>

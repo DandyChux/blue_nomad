@@ -3,10 +3,25 @@
 		label: string;
 		href: string;
 	};
+
+	export const navLinks: NavItem[] = [
+		{ label: "Home", href: "/" },
+		{ label: "Our Story", href: "/about" },
+		{
+			label: "Book a Treatment",
+			href: "/booking",
+		},
+		{ label: "Shop", href: "/shop" },
+		{
+			label: "Gift Card",
+			href: "https://app.squareup.com/gift/ML665NPQYDHTJ/order",
+		},
+		{ label: "Nomad's Land", href: "/nomadsland" },
+	];
 </script>
 
 <script lang="ts">
-	import { MenuIcon, ShoppingCart } from "@lucide/svelte";
+	import { MenuIcon } from "@lucide/svelte";
 	import { Button } from "$lib/components/ui/button";
 	import * as Sheet from "$lib/components/ui/sheet";
 	import { cn, generateSrcSet } from "$lib/utils";
@@ -16,21 +31,6 @@
 	import { getCart } from "$lib/context/cart.svelte";
 
 	const cart = getCart();
-
-	export const navLinks: NavItem[] = [
-		{ label: "Home", href: "/" },
-		{ label: "Our Story", href: "/about" },
-		{
-			label: "Book a Treatment",
-			href: "https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start",
-		},
-		{ label: "Shop", href: "/shop" },
-		{
-			label: "Gift Card",
-			href: "https://app.squareup.com/gift/ML665NPQYDHTJ/order",
-		},
-		{ label: "Nomad's Land", href: "/nomadsland" },
-	];
 
 	const isExternal = (url: string) =>
 		url.startsWith("http://") || url.startsWith("https://");
