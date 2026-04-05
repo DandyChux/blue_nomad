@@ -191,7 +191,7 @@
 						</button>
 
 						<h2
-							class="text-5xl lg:text-7xl uppercase tracking-tighter leading-[0.9]"
+							class="text-5xl lg:text-6xl uppercase tracking-tighter leading-[0.9]"
 						>
 							{booking.selection.service.item_data.name}
 						</h2>
@@ -241,84 +241,98 @@
 					</div>
 				</div>
 			{:else if booking.step === 2}
-				<div
-					class="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-12 lg:gap-24"
-					in:fade
-				>
-					<div
-						class="flex justify-center p-8 bg-black/5 dark:bg-white/5 backdrop-blur-sm border border-border"
+				<div class="w-full" in:fade>
+					<button
+						onclick={() => (booking.step = 1.5)}
+						class="font-source-code-pro text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors mb-12"
 					>
-						<Calendar
-							type="single"
-							bind:value={booking.selection.date}
-							minValue={minDate}
-							class="border-0 shadow-none bg-transparent font-harmony"
-						/>
-					</div>
+						&larr; Back to Experience
+					</button>
 
-					<div class="flex flex-col h-full">
+					<div
+						class="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-12 lg:gap-24"
+					>
 						<div
-							class="flex items-center justify-between border-b border-border pb-4 mb-6"
+							class="flex justify-center p-8 bg-black/5 dark:bg-white/5 backdrop-blur-sm border border-border"
 						>
-							<Label
-								class="text-[10px] font-source-code-pro uppercase tracking-widest text-muted-foreground"
+							<Calendar
+								type="single"
+								bind:value={booking.selection.date}
+								minValue={minDate}
+								class="border-0 shadow-none bg-transparent font-harmony"
+							/>
+						</div>
+
+						<div class="flex flex-col h-full">
+							<div
+								class="flex items-center justify-between border-b border-border pb-4 mb-6"
 							>
-								Available Times
-							</Label>
-						</div>
-
-						<div class="flex-grow">
-							{#if !booking.selection.date}
-								<div
-									class="h-full min-h-[200px] flex items-center justify-center text-center text-xs font-source-code-pro uppercase text-muted-foreground tracking-widest"
+								<Label
+									class="text-[10px] font-source-code-pro uppercase tracking-widest text-muted-foreground"
 								>
-									Select a date to <br /> view availability
-								</div>
-							{:else if booking.isLoading}
-								<div class="grid grid-cols-2 gap-3">
-									{#each Array(6) as _}
-										<div
-											class="h-12 bg-border/50 animate-pulse"
-										></div>
-									{/each}
-								</div>
-							{:else if booking.slots.length === 0}
-								<div
-									class="h-full min-h-[200px] flex items-center justify-center text-center text-xs font-source-code-pro uppercase text-muted-foreground tracking-widest"
-								>
-									No availability on <br /> this date
-								</div>
-							{:else}
-								<div class="grid grid-cols-3 gap-3">
-									{#each booking.slots as slot}
-										<button
-											class="py-4 border font-source-code-pro text-[11px] tracking-wider transition-all duration-300
-                                            {booking.selection.time ===
-											slot.start_at
-												? 'bg-foreground text-background border-foreground'
-												: 'border-border hover:border-foreground text-foreground bg-transparent'}"
-											onclick={() =>
-												(booking.selection.time =
-													slot.start_at)}
-										>
-											{formatTime(slot.start_at)}
-										</button>
-									{/each}
-								</div>
-							{/if}
-						</div>
+									Available Times
+								</Label>
+							</div>
 
-						<Button
-							class="w-full uppercase rounded-none h-16 bg-foreground text-background tracking-widest font-source-code-pro text-sm mt-8 disabled:opacity-20"
-							disabled={!booking.selection.time}
-							onclick={() => (booking.step = 3)}
-						>
-							Continue
-						</Button>
+							<div class="flex-grow">
+								{#if !booking.selection.date}
+									<div
+										class="h-full min-h-[200px] flex items-center justify-center text-center text-xs font-source-code-pro uppercase text-muted-foreground tracking-widest"
+									>
+										Select a date to <br /> view availability
+									</div>
+								{:else if booking.isLoading}
+									<div class="grid grid-cols-2 gap-3">
+										{#each Array(6) as _}
+											<div
+												class="h-12 bg-border/50 animate-pulse"
+											></div>
+										{/each}
+									</div>
+								{:else if booking.slots.length === 0}
+									<div
+										class="h-full min-h-[200px] flex items-center justify-center text-center text-xs font-source-code-pro uppercase text-muted-foreground tracking-widest"
+									>
+										No availability on <br /> this date
+									</div>
+								{:else}
+									<div class="grid grid-cols-3 gap-3">
+										{#each booking.slots as slot}
+											<button
+												class="py-4 border font-source-code-pro text-[11px] tracking-wider transition-all duration-300
+												{booking.selection.time === slot.start_at
+													? 'bg-foreground text-background border-foreground'
+													: 'border-border hover:border-foreground text-foreground bg-transparent'}"
+												onclick={() =>
+													(booking.selection.time =
+														slot.start_at)}
+											>
+												{formatTime(slot.start_at)}
+											</button>
+										{/each}
+									</div>
+								{/if}
+							</div>
+
+							<Button
+								class="w-full uppercase rounded-none h-16 bg-foreground text-background tracking-widest font-source-code-pro text-sm mt-8 disabled:opacity-20 transition-opacity"
+								disabled={!booking.selection.time}
+								onclick={() => (booking.step = 3)}
+							>
+								Continue
+							</Button>
+						</div>
 					</div>
 				</div>
 			{:else if booking.step === 3}
 				<div in:fade class="max-w-2xl mx-auto w-full">
+					<button
+						onclick={() => (booking.step = 2)}
+						class="font-source-code-pro text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors mb-12"
+					>
+						&larr; Back to Calendar
+					</button>
+
 					<div class="text-center mb-16 space-y-4">
 						<h2 class="uppercase text-4xl tracking-tighter">
 							{booking.selection.service.item_data.name}
