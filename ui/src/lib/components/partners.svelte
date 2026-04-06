@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { generateSrcSet, roundTo } from "$lib/utils";
+	import Picture from "./picture.svelte";
 	import { Button, buttonVariants } from "./ui/button";
 
 	type LogoProps = {
@@ -83,7 +84,7 @@
 		<div
 			class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
 		>
-			<img
+			<!-- <img
 				src={centralLogo.src}
 				srcset={generateSrcSet(
 					centralLogo.src,
@@ -95,6 +96,20 @@
 				width="300"
 				height="300"
 				sizes="(max-width: 640px) 100vw, (max-width: 1024px) 70vw, (max-width: 1280px) 50vw, 33vw"
+			/> -->
+			<Picture
+				src={centralLogo.src}
+				srcset={generateSrcSet(
+					centralLogo.src,
+					[400, 800, 1200, 1600],
+					"webp",
+					85,
+				)}
+				alt={centralLogo.alt}
+				width="300"
+				height="300"
+				sizes="(max-width: 640px) 100vw, (max-width: 1024px) 70vw, (max-width: 1280px) 50vw, 33vw"
+				loading="eager"
 			/>
 		</div>
 
@@ -108,7 +123,7 @@
 					class="flex items-center justify-center"
 					style:transform="translate(-50%, -50%)"
 				>
-					<img
+					<!-- <img
 						src={logo.src}
 						srcset={generateSrcSet(
 							logo.src,
@@ -121,6 +136,24 @@
 						height="75"
 						loading="lazy"
 						sizes="(max-width: 640px) 100vw, (max-width: 1024px) 70vw, (max-width: 1280px) 50vw, 33vw"
+					/> -->
+					<Picture
+						src={logo.src}
+						alt={logo.alt}
+						width="175"
+						height="75"
+						sizes="(max-width: 640px) 100vw, 33vw"
+						sources={[
+							{
+								type: "image/webp",
+								srcset: generateSrcSet(
+									logo.src,
+									[400, 800, 1200, 1600],
+									"webp",
+									85,
+								),
+							},
+						]}
 					/>
 				</div>
 			</div>
@@ -130,7 +163,7 @@
 	<!-- Stacked layout for mobile -->
 	<div class="flex flex-col items-center gap-4 mt-10 md:hidden">
 		<div>
-			<img
+			<Picture
 				src={centralLogo.src}
 				srcset={generateSrcSet(
 					centralLogo.src,
@@ -141,11 +174,13 @@
 				alt={centralLogo.alt}
 				width="250"
 				height="200"
+				loading="eager"
 			/>
 		</div>
+
 		{#each surroundingLogos as logo (logo.alt)}
 			<div>
-				<img
+				<Picture
 					src={logo.src}
 					srcset={generateSrcSet(
 						logo.src,
@@ -156,7 +191,6 @@
 					alt={logo.alt}
 					width="125"
 					height="75"
-					loading="lazy"
 				/>
 			</div>
 		{/each}

@@ -73,21 +73,6 @@
 			<br />
 			<span class="pl-12 md:pl-24">near, far, and within</span>
 		</p>
-		<!-- <div
-			class="flex flex-col text-2xl lg:text-4xl uppercase"
-			style="--indent: 1.5rem"
-		>
-			<p>modern wellness</p>
-			<p style="margin-inline-start: calc(var(--indent) + 8px)">
-				inspired
-			</p>
-			<p style="margin-inline-start: calc(var(--indent) + 36px)">
-				by worlds
-			</p>
-			<p style="margin-inline-start: calc(var(--indent) + 48px)">
-				near, far, and within
-			</p>
-		</div> -->
 
 		<Button
 			variant="outline"
@@ -162,7 +147,7 @@
 	<Button
 		class={buttonVariants({
 			variant: "outline",
-			class: "uppercase mt-20 lg:mt-36 rounded-full text-center font-bold h-auto place-self-center",
+			class: "uppercase mt-20 lg:mt-36 rounded-full text-center font-bold h-auto place-self-center font-source-code-pro",
 			size: "xl",
 		})}
 		variant="link"

@@ -1,9 +1,7 @@
 <script lang="ts">
 	import { trackEvent } from "$lib/analytics.svelte";
 	import Button, { buttonVariants } from "./ui/button/button.svelte";
-	import { getBooking } from "$lib/context/booking.svelte";
 
-	const booking = getBooking();
 	let hidden = $state(false);
 
 	function handleClose() {
@@ -12,7 +10,6 @@
 
 	function handleClick() {
 		trackEvent("Clicked Booking Button");
-		booking.open();
 	}
 </script>
 
@@ -34,6 +31,8 @@
 					class: "rounded-full no-underline bg-black text-white border-2 border-black uppercase font-source-code-pro font-bold hover:bg-transparent hover:text-black h-auto",
 					size: "xl",
 				})}
+				variant="link"
+				href="/diagnosis"
 				onclick={handleClick}
 			>
 				Begin with a <br /> consultation

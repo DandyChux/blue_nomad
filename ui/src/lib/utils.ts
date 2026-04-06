@@ -21,7 +21,6 @@ export function getOptimizedImageUrl(
 		quality?: number;
 	},
 ): string {
-	// Replace this with your actual Railway generated domain
 	const IMGPROXY_URL = "https://img.bluenomadworld.com";
 
 	// If no size is provided, default to 0 (Imgproxy keeps original width)

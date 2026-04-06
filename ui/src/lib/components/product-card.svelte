@@ -53,7 +53,7 @@
 
 		<Button
 			variant="outline"
-			class="uppercase rounded-full w-full mt-auto font-source-code-pro tracking-tight transition-colors"
+			class="uppercase rounded-full w-full mt-auto font-source-code-pro tracking-tight transition-colors hover:bg-card hover:text-card-foreground"
 			onclick={() => cart.add(product, firstVariation)}
 		>
 			Add to bag

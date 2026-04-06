@@ -132,11 +132,11 @@
 	<Button
 		class={buttonVariants({
 			variant: "outline",
-			class: "uppercase mt-4 rounded-full text-center font-bold h-auto",
+			class: "uppercase mt-4 rounded-full text-center font-bold h-auto font-source-code-pro",
 			size: "xl",
 		})}
 		variant="link"
-		href="https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start"
+		href="/booking"
 		target="_blank"
 		rel="noopener noreferrer"
 	>

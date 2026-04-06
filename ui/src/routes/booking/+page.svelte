@@ -14,16 +14,21 @@
 	import type {
 		CatalogListResponse,
 		SearchAvailabilityResponse,
+		CatalogItem,
 	} from "$lib/schemas";
+	import Picture from "$lib/components/picture.svelte";
+	import { generateSrcSet } from "$lib/utils.js";
+
+	let { data } = $props();
+	const services = $derived(data.services as CatalogItem[]);
 
 	const booking = $state({
 		step: 1,
 		isLoading: false,
 		error: "",
-		services: [] as any[],
 		slots: [] as any[],
 		selection: {
-			service: null as any,
+			service: null as CatalogItem | null,
 			variationId: "",
 			date: undefined as DateValue | undefined,
 			time: "",
@@ -47,23 +52,20 @@
 		booking.step === 1.5 ? 2 : booking.step > 1 ? booking.step + 1 : 1,
 	);
 
-	$effect(() => {
-		loadServices();
-	});
-
-	async function loadServices() {
+	async function confirmBooking() {
 		booking.isLoading = true;
 		try {
-			const res =
-				await apiClient.get<CatalogListResponse>("/booking/services");
-			booking.services =
-				res.objects?.filter(
-					(obj) =>
-						obj.type === "ITEM" &&
-						obj.item_data?.product_type === "APPOINTMENTS_SERVICE",
-				) || [];
+			await apiClient.post("/booking/create", {
+				service_variation_id: booking.selection.variationId,
+				start_at: booking.selection.time,
+				given_name: booking.customer.first,
+				family_name: booking.customer.last,
+				email_address: booking.customer.email,
+				phone_number: booking.customer.phone,
+			});
+			booking.step = 4;
 		} catch (e) {
-			booking.error = "Failed to load treatments.";
+			booking.error = "Slot no longer available.";
 		} finally {
 			booking.isLoading = false;
 		}
@@ -93,24 +95,14 @@
 		if (booking.selection.date) loadAvailability(booking.selection.date);
 	});
 
-	async function confirmBooking() {
-		booking.isLoading = true;
-		try {
-			await apiClient.post("/booking/create", {
-				service_variation_id: booking.selection.variationId,
-				start_at: booking.selection.time,
-				given_name: booking.customer.first,
-				family_name: booking.customer.last,
-				email_address: booking.customer.email,
-				phone_number: booking.customer.phone,
-			});
-			booking.step = 4;
-		} catch (e) {
-			booking.error = "Slot no longer available.";
-		} finally {
-			booking.isLoading = false;
+	$effect(() => {
+		// This tracks booking.step automatically
+		if (booking.step) {
+			window.scrollTo({ top: 0, behavior: "smooth" });
 		}
-	}
+	});
+
+	$inspect(services);
 </script>
 
 <section class="min-h-screen items-start !p-0">
@@ -141,13 +133,14 @@
 		<div class="w-full max-w-6xl mx-auto">
 			{#if booking.step === 1}
 				<div class="flex flex-col border-t border-border" in:fade>
-					{#each booking.services as service}
+					{#each services as service}
 						{@const duration =
-							service.item_data.variations[0].item_variation_data
-								?.service_duration || 0}
+							service.item_data.variations?.[0]
+								.item_variation_data?.service_duration || 0}
 						{@const price =
-							service.item_data.variations[0].item_variation_data
-								?.price_money.amount / 100}
+							(service.item_data.variations?.[0]
+								?.item_variation_data?.price_money?.amount ||
+								0) / 100}
 
 						<button
 							class="group flex flex-col md:flex-row md:items-center justify-between py-10 border-b border-border text-left transition-all duration-500 ease-out"
@@ -156,6 +149,25 @@
 								booking.step = 1.5;
 							}}
 						>
+							<Picture
+								src={service.image_url ? service.image_url : ""}
+								alt={service.item_data.name}
+								width={160}
+								height={160}
+								class="max-w-full h-auto"
+								sizes="(max-width: 768px) 16vw, 160px"
+								sources={[
+									{
+										type: "image/webp",
+										srcset: generateSrcSet(
+											service.image_url!,
+											[400, 800],
+											"webp",
+											80,
+										),
+									},
+								]}
+							/>
 							<div class="max-w-2xl">
 								<h3
 									class="text-3xl md:text-4xl uppercase tracking-tight font-light group-hover:text-muted-foreground transition-colors"
@@ -193,7 +205,7 @@
 						<h2
 							class="text-5xl lg:text-6xl uppercase tracking-tighter leading-[0.9]"
 						>
-							{booking.selection.service.item_data.name}
+							{booking.selection.service?.item_data.name}
 						</h2>
 
 						<div
@@ -203,17 +215,17 @@
 								<span class="block text-muted-foreground mb-2"
 									>Duration</span
 								>
-								{(booking.selection.service.item_data
-									.variations[0].item_variation_data
+								{(booking.selection.service?.item_data
+									.variations?.[0].item_variation_data
 									?.service_duration || 0) / 60000} Min
 							</div>
 							<div>
 								<span class="block text-muted-foreground mb-2"
 									>Investment</span
 								>
-								${booking.selection.service.item_data
-									.variations[0].item_variation_data
-									.price_money.amount / 100}
+								${(booking.selection.service?.item_data
+									.variations?.[0]?.item_variation_data
+									?.price_money?.amount || 0) / 100}
 							</div>
 						</div>
 					</div>
@@ -224,7 +236,7 @@
 						<p
 							class="text-xl md:text-2xl leading-relaxed font-light text-muted-foreground"
 						>
-							{booking.selection.service.item_data.description ||
+							{booking.selection.service?.item_data.description ||
 								"A curated experience focused on restoration and results."}
 						</p>
 
@@ -232,7 +244,8 @@
 							class="w-full uppercase rounded-none h-16 bg-foreground text-background hover:bg-foreground/80 text-sm font-source-code-pro tracking-widest mt-12"
 							onclick={() => {
 								booking.selection.variationId =
-									booking.selection.service.item_data.variations[0].id;
+									booking.selection.service?.item_data
+										.variations?.[0]?.id || "";
 								booking.step = 2;
 							}}
 						>
@@ -335,7 +348,7 @@
 
 					<div class="text-center mb-16 space-y-4">
 						<h2 class="uppercase text-4xl tracking-tighter">
-							{booking.selection.service.item_data.name}
+							{booking.selection.service?.item_data.name}
 						</h2>
 						<p
 							class="font-source-code-pro text-[11px] uppercase tracking-[0.2em] text-muted-foreground"

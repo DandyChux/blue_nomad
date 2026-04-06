@@ -15,6 +15,7 @@ export const CatalogItemVariationDataSchema = z.object({
 	price_money: SquareMoneySchema.optional(),
 	// pricing_type can be FIXED_PRICING or VARIABLE_PRICING
 	pricing_type: z.string().optional(),
+	service_duration: z.number().optional(),
 });
 
 export const CatalogItemVariationSchema = z.object({
