@@ -17,6 +17,7 @@ export const load: PageLoad = async ({ params }) => {
 
 		const categories = allObjects
 			.filter((obj) => obj.type === "CATEGORY")
+			.filter((cat) => cat.category_data.name !== "Treatments")
 			.map((cat) => ({
 				id: cat.id,
 				name: cat.category_data?.name || "Unknown Category",

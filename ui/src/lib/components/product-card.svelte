@@ -34,7 +34,7 @@
 			src={imageUrl}
 			srcset={generateSrcSet(imageUrl || "")}
 			alt={itemData.name}
-			class="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
+			class="object-cover w-full h-full transition-transform duration-500"
 			loading="lazy"
 		/>
 	</div>

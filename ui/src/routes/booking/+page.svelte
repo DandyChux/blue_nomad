@@ -1,461 +1,489 @@
 <script lang="ts">
-	import * as Card from "$lib/components/ui/card";
-	import { Button } from "$lib/components/ui/button";
 	import { Input } from "$lib/components/ui/input";
-	import { Label } from "$lib/components/ui/label";
-	import { Calendar } from "$lib/components/ui/calendar";
-	import { apiClient } from "$lib/api";
-	import {
-		today,
-		getLocalTimeZone,
-		type DateValue,
-	} from "@internationalized/date";
-	import { fade, fly } from "svelte/transition";
-	import type {
-		CatalogListResponse,
-		SearchAvailabilityResponse,
-		CatalogItem,
-	} from "$lib/schemas";
+	import { Button } from "$lib/components/ui/button";
+	import * as Pagination from "$lib/components/ui/pagination";
+	import * as Empty from "$lib/components/ui/empty";
 	import Picture from "$lib/components/picture.svelte";
-	import { generateSrcSet } from "$lib/utils.js";
+	import { generateSrcSet, debounce, cn } from "$lib/utils";
+	import { page } from "$app/state";
+	import { goto } from "$app/navigation";
+	import { fade, fly } from "svelte/transition";
+	import type { CatalogItem } from "$lib/schemas";
+	import Video from "$lib/components/video.svelte";
+	import InfiniteMovingCards from "$lib/components/infinite-moving-cards.svelte";
+	import { pressBrands } from "../+page.svelte";
 
 	let { data } = $props();
 	const services = $derived(data.services as CatalogItem[]);
 
-	const booking = $state({
-		step: 1,
-		isLoading: false,
-		error: "",
-		slots: [] as any[],
-		selection: {
-			service: null as CatalogItem | null,
-			variationId: "",
-			date: undefined as DateValue | undefined,
-			time: "",
-		},
-		customer: {
-			first: "",
-			last: "",
-			email: "",
-			phone: "",
-		},
-	});
+	// --- URL-Based State ---
+	let searchQuery = $derived(page.url.searchParams.get("q") ?? "");
+	let currentPage = $derived(
+		parseInt(page.url.searchParams.get("page") ?? "1"),
+	);
+	const perPage = 5;
 
-	const minDate = today(getLocalTimeZone());
-	const formatTime = (rfc: string) =>
-		new Date(rfc).toLocaleTimeString([], {
-			hour: "2-digit",
-			minute: "2-digit",
-		});
+	function updateFilter(key: string, value: string | number | null) {
+		const url = new URL(page.url);
+		if (value === null || value === "") url.searchParams.delete(key);
+		else url.searchParams.set(key, String(value));
+		if (key !== "page") url.searchParams.delete("page");
+		goto(url, { keepFocus: true, replaceState: true, noScroll: true });
+	}
 
-	const displayStep = $derived(
-		booking.step === 1.5 ? 2 : booking.step > 1 ? booking.step + 1 : 1,
+	const debouncedSearch = debounce((q: string) => updateFilter("q", q), 300);
+
+	let filteredServices = $derived(
+		services.filter((s) => {
+			const name = s.item_data?.name?.toLowerCase() || "";
+			return name.includes(searchQuery.toLowerCase());
+		}),
 	);
 
-	async function confirmBooking() {
-		booking.isLoading = true;
-		try {
-			await apiClient.post("/booking/create", {
-				service_variation_id: booking.selection.variationId,
-				start_at: booking.selection.time,
-				given_name: booking.customer.first,
-				family_name: booking.customer.last,
-				email_address: booking.customer.email,
-				phone_number: booking.customer.phone,
-			});
-			booking.step = 4;
-		} catch (e) {
-			booking.error = "Slot no longer available.";
-		} finally {
-			booking.isLoading = false;
-		}
-	}
+	let paginatedServices = $derived(
+		filteredServices.slice(
+			(currentPage - 1) * perPage,
+			currentPage * perPage,
+		),
+	);
 
-	async function loadAvailability(date: DateValue) {
-		booking.selection.time = "";
-		booking.isLoading = true;
-		try {
-			const res = await apiClient.post<SearchAvailabilityResponse>(
-				"/booking/availability",
-				{
-					service_variation_id: booking.selection.variationId,
-					start_at: `${date.toString()}T00:00:00Z`,
-					end_at: `${date.toString()}T23:59:59Z`,
-				},
-			);
-			booking.slots = res.availabilities || [];
-		} catch (e) {
-			booking.error = "Error fetching times.";
-		} finally {
-			booking.isLoading = false;
-		}
-	}
+	// Split into featured (first) and the rest
+	const featured = $derived(
+		paginatedServices.find((s) => s.id === "TWYSCIC46EIMS3SD2A6UMJ5H") ??
+			paginatedServices[0] ??
+			null,
+	);
+	const remaining = $derived(paginatedServices.slice(1));
+
+	// Helpers
+	const getDuration = (s: CatalogItem) =>
+		(
+			(s.item_data.variations?.[0]?.item_variation_data
+				?.service_duration || 0) / 60000
+		).toFixed(0);
+	const getPrice = (s: CatalogItem) =>
+		(
+			(s.item_data.variations?.[0]?.item_variation_data?.price_money
+				?.amount || 0) / 100
+		).toFixed(0);
+
+	// Search bar visibility toggle
+	let showSearch = $state(false);
+
+	let featuredTreatmentId = $derived(featured?.id ?? null);
+
+	const testimonials = [
+		{
+			quote: "Calming, relaxing, informative, honest. Highly recommend! My skin feels and looks great.",
+			author: "Anna, BK",
+		},
+		{
+			quote: "Come here for a bespoke and private treatment in a space that feels like…a new home.",
+			author: "Siba, Bed-Stuy",
+		},
+		{
+			quote: "What an incredible experience! 10/10 recommend!!! I'm hooked.",
+			author: "Ron, West Village",
+		},
+	];
+
+	// Intersection Observer to trigger animation on scroll
+	let testimonialsEl = $state<HTMLDivElement>();
+	let testimonialsVisible = $state(false);
 
 	$effect(() => {
-		if (booking.selection.date) loadAvailability(booking.selection.date);
+		if (!testimonialsEl) return;
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				if (entry.isIntersecting) {
+					testimonialsVisible = true;
+					observer.unobserve(testimonialsEl!);
+				}
+			},
+			{ threshold: 1 },
+		);
+		observer.observe(testimonialsEl);
+		return () => observer.disconnect();
 	});
-
-	$effect(() => {
-		// This tracks booking.step automatically
-		if (booking.step) {
-			window.scrollTo({ top: 0, behavior: "smooth" });
-		}
-	});
-
-	$inspect(services);
 </script>
 
-<section class="min-h-screen items-start !p-0">
-	<div
-		class="w-full flex flex-col max-w-[1600px] mx-auto pt-24 lg:pt-32 px-6 md:px-12 lg:px-24 mb-20"
+<svelte:head>
+	<title>Treatments | Blue Nomad</title>
+</svelte:head>
+
+<section class="min-h-screen w-full flex flex-col p-0">
+	<!-- ======================== -->
+	<!-- HERO: Full-bleed Video   -->
+	<!-- ======================== -->
+	<div class="relative w-full h-[85vh] overflow-hidden bg-black">
+		<!-- Video Background -->
+		<Video
+			poster="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/hero-poster.jpg"
+			class="absolute inset-0 w-full h-full object-cover opacity-60"
+			src="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/videos/Blue%20Nomad%20-%20Treatment%20V1.webm"
+		/>
+
+		<!-- Gradient Overlay -->
+		<div
+			class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"
+		></div>
+
+		<!-- Hero Content -->
+		<div
+			class="absolute inset-0 flex flex-col justify-end px-6 md:px-12 lg:px-16 pb-16 lg:pb-24 max-w-5xl"
+		>
+			<p
+				class="font-source-code-pro text-[11px] uppercase tracking-[0.3em] text-white/60 mb-4"
+				in:fly={{ y: 10, duration: 600, delay: 200 }}
+			>
+				Blue Nomad Skin Health Studio
+			</p>
+			<h1
+				class="uppercase text-5xl md:text-7xl lg:text-8xl tracking-tighter font-light text-white leading-[0.9] mb-6"
+				in:fly={{ y: 20, duration: 600, delay: 300 }}
+			>
+				Your skin <br />Our practice
+			</h1>
+			<p
+				class="text-white/70 text-lg md:text-xl max-w-xl leading-relaxed font-light"
+				in:fly={{ y: 20, duration: 600, delay: 400 }}
+			>
+				Personalized treatments designed to restore, protect, and
+				support long-term skin health.
+			</p>
+
+			<!-- Scroll Indicator -->
+			<div class="mt-12 flex items-center gap-3" in:fade={{ delay: 800 }}>
+				<div class="w-[1px] h-12 bg-white/40 animate-pulse"></div>
+				<a
+					class="font-source-code-pro text-[10px] uppercase tracking-widest text-white/40 underline"
+					href={`/booking/${featuredTreatmentId}`}
+				>
+					Book a Treatment
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<!-- ======================== -->
+	<!-- FILTER BAR               -->
+	<!-- ======================== -->
+	<!-- <div
+		class="w-full px-6 md:px-12 lg:px-16 py-6 border-border flex items-center justify-between"
 	>
-		{#if booking.step < 4}
+		<p
+			class="font-source-code-pro text-[11px] uppercase tracking-widest text-muted-foreground"
+		>
+			{filteredServices.length} Treatments
+		</p>
+
+		<div class="flex items-center gap-4">
+			{#if showSearch}
+				<div in:fly={{ x: 20, duration: 300 }}>
+					<Input
+						type="text"
+						value={searchQuery}
+						oninput={(e) => debouncedSearch(e.currentTarget.value)}
+						placeholder="Search..."
+						autofocus
+						class="w-48 md:w-64 border-0 border-b border-border rounded-none bg-transparent font-source-code-pro text-sm focus-visible:ring-0 shadow-none px-0"
+					/>
+				</div>
+			{/if}
+			<button
+				class="font-source-code-pro text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
+				onclick={() => {
+					showSearch = !showSearch;
+					if (!showSearch) debouncedSearch("");
+				}}
+			>
+				{showSearch ? "Close" : "Search"}
+			</button>
+		</div>
+	</div> -->
+
+	<div class="px-6 md:px-8 lg:px-12 pt-6">
+		<h4 class="text-base uppercase font-source-code-pro tracking-widest">
+			Treatments
+		</h4>
+		<p class="text-2xl text-foreground/70">
+			Advanced skin therapy, tailored to your skin.
+		</p>
+	</div>
+
+	<!-- ======================== -->
+	<!-- TREATMENT GRID            -->
+	<!-- ======================== -->
+	<div class="w-full px-4 md:px-8 lg:px-12 py-8 lg:py-12">
+		{#if paginatedServices.length === 0}
+			<div class="w-full flex justify-center py-32">
+				<Empty.Root
+					class="border border-dashed w-full max-w-xl min-h-[400px] flex flex-col items-center justify-center bg-transparent"
+				>
+					<Empty.Header>
+						<Empty.Title
+							class="uppercase font-source-code-pro font-normal tracking-widest text-sm"
+						>
+							No treatments found.
+						</Empty.Title>
+					</Empty.Header>
+				</Empty.Root>
+			</div>
+		{:else}
 			<div
-				class="flex flex-col md:flex-row md:items-end justify-between mb-20 border-b border-border pb-8 gap-4 w-full"
+				class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4"
 				in:fade
 			>
-				<h1
-					class="uppercase text-5xl lg:text-7xl tracking-tighter font-light leading-none"
-				>
-					{#if booking.step === 1}Treatments
-					{:else if booking.step === 1.5}The Experience
-					{:else if booking.step === 2}Select Time
-					{:else}Details{/if}
-				</h1>
-				<div
-					class="font-source-code-pro text-xs uppercase tracking-widest text-muted-foreground pb-2"
-				>
-					Step 0{displayStep} &mdash; 04
-				</div>
+				<!-- FEATURED: First treatment spans 2 cols + 2 rows -->
+				{#if featured}
+					<a
+						href="/booking/{featured.id}"
+						class="group relative overflow-hidden md:col-span-2 md:row-span-2 flex flex-col bg-background"
+					>
+						<div
+							class="relative w-full aspect-square md:aspect-auto md:h-full min-h-[500px] overflow-hidden bg-muted"
+						>
+							<Picture
+								src={featured.image_url || ""}
+								alt={featured.item_data.name}
+								class="w-full h-full object-cover transition-transform duration-1000"
+								loading="eager"
+								sizes="(max-width: 768px) 100vw, 50vw"
+								sources={featured.image_url
+									? [
+											{
+												type: "image/webp",
+												srcset: generateSrcSet(
+													featured.image_url,
+													[600, 1000, 1600],
+													"webp",
+													85,
+												),
+											},
+										]
+									: []}
+							/>
+
+							<!-- Gradient overlay (always visible, intensifies on hover) -->
+							<div
+								class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent group-hover:from-black/80 transition-all duration-700"
+							></div>
+
+							<!-- Content pinned to bottom -->
+							<div
+								class="absolute bottom-0 left-0 right-0 p-8 lg:p-10"
+							>
+								<span
+									class="font-source-code-pro text-[10px] uppercase tracking-[0.3em] text-white/50 block mb-3"
+								>
+									Core Treatment
+								</span>
+								<h2
+									class="uppercase text-3xl lg:text-4xl tracking-tighter text-white font-light leading-[0.95] mb-3"
+								>
+									{featured.item_data.name}
+								</h2>
+								<p
+									class="text-white/60 text-sm leading-relaxed line-clamp-2 max-w-md mb-4 font-source-code-pro"
+								>
+									{featured.item_data.description ||
+										"A curated experience focused on restoration and results."}
+								</p>
+								<div
+									class="flex items-center gap-6 font-source-code-pro"
+								>
+									<span
+										class="text-[11px] uppercase tracking-widest text-white/80"
+									>
+										{getDuration(featured)} Min — ${getPrice(
+											featured,
+										)}
+									</span>
+									<span
+										class="text-[10px] uppercase tracking-widest text-white/50 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500"
+									>
+										Book Now &rarr;
+									</span>
+								</div>
+							</div>
+						</div>
+					</a>
+				{/if}
+
+				<!-- REMAINING: Standard cards -->
+				{#each remaining as service, index (service.id)}
+					{@const isAlternate = index % 3 === 0}
+					<a
+						href="/booking/{service.id}"
+						class={cn(
+							"group relative overflow-hidden flex flex-col",
+							{
+								"bg-card text-primary-foreground": isAlternate,
+								"bg-secondary text-secondary-foreground":
+									!isAlternate,
+							},
+						)}
+					>
+						<div
+							class="relative w-full aspect-[3/4] overflow-hidden bg-muted"
+						>
+							<Picture
+								src={service.image_url || ""}
+								alt={service.item_data.name}
+								class="w-full h-full object-cover transition-transform duration-700"
+								loading="lazy"
+								sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+								sources={service.image_url
+									? [
+											{
+												type: "image/webp",
+												srcset: generateSrcSet(
+													service.image_url,
+													[400, 800],
+													"webp",
+													80,
+												),
+											},
+										]
+									: []}
+							/>
+
+							<!-- Hover Overlay -->
+							<div
+								class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-5"
+							>
+								<p
+									class="text-white text-sm leading-relaxed line-clamp-3 font-source-code-pro"
+								>
+									{service.item_data.description ||
+										"Tap to explore this treatment."}
+								</p>
+								<span
+									class="text-white/60 font-source-code-pro text-[10px] uppercase tracking-widest mt-3"
+								>
+									Book Now &rarr;
+								</span>
+							</div>
+						</div>
+
+						<!-- Footer -->
+						<div class="px-4 py-4 flex flex-col gap-1">
+							<h2
+								class="uppercase text-sm tracking-wide leading-tight line-clamp-1 font-extrabold"
+							>
+								{service.item_data.name}
+							</h2>
+							<span
+								class="font-source-code-pro text-[11px] font-bold"
+							>
+								{getDuration(service)} min — ${getPrice(
+									service,
+								)}
+							</span>
+						</div>
+					</a>
+				{/each}
 			</div>
 		{/if}
 
-		<div class="w-full max-w-6xl mx-auto">
-			{#if booking.step === 1}
-				<div class="flex flex-col border-t border-border" in:fade>
-					{#each services as service}
-						{@const duration =
-							service.item_data.variations?.[0]
-								.item_variation_data?.service_duration || 0}
-						{@const price =
-							(service.item_data.variations?.[0]
-								?.item_variation_data?.price_money?.amount ||
-								0) / 100}
-
-						<button
-							class="group flex flex-col md:flex-row md:items-center justify-between py-10 border-b border-border text-left transition-all duration-500 ease-out"
-							onclick={() => {
-								booking.selection.service = service;
-								booking.step = 1.5;
-							}}
-						>
-							<Picture
-								src={service.image_url ? service.image_url : ""}
-								alt={service.item_data.name}
-								width={160}
-								height={160}
-								class="max-w-full h-auto"
-								sizes="(max-width: 768px) 16vw, 160px"
-								sources={[
-									{
-										type: "image/webp",
-										srcset: generateSrcSet(
-											service.image_url!,
-											[400, 800],
-											"webp",
-											80,
-										),
-									},
-								]}
-							/>
-							<div class="max-w-2xl">
-								<h3
-									class="text-3xl md:text-4xl uppercase tracking-tight font-light group-hover:text-muted-foreground transition-colors"
-								>
-									{service.item_data.name}
-								</h3>
-								<p
-									class="font-source-code-pro text-[11px] uppercase tracking-[0.2em] text-muted-foreground mt-3"
-								>
-									{(duration / 60000).toFixed(0)} Min &nbsp;&mdash;&nbsp;
-									${price}
-								</p>
-							</div>
-							<div
-								class="mt-6 md:mt-0 font-source-code-pro text-xs uppercase tracking-widest opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500"
-							>
-								Explore &rarr;
-							</div>
-						</button>
-					{/each}
-				</div>
-			{:else if booking.step === 1.5}
-				<div
-					in:fly={{ y: 20, duration: 600 }}
-					class="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24"
+		<!-- Pagination -->
+		{#if filteredServices.length > perPage}
+			<div class="mt-16 pt-8 flex justify-center">
+				<Pagination.Root
+					count={filteredServices.length}
+					{perPage}
+					page={currentPage}
 				>
-					<div class="lg:col-span-5 space-y-8">
-						<button
-							onclick={() => (booking.step = 1)}
-							class="font-source-code-pro text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
-						>
-							&larr; Back to Treatments
-						</button>
-
-						<h2
-							class="text-5xl lg:text-6xl uppercase tracking-tighter leading-[0.9]"
-						>
-							{booking.selection.service?.item_data.name}
-						</h2>
-
-						<div
-							class="flex gap-12 py-6 border-y border-border font-source-code-pro text-[11px] uppercase tracking-[0.2em]"
-						>
-							<div>
-								<span class="block text-muted-foreground mb-2"
-									>Duration</span
-								>
-								{(booking.selection.service?.item_data
-									.variations?.[0].item_variation_data
-									?.service_duration || 0) / 60000} Min
-							</div>
-							<div>
-								<span class="block text-muted-foreground mb-2"
-									>Investment</span
-								>
-								${(booking.selection.service?.item_data
-									.variations?.[0]?.item_variation_data
-									?.price_money?.amount || 0) / 100}
-							</div>
-						</div>
-					</div>
-
-					<div
-						class="lg:col-span-7 flex flex-col justify-between pt-2"
-					>
-						<p
-							class="text-xl md:text-2xl leading-relaxed font-light text-muted-foreground"
-						>
-							{booking.selection.service?.item_data.description ||
-								"A curated experience focused on restoration and results."}
-						</p>
-
-						<Button
-							class="w-full uppercase rounded-none h-16 bg-foreground text-background hover:bg-foreground/80 text-sm font-source-code-pro tracking-widest mt-12"
-							onclick={() => {
-								booking.selection.variationId =
-									booking.selection.service?.item_data
-										.variations?.[0]?.id || "";
-								booking.step = 2;
-							}}
-						>
-							Select Date
-						</Button>
-					</div>
-				</div>
-			{:else if booking.step === 2}
-				<div class="w-full" in:fade>
-					<button
-						onclick={() => (booking.step = 1.5)}
-						class="font-source-code-pro text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors mb-12"
-					>
-						&larr; Back to Experience
-					</button>
-
-					<div
-						class="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-12 lg:gap-24"
-					>
-						<div
-							class="flex justify-center p-8 bg-black/5 dark:bg-white/5 backdrop-blur-sm border border-border"
-						>
-							<Calendar
-								type="single"
-								bind:value={booking.selection.date}
-								minValue={minDate}
-								class="border-0 shadow-none bg-transparent font-harmony"
-							/>
-						</div>
-
-						<div class="flex flex-col h-full">
-							<div
-								class="flex items-center justify-between border-b border-border pb-4 mb-6"
-							>
-								<Label
-									class="text-[10px] font-source-code-pro uppercase tracking-widest text-muted-foreground"
-								>
-									Available Times
-								</Label>
-							</div>
-
-							<div class="flex-grow">
-								{#if !booking.selection.date}
-									<div
-										class="h-full min-h-[200px] flex items-center justify-center text-center text-xs font-source-code-pro uppercase text-muted-foreground tracking-widest"
+					{#snippet children({ pages, currentPage: current })}
+						<Pagination.Content>
+							<Pagination.Item>
+								<Pagination.PrevButton
+									onclick={() =>
+										updateFilter(
+											"page",
+											Math.max(1, current - 1),
+										)}
+								/>
+							</Pagination.Item>
+							{#each pages as pg (pg.key)}
+								{#if pg.type === "ellipsis"}
+									<Pagination.Item
+										><Pagination.Ellipsis
+										/></Pagination.Item
 									>
-										Select a date to <br /> view availability
-									</div>
-								{:else if booking.isLoading}
-									<div class="grid grid-cols-2 gap-3">
-										{#each Array(6) as _}
-											<div
-												class="h-12 bg-border/50 animate-pulse"
-											></div>
-										{/each}
-									</div>
-								{:else if booking.slots.length === 0}
-									<div
-										class="h-full min-h-[200px] flex items-center justify-center text-center text-xs font-source-code-pro uppercase text-muted-foreground tracking-widest"
-									>
-										No availability on <br /> this date
-									</div>
 								{:else}
-									<div class="grid grid-cols-3 gap-3">
-										{#each booking.slots as slot}
-											<button
-												class="py-4 border font-source-code-pro text-[11px] tracking-wider transition-all duration-300
-												{booking.selection.time === slot.start_at
-													? 'bg-foreground text-background border-foreground'
-													: 'border-border hover:border-foreground text-foreground bg-transparent'}"
-												onclick={() =>
-													(booking.selection.time =
-														slot.start_at)}
-											>
-												{formatTime(slot.start_at)}
-											</button>
-										{/each}
-									</div>
+									<Pagination.Item>
+										<Pagination.Link
+											page={pg}
+											isActive={current === pg.value}
+											onclick={() =>
+												updateFilter("page", pg.value)}
+										>
+											{pg.value}
+										</Pagination.Link>
+									</Pagination.Item>
 								{/if}
-							</div>
-
-							<Button
-								class="w-full uppercase rounded-none h-16 bg-foreground text-background tracking-widest font-source-code-pro text-sm mt-8 disabled:opacity-20 transition-opacity"
-								disabled={!booking.selection.time}
-								onclick={() => (booking.step = 3)}
-							>
-								Continue
-							</Button>
-						</div>
-					</div>
-				</div>
-			{:else if booking.step === 3}
-				<div in:fade class="max-w-2xl mx-auto w-full">
-					<button
-						onclick={() => (booking.step = 2)}
-						class="font-source-code-pro text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors mb-12"
-					>
-						&larr; Back to Calendar
-					</button>
-
-					<div class="text-center mb-16 space-y-4">
-						<h2 class="uppercase text-4xl tracking-tighter">
-							{booking.selection.service?.item_data.name}
-						</h2>
-						<p
-							class="font-source-code-pro text-[11px] uppercase tracking-[0.2em] text-muted-foreground"
-						>
-							{new Date(
-								booking.selection.time,
-							).toLocaleDateString(undefined, {
-								weekday: "long",
-								month: "long",
-								day: "numeric",
-							})}
-							&nbsp;&mdash;&nbsp;
-							{formatTime(booking.selection.time)}
-						</p>
-					</div>
-
-					<div class="space-y-10">
-						<div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-							<div class="space-y-2">
-								<Label
-									class="text-[10px] font-source-code-pro uppercase tracking-widest text-muted-foreground"
-									>First Name</Label
-								>
-								<Input
-									bind:value={booking.customer.first}
-									class="rounded-none border-0 border-b border-border bg-transparent px-0 h-12 focus-visible:ring-0 focus-visible:border-foreground shadow-none text-lg"
+							{/each}
+							<Pagination.Item>
+								<Pagination.NextButton
+									onclick={() =>
+										updateFilter(
+											"page",
+											Math.min(
+												Math.ceil(
+													filteredServices.length /
+														perPage,
+												),
+												current + 1,
+											),
+										)}
 								/>
-							</div>
-							<div class="space-y-2">
-								<Label
-									class="text-[10px] font-source-code-pro uppercase tracking-widest text-muted-foreground"
-									>Last Name</Label
-								>
-								<Input
-									bind:value={booking.customer.last}
-									class="rounded-none border-0 border-b border-border bg-transparent px-0 h-12 focus-visible:ring-0 focus-visible:border-foreground shadow-none text-lg"
-								/>
-							</div>
-						</div>
+							</Pagination.Item>
+						</Pagination.Content>
+					{/snippet}
+				</Pagination.Root>
+			</div>
+		{/if}
+	</div>
 
-						<div class="space-y-2">
-							<Label
-								class="text-[10px] font-source-code-pro uppercase tracking-widest text-muted-foreground"
-								>Email Address</Label
-							>
-							<Input
-								type="email"
-								bind:value={booking.customer.email}
-								class="rounded-none border-0 border-b border-border bg-transparent px-0 h-12 focus-visible:ring-0 focus-visible:border-foreground shadow-none text-lg"
-							/>
-						</div>
+	<!-- Testimonials -->
+	<div
+		class="w-full py-24 lg:py-32 px-6 md:px-12 lg:px-16 overflow-hidden"
+		bind:this={testimonialsEl}
+	>
+		<p
+			class="text-sm font-semibold uppercase tracking-[0.3em] text-muted-foreground text-center mb-16"
+		>
+			Earned Love
+		</p>
 
-						<div class="space-y-2">
-							<Label
-								class="text-[10px] font-source-code-pro uppercase tracking-widest text-muted-foreground"
-								>Phone Number</Label
-							>
-							<Input
-								type="tel"
-								bind:value={booking.customer.phone}
-								class="rounded-none border-0 border-b border-border bg-transparent px-0 h-12 focus-visible:ring-0 focus-visible:border-foreground shadow-none text-lg"
-								placeholder="Optional"
-							/>
-						</div>
-
-						<Button
-							class="w-full uppercase rounded-none h-16 bg-foreground text-background tracking-widest font-source-code-pro text-sm mt-8 disabled:opacity-20 transition-opacity"
-							onclick={confirmBooking}
-							disabled={booking.isLoading ||
-								!booking.customer.first ||
-								!booking.customer.email}
-						>
-							{booking.isLoading
-								? "Securing..."
-								: "Confirm Booking"}
-						</Button>
-					</div>
-				</div>
-			{:else}
-				<div
-					class="flex flex-col items-center justify-center py-32 text-center gap-12 w-full"
-					in:fly={{ y: 20, duration: 800 }}
-				>
-					<h2
-						class="uppercase text-7xl lg:text-[9rem] tracking-tighter leading-[0.85] font-light"
-					>
-						See <br /> You <br /> Soon.
-					</h2>
-
+		<div
+			class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16"
+		>
+			{#if testimonialsVisible}
+				{#each testimonials as testimonial, i}
 					<div
-						class="font-source-code-pro uppercase text-[11px] tracking-[0.2em] space-y-2 text-muted-foreground"
+						class="flex flex-col items-center text-center gap-6 font-source-code-pro"
+						in:fly={{ y: 40, duration: 600, delay: i * 250 }}
 					>
-						<p class="text-foreground">
-							Confirmed for {booking.customer.first}
+						<p class="text-lg lg:text-xl leading-relaxed">
+							{testimonial.quote}
 						</p>
-						<p>Details have been sent to your inbox</p>
+						<span
+							class=" text-sm font-bold uppercase tracking-[0.2em]"
+						>
+							{testimonial.author}
+						</span>
 					</div>
-
-					<Button
-						href="/"
-						variant="outline"
-						class="rounded-none px-12 h-16 border-border uppercase font-source-code-pro text-xs tracking-widest hover:bg-foreground hover:text-background hover:border-foreground transition-all mt-8"
-					>
-						Return Home
-					</Button>
-				</div>
+				{/each}
 			{/if}
 		</div>
 	</div>
+
+	<InfiniteMovingCards
+		items={pressBrands}
+		direction="right"
+		speed="normal"
+		class="mask-[linear-gradient(to_right,transparent_0%,white_20%,white_100%)] max-w-[unset]"
+	/>
 </section>

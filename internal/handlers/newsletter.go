@@ -259,3 +259,8 @@ func (h *NewsletterHandler) addContactToList(ctx context.Context, contactID stri
 
 	fmt.Printf("Contact %s added to list %s\n", contactID, h.listID)
 }
+
+// AddContact is a public wrapper around addToHubSpot so other handlers can reuse it.
+func (h *NewsletterHandler) AddContact(ctx context.Context, email string, properties map[string]any) (map[string]any, error) {
+	return h.addToHubSpot(ctx, email, properties)
+}

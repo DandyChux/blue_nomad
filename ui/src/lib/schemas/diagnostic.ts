@@ -15,6 +15,8 @@ export const diagnosticSchema = z.object({
 		.min(1, "Please select at least one ingredient."),
 	ingredientsOther: z.string().optional(),
 
+	specificProducts: z.string().optional(),
+
 	concerns: z
 		.array(z.string())
 		.min(1, "Please select at least one concern.")

@@ -36,7 +36,7 @@
 		},
 		{
 			name: "Mawatle",
-			profession: "marketer",
+			profession: "thespian",
 			description: "Embrace my authentic self",
 			image: "https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/testimonial/Mawatle%201.webp",
 		},

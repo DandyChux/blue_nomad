@@ -22,7 +22,13 @@ export const load: PageLoad = async ({ url }) => {
 			.filter(
 				(obj): obj is CatalogItem =>
 					obj.type === "ITEM" &&
-					obj.item_data?.product_type === "APPOINTMENTS_SERVICE",
+					obj.item_data?.product_type === "APPOINTMENTS_SERVICE" &&
+					(obj.item_data?.variations?.some(
+						(v) =>
+							v.item_variation_data?.available_for_booking ===
+							true,
+					) ??
+						false),
 			)
 			.map((service) => {
 				const primaryImageId = service.item_data?.image_ids?.[0];
@@ -36,6 +42,8 @@ export const load: PageLoad = async ({ url }) => {
 					image_url: primaryImageUrl,
 				};
 			});
+
+		console.log(services);
 
 		return { services };
 	} catch (err) {

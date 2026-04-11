@@ -43,8 +43,10 @@ export class CartState {
 		this.isOpen = true;
 	}
 
-	remove(variationId: string) {
-		this.items = this.items.filter((item) => item.id !== variationId);
+	remove(cartItemId: string) {
+		this.items = this.items.filter(
+			(item) => item.cartItemId !== cartItemId,
+		);
 	}
 
 	clear() {

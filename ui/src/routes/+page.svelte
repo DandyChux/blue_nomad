@@ -1,15 +1,5 @@
-<script lang="ts">
-	import { Button, buttonVariants } from "$lib/components/ui/button";
-	import InfiniteMovingCards, {
-		type MovingCardProps,
-	} from "$lib/components/infinite-moving-cards.svelte";
-	import TreatmentCards from "$lib/components/treatment-cards.svelte";
-	import Partners from "$lib/components/partners.svelte";
-	import Testimonials from "$lib/components/testimonials.svelte";
-	import { SITE_TITLE } from "./+layout.svelte";
-	import { generateSrcSet } from "$lib/utils";
-
-	const pressBrands: MovingCardProps[] = [
+<script lang="ts" module>
+	export const pressBrands: MovingCardProps[] = [
 		{
 			name: "Elle",
 			image: "https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/elle-logo.svg",
@@ -51,6 +41,18 @@
 			link: "https://archello.com",
 		},
 	];
+</script>
+
+<script lang="ts">
+	import { Button, buttonVariants } from "$lib/components/ui/button";
+	import InfiniteMovingCards, {
+		type MovingCardProps,
+	} from "$lib/components/infinite-moving-cards.svelte";
+	import TreatmentCards from "$lib/components/treatment-cards.svelte";
+	import Partners from "$lib/components/partners.svelte";
+	import Testimonials from "$lib/components/testimonials.svelte";
+	import { SITE_TITLE } from "./+layout.svelte";
+	import { generateSrcSet } from "$lib/utils";
 </script>
 
 <svelte:head>

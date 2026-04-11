@@ -83,9 +83,9 @@
 						)}
 					>
 						{treatment.description}{" "}
-						{treatment.membersOnly
+						<!-- {treatment.membersOnly
 							? "Cancel anytime after the first three (3) months."
-							: null}
+							: null} -->
 					</Card.Description>
 				</Card.Header>
 				<Card.Content

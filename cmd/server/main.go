@@ -110,6 +110,7 @@ func main() {
 	postHandler := handlers.NewPostHandler(sanityClient)
 	shopHandler := handlers.NewShopHandler(squareClient)
 	bookingHandler := handlers.NewBookingHandler(squareClient)
+	diagnosticHandler := handlers.NewDiagnosticHandler(newsletterHandler)
 
 	// ── API routes ────────────────────────────────────────────────
 	api := http.NewServeMux()
@@ -120,6 +121,9 @@ func main() {
 	// Newsletter
 	api.HandleFunc("POST /subscribe", newsletterHandler.Subscribe)
 	api.HandleFunc("POST /send-mail", newsletterHandler.SendMail)
+
+	// Diagnostic
+	api.HandleFunc("POST /diagnostic", diagnosticHandler.Submit)
 
 	// Blog posts
 	api.HandleFunc("GET /posts", postHandler.ListPosts)

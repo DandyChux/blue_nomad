@@ -15,6 +15,7 @@ export const CatalogItemVariationDataSchema = z.object({
 	price_money: SquareMoneySchema.optional(),
 	// pricing_type can be FIXED_PRICING or VARIABLE_PRICING
 	pricing_type: z.string().optional(),
+	available_for_booking: z.boolean().optional(),
 	service_duration: z.number().optional(),
 });
 
@@ -40,7 +41,7 @@ export const CatalogItemDataSchema = z.object({
 		}),
 	),
 	ecom_available: z.boolean(),
-	ecom_visibility: z.enum(["VISIBLE", "UNINDEXED", "UNAVAILABLE"]),
+	ecom_visibility: z.enum(["VISIBLE", "UNINDEXED", "UNAVAILABLE", "HIDDEN"]),
 	product_type: z.string(),
 });
 

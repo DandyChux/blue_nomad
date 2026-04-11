@@ -20,6 +20,7 @@
 	import CartDrawer from "$lib/components/cart-drawer.svelte";
 	import { initBooking } from "$lib/context/booking.svelte";
 	import BookingDrawer from "$lib/components/booking-drawer.svelte";
+	import FloatingVideo from "$lib/components/floating-video.svelte";
 
 	let { children } = $props();
 
@@ -79,4 +80,7 @@
 
 <Footer />
 <BookingButton />
+<FloatingVideo
+	src="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/videos/BN%20x%20Dr%20Dana%20-%20Alternate%20.webm"
+/>
 <CartDrawer />
