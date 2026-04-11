@@ -1,7 +1,6 @@
-import { goto } from '$app/navigation';
+import { goto } from "$app/navigation";
 
-// export const BASE_URL = import.meta.env.VITE_API_URL;
-export const BASE_URL = "/api"
+export const BASE_URL = "/api";
 
 /**
  * Custom API error class with additional context
@@ -11,9 +10,14 @@ export class ApiError extends Error {
 	public readonly statusText: string;
 	public readonly data: unknown;
 
-	constructor(message: string, status: number, statusText: string, data?: unknown) {
+	constructor(
+		message: string,
+		status: number,
+		statusText: string,
+		data?: unknown,
+	) {
 		super(message);
-		this.name = 'ApiError';
+		this.name = "ApiError";
 		this.status = status;
 		this.statusText = statusText;
 		this.data = data;
@@ -39,7 +43,7 @@ export class ApiError extends Error {
 /**
  * Request configuration options
  */
-export interface RequestConfig extends Omit<RequestInit, 'body'> {
+export interface RequestConfig extends Omit<RequestInit, "body"> {
 	body?: unknown;
 	params?: Record<string, string | number | boolean | undefined>;
 }
@@ -47,9 +51,14 @@ export interface RequestConfig extends Omit<RequestInit, 'body'> {
 /**
  * Build URL with query parameters
  */
-function buildUrl(endpoint: string, params?: Record<string, string | number | boolean | undefined>): string {
+function buildUrl(
+	endpoint: string,
+	params?: Record<string, string | number | boolean | undefined>,
+): string {
 	// Ensure the endpoint starts with a forward slash
-	const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+	const normalizedEndpoint = endpoint.startsWith("/")
+		? endpoint
+		: `/${endpoint}`;
 
 	// Combine base URL and endpoint directly to preserve path components like /v1.0
 	const fullUrl = `${BASE_URL}${normalizedEndpoint}`;
@@ -69,20 +78,23 @@ function buildUrl(endpoint: string, params?: Record<string, string | number | bo
 /**
  * Core request function
  */
-async function request<T>(endpoint: string, config: RequestConfig = {}): Promise<T> {
+async function request<T>(
+	endpoint: string,
+	config: RequestConfig = {},
+): Promise<T> {
 	const { body, params, headers: customHeaders, ...fetchConfig } = config;
 
 	const url = buildUrl(endpoint, params);
 
 	const headers: HeadersInit = {
-		'Content-Type': 'application/json',
+		"Content-Type": "application/json",
 		...customHeaders,
 	};
 
 	const response = await fetch(url, {
 		...fetchConfig,
 		headers,
-		credentials: 'include', // Always include cookies for auth
+		credentials: "include", // Always include cookies for auth
 		body: body ? JSON.stringify(body) : undefined,
 	});
 
@@ -100,7 +112,12 @@ async function request<T>(endpoint: string, config: RequestConfig = {}): Promise
 			(errorData as { error?: string })?.error ||
 			response.statusText;
 
-		throw new ApiError(errorMessage, response.status, response.statusText, errorData);
+		throw new ApiError(
+			errorMessage,
+			response.status,
+			response.statusText,
+			errorData,
+		);
 	}
 
 	// Handle empty responses (204 No Content)
@@ -110,7 +127,7 @@ async function request<T>(endpoint: string, config: RequestConfig = {}): Promise
 
 	// Parse JSON response
 	try {
-		return await response.json() as T;
+		return (await response.json()) as T;
 	} catch {
 		return undefined as T;
 	}
@@ -120,24 +137,36 @@ async function request<T>(endpoint: string, config: RequestConfig = {}): Promise
  * API client with typed HTTP methods
  */
 export const apiClient = {
-	get<T>(endpoint: string, config?: Omit<RequestConfig, 'body'>): Promise<T> {
-		return request<T>(endpoint, { ...config, method: 'GET' });
+	get<T>(endpoint: string, config?: Omit<RequestConfig, "body">): Promise<T> {
+		return request<T>(endpoint, { ...config, method: "GET" });
 	},
 
-	post<T, B = unknown>(endpoint: string, body?: B, config?: RequestConfig): Promise<T> {
-		return request<T>(endpoint, { ...config, method: 'POST', body });
+	post<T, B = unknown>(
+		endpoint: string,
+		body?: B,
+		config?: RequestConfig,
+	): Promise<T> {
+		return request<T>(endpoint, { ...config, method: "POST", body });
 	},
 
-	put<T, B = unknown>(endpoint: string, body?: B, config?: RequestConfig): Promise<T> {
-		return request<T>(endpoint, { ...config, method: 'PUT', body });
+	put<T, B = unknown>(
+		endpoint: string,
+		body?: B,
+		config?: RequestConfig,
+	): Promise<T> {
+		return request<T>(endpoint, { ...config, method: "PUT", body });
 	},
 
-	patch<T, B = unknown>(endpoint: string, body?: B, config?: RequestConfig): Promise<T> {
-		return request<T>(endpoint, { ...config, method: 'PATCH', body });
+	patch<T, B = unknown>(
+		endpoint: string,
+		body?: B,
+		config?: RequestConfig,
+	): Promise<T> {
+		return request<T>(endpoint, { ...config, method: "PATCH", body });
 	},
 
 	delete<T>(endpoint: string, config?: RequestConfig): Promise<T> {
-		return request<T>(endpoint, { ...config, method: 'DELETE' });
+		return request<T>(endpoint, { ...config, method: "DELETE" });
 	},
 };
 
@@ -155,7 +184,7 @@ export async function apiRequest<T>(config: {
 	body?: unknown;
 	params?: Record<string, string | number | boolean | undefined>;
 }): Promise<T> {
-	const { endpoint, method = 'GET', body, params } = config;
+	const { endpoint, method = "GET", body, params } = config;
 	return request<T>(endpoint, { method, body, params });
 }
 
