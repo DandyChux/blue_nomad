@@ -41,14 +41,29 @@ type SquareWebhookPayload struct {
 					Currency string `json:"currency"`
 				} `json:"amount_money"`
 			} `json:"payment"`
+			Booking struct {
+				ID                  string `json:"id"`
+				Version             int    `json:"version"`
+				Status              string `json:"status"`
+				CreatedAt           string `json:"created_at"`
+				StartAt             string `json:"start_at"`
+				LocationID          string `json:"location_id"`
+				CustomerID          string `json:"customer_id"`
+				AppointmentSegments []struct {
+					DurationMinutes         int    `json:"duration_minutes"`
+					ServiceVariationID      string `json:"service_variation_id"`
+					TeamMemberID            string `json:"team_member_id"`
+					ServiceVariationVersion int64  `json:"service_variation_version"`
+				} `json:"appointment_segments"`
+			} `json:"booking"`
 		} `json:"object"`
 	} `json:"data"`
 }
 
 type WebhookHandler struct {
 	secret             string
-	squareSignatureKey string // NEW: From Square Developer Dashboard
-	squareWebhookURL   string // NEW: The exact URL Square is hitting (needed for validation)
+	squareSignatureKey string
+	squareWebhookURL   string
 	sanity             *services.SanityClient
 
 	mu            sync.RWMutex
@@ -195,6 +210,120 @@ func (h *WebhookHandler) HandleSquareWebhook(w http.ResponseWriter, r *http.Requ
 	}
 
 	w.WriteHeader(http.StatusOK)
+}
+
+func (h *WebhookHandler) handlePaymentEvent(payload SquareWebhookPayload) {
+	payment := payload.Data.Object.Payment
+
+	if payment.Status != "COMPLETED" {
+		return
+	}
+
+	slog.Info("✅ Payment COMPLETED!",
+		"payment_id", payment.ID,
+		"order_id", payment.OrderID,
+		"amount", payment.AmountMoney.Amount,
+	)
+
+	adminEmail := os.Getenv("ADMIN_EMAIL")
+	if adminEmail == "" {
+		adminEmail = os.Getenv("EMAIL_USERNAME")
+	}
+
+	formattedAmount := fmt.Sprintf("%.2f", float64(payment.AmountMoney.Amount)/100.0)
+
+	msg := &services.EmailMessage{
+		To:      []string{adminEmail},
+		Subject: fmt.Sprintf("New Blue Nomad Order Paid: %s", payment.OrderID),
+		BodyText: fmt.Sprintf(
+			"New Order Received!\n\nOrder ID: %s\nPayment ID: %s\nAmount: $%s %s\n\nPlease check your Square Dashboard for shipping details.",
+			payment.OrderID, payment.ID, formattedAmount, payment.AmountMoney.Currency,
+		),
+		BodyHTML: fmt.Sprintf(`
+			<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+				<h2 style="color: #000; text-transform: uppercase;">New Order Received</h2>
+				<p>A payment has been successfully completed via Square Checkout.</p>
+				<div style="background-color: #f9fafb; padding: 20px; border-radius: 4px; margin: 20px 0;">
+					<p><strong>Order ID:</strong> %s</p>
+					<p><strong>Payment ID:</strong> %s</p>
+					<p><strong>Total Amount:</strong> $%s %s</p>
+				</div>
+				<p>Log in to your <a href="https://squareup.com/dashboard/orders">Square Dashboard</a> to view the customer's shipping address and fulfill the order.</p>
+			</div>
+		`, payment.OrderID, payment.ID, formattedAmount, payment.AmountMoney.Currency),
+	}
+
+	if err := services.SendEmail(msg); err != nil {
+		slog.Error("Failed to send fulfillment notification email", "error", err, "order_id", payment.OrderID)
+	} else {
+		slog.Info("Fulfillment notification sent to admin", "order_id", payment.OrderID)
+	}
+}
+
+func (h *WebhookHandler) handleBookingCreated(payload SquareWebhookPayload) {
+	booking := payload.Data.Object.Booking
+
+	// Parse the appointment start time for the email
+	startAt, err := time.Parse(time.RFC3339, booking.StartAt)
+	var formattedDate, formattedTime string
+	if err == nil {
+		loc, _ := time.LoadLocation("America/New_York")
+		if loc != nil {
+			startAt = startAt.In(loc)
+		}
+		formattedDate = startAt.Format("Monday, January 2, 2006")
+		formattedTime = startAt.Format("3:04 PM")
+	} else {
+		formattedDate = booking.StartAt
+		formattedTime = ""
+	}
+
+	var durationMin int
+	if len(booking.AppointmentSegments) > 0 {
+		durationMin = booking.AppointmentSegments[0].DurationMinutes
+	}
+
+	slog.Info("📅 Booking CREATED",
+		"booking_id", booking.ID,
+		"status", booking.Status,
+		"start_at", booking.StartAt,
+		"customer_id", booking.CustomerID,
+		"duration_min", durationMin,
+	)
+
+	adminEmail := os.Getenv("ADMIN_EMAIL")
+	if adminEmail == "" {
+		adminEmail = os.Getenv("EMAIL_USERNAME")
+	}
+
+	msg := &services.EmailMessage{
+		To:      []string{adminEmail},
+		Subject: fmt.Sprintf("New Blue Nomad Booking: %s at %s", formattedDate, formattedTime),
+		BodyText: fmt.Sprintf(
+			"New Appointment Booked!\n\nBooking ID: %s\nStatus: %s\nDate: %s\nTime: %s\nDuration: %d minutes\nCustomer ID: %s\n\nCheck your Square Dashboard for full details.",
+			booking.ID, booking.Status, formattedDate, formattedTime, durationMin, booking.CustomerID,
+		),
+		BodyHTML: fmt.Sprintf(`
+			<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+				<h2 style="color: #000; text-transform: uppercase;">New Appointment Booked</h2>
+				<p>A new appointment has been created via the Blue Nomad website.</p>
+				<div style="background-color: #f9fafb; padding: 20px; border-radius: 4px; margin: 20px 0;">
+					<p><strong>Date:</strong> %s</p>
+					<p><strong>Time:</strong> %s</p>
+					<p><strong>Duration:</strong> %d minutes</p>
+					<p><strong>Status:</strong> %s</p>
+					<p><strong>Booking ID:</strong> %s</p>
+				</div>
+				<p>Log in to your <a href="https://squareup.com/dashboard/appointments">Square Dashboard</a> to view client details and manage this appointment.</p>
+			</div>
+		`, formattedDate, formattedTime, durationMin, booking.Status, booking.ID),
+	}
+
+	if err := services.SendEmail(msg); err != nil {
+		slog.Error("Failed to send booking notification email", "error", err, "booking_id", booking.ID)
+	} else {
+		slog.Info("Booking notification sent to admin", "booking_id", booking.ID)
+	}
 }
 
 // verifySquareSignature mathematically proves the request came from Square

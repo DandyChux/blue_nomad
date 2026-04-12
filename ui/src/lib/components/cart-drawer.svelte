@@ -4,6 +4,7 @@
 	import * as Sheet from "$lib/components/ui/sheet";
 	import apiClient from "$lib/api";
 	import { goto } from "$app/navigation";
+	import Picture from "./picture.svelte";
 
 	const cart = getCart();
 	let isCheckingOut = $state(false);
@@ -62,7 +63,19 @@
 			{:else}
 				{#each cart.items as item (item.cartItemId)}
 					<div class="flex gap-4">
-						<div class="w-20 h-24 bg-gray-100 shrink-0"></div>
+						<div
+							class="w-20 h-24 bg-muted shrink-0 overflow-hidden"
+						>
+							{#if item.imageUrl}
+								<Picture
+									src={item.imageUrl}
+									alt={item.name}
+									class="w-full h-full object-cover"
+									loading="lazy"
+									sizes="80px"
+								/>
+							{/if}
+						</div>
 
 						<div class="flex flex-col flex-grow justify-between">
 							<div>

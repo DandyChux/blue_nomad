@@ -154,11 +154,14 @@ export const SearchAvailabilityResponseSchema = z.object({
  */
 export const CreateBookingRequestSchema = z.object({
 	service_variation_id: z.string().min(1, "Service variation is required"),
+	team_member_id: z.string().min(1, "Team member is required"),
 	start_at: z.string().min(1, "Please select a time slot"),
 	given_name: z.string().min(1, "First name is required"),
 	family_name: z.string().min(1, "Last name is required"),
 	email_address: z.email("Please enter a valid email"),
 	phone_number: z.string().optional(),
+	service_name: z.string().min(1),
+	price_cents: z.number().int().positive(),
 });
 
 /**

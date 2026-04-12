@@ -57,7 +57,7 @@ func (h *BookingHandler) GetAvailability(w http.ResponseWriter, r *http.Request)
 	w.Write(data)
 }
 
-// CreateBooking handles the final submission: Customer creation + Appointment booking
+// Customer creation → Appointment reservation → Payment link generation
 func (h *BookingHandler) CreateBooking(w http.ResponseWriter, r *http.Request) {
 	var req services.CreateBookingRequest
 
@@ -67,24 +67,23 @@ func (h *BookingHandler) CreateBooking(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Basic Validation
-	if req.ServiceVariationID == "" || req.StartAt == "" || req.EmailAddress == "" {
+	// Validation
+	if req.ServiceVariationID == "" || req.TeamMemberID == "" || req.StartAt == "" || req.EmailAddress == "" {
 		http.Error(w, "Missing required booking details", http.StatusBadRequest)
 		return
 	}
+	if req.ServiceName == "" || req.PriceCents <= 0 {
+		http.Error(w, "Missing service name or price for checkout", http.StatusBadRequest)
+		return
+	}
 
-	err := h.square.CreateBooking(r.Context(), req)
+	result, err := h.square.CreateBooking(r.Context(), req)
 	if err != nil {
 		slog.Error("failed to finalize square booking", "error", err)
-		// We return a 422 if it's likely a business logic error (slot taken, etc)
-		// or 502 if Square is down.
 		http.Error(w, "Could not complete booking", http.StatusUnprocessableEntity)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]string{
-		"status":  "success",
-		"message": "Booking confirmed",
-	})
+	json.NewEncoder(w).Encode(result)
 }

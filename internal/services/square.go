@@ -47,11 +47,14 @@ type SearchAvailabilityRequest struct {
 // CreateBookingRequest for headless booking
 type CreateBookingRequest struct {
 	ServiceVariationID string `json:"service_variation_id"`
+	TeamMemberID       string `json:"team_member_id"`
 	StartAt            string `json:"start_at"`
 	GivenName          string `json:"given_name"`
 	FamilyName         string `json:"family_name"`
 	EmailAddress       string `json:"email_address"`
 	PhoneNumber        string `json:"phone_number"`
+	ServiceName        string `json:"service_name"`
+	PriceCents         int64  `json:"price_cents"`
 }
 
 // NewSquareClient initializes a new Square API client
@@ -231,8 +234,15 @@ func (s *SquareClient) SearchAvailability(ctx context.Context, req SearchAvailab
 	return resp.Body, nil
 }
 
-// CreateBooking creates a customer and then reserves the appointment
-func (s *SquareClient) CreateBooking(ctx context.Context, req CreateBookingRequest) error {
+// BookingResult contains the data returned after a successful booking + checkout creation
+type BookingResult struct {
+	BookingID   string `json:"booking_id"`
+	CheckoutURL string `json:"checkout_url"`
+}
+
+// CreateBooking creates a customer, reserves the appointment, and generates a
+// Square-hosted checkout link for prepayment — mirroring the shop checkout flow.
+func (s *SquareClient) CreateBooking(ctx context.Context, req CreateBookingRequest) (*BookingResult, error) {
 	// 1. Create/Find Customer
 	customerPayload := map[string]interface{}{
 		"idempotency_key": generateIdempotencyKey(),
@@ -245,7 +255,7 @@ func (s *SquareClient) CreateBooking(ctx context.Context, req CreateBookingReque
 	custBytes, _ := json.Marshal(customerPayload)
 	custResp, err := s.http.Post(ctx, "/v2/customers", bytes.NewReader(custBytes))
 	if err != nil {
-		return fmt.Errorf("customer creation failed: %w", err)
+		return nil, fmt.Errorf("customer creation failed: %w", err)
 	}
 
 	var custResult struct {
@@ -255,7 +265,7 @@ func (s *SquareClient) CreateBooking(ctx context.Context, req CreateBookingReque
 	}
 	json.Unmarshal(custResp.Body, &custResult)
 
-	// 2. Create Booking
+	// 2. Create Booking (reserves the time slot)
 	bookingPayload := map[string]interface{}{
 		"idempotency_key": generateIdempotencyKey(),
 		"booking": map[string]interface{}{
@@ -263,14 +273,84 @@ func (s *SquareClient) CreateBooking(ctx context.Context, req CreateBookingReque
 			"location_id": s.locationID,
 			"customer_id": custResult.Customer.ID,
 			"appointment_segments": []map[string]interface{}{
-				{"service_variation_id": req.ServiceVariationID},
+				{
+					"service_variation_id": req.ServiceVariationID,
+					"team_member_id":       req.TeamMemberID,
+				},
 			},
 		},
 	}
 
 	bookBytes, _ := json.Marshal(bookingPayload)
-	_, err = s.http.Post(ctx, "/v2/bookings", bytes.NewReader(bookBytes))
-	return err
+	bookResp, err := s.http.Post(ctx, "/v2/bookings", bytes.NewReader(bookBytes))
+	if err != nil {
+		return nil, fmt.Errorf("booking creation failed: %w", err)
+	}
+
+	var bookResult struct {
+		Booking struct {
+			ID string `json:"id"`
+		} `json:"booking"`
+	}
+	json.Unmarshal(bookResp.Body, &bookResult)
+
+	// 3. Create a Square-hosted checkout link for prepayment
+	checkoutURL, err := s.createBookingCheckoutLink(ctx, req)
+	if err != nil {
+		return nil, fmt.Errorf("checkout link creation failed: %w", err)
+	}
+
+	return &BookingResult{
+		BookingID:   bookResult.Booking.ID,
+		CheckoutURL: checkoutURL,
+	}, nil
+}
+
+// createBookingCheckoutLink generates a Square payment link for a booking.
+// Uses an ad-hoc line item (service name + price) since APPOINTMENTS_SERVICE
+// catalog items may not be orderable through the checkout API.
+func (s *SquareClient) createBookingCheckoutLink(ctx context.Context, req CreateBookingRequest) (string, error) {
+	payload := map[string]interface{}{
+		"idempotency_key": uuid.New().String(),
+		"order": map[string]interface{}{
+			"location_id": s.locationID,
+			"line_items": []map[string]interface{}{
+				{
+					"name":     req.ServiceName,
+					"quantity": "1",
+					"base_price_money": map[string]interface{}{
+						"amount":   req.PriceCents,
+						"currency": "USD",
+					},
+				},
+			},
+		},
+		"checkout_options": map[string]interface{}{
+			"redirect_url": "https://bluenomad.com/booking/confirmed",
+		},
+	}
+
+	bodyBytes, _ := json.Marshal(payload)
+	resp, err := s.http.Post(ctx, "/v2/online-checkout/payment-links", bytes.NewReader(bodyBytes))
+	if err != nil {
+		return "", fmt.Errorf("square checkout link error: %w", err)
+	}
+
+	var result struct {
+		PaymentLink struct {
+			URL string `json:"url"`
+		} `json:"payment_link"`
+	}
+
+	if err := json.Unmarshal(resp.Body, &result); err != nil {
+		return "", fmt.Errorf("failed to decode checkout link response: %w", err)
+	}
+
+	if result.PaymentLink.URL == "" {
+		return "", fmt.Errorf("square did not return a checkout url")
+	}
+
+	return result.PaymentLink.URL, nil
 }
 
 // --- Helper Functions ---

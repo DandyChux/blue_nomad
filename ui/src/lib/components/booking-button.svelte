@@ -28,17 +28,14 @@
 				id="booking-button"
 				class={buttonVariants({
 					variant: "default",
-					class: "rounded-full no-underline bg-black text-white border-2 border-black uppercase font-source-code-pro font-bold hover:bg-transparent hover:text-black h-auto md:[writing-mode:horizontal-tb] [writing-mode:sideways-lr] text-[10px] tracking-[0.1em] px-3 py-6 md:px-12 md:py-2 md:text-sm md:tracking-normal",
+					class: "rounded-full no-underline bg-black text-[10px] md:text-sm text-white border-2 border-black uppercase font-source-code-pro font-bold hover:bg-transparent hover:text-black h-auto",
 					size: "xl",
 				})}
 				variant="link"
 				href="/diagnosis"
 				onclick={handleClick}
 			>
-				<span class="md:hidden">Skin Diagnostic</span>
-				<span class="hidden md:inline text-center"
-					>Skin <br /> Diagnostic</span
-				>
+				<span class="text-center">Skin <br /> Diagnostic</span>
 			</Button>
 		</div>
 	</div>

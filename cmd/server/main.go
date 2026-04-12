@@ -133,6 +133,7 @@ func main() {
 	// Webhooks & cache
 	api.HandleFunc("POST /revalidate", webhookHandler.Revalidate)
 	api.HandleFunc("GET /cache/status", webhookHandler.LastInvalidation)
+	api.HandleFunc("POST /webhooks/square", webhookHandler.HandleSquareWebhook)
 
 	// Shop
 	api.HandleFunc("GET /shop/catalog", shopHandler.GetCatalog)

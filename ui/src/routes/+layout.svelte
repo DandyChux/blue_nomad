@@ -80,7 +80,4 @@
 
 <Footer />
 <BookingButton />
-<FloatingVideo
-	src="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/videos/BN%20x%20Dr%20Dana%20-%20Alternate%20.webm"
-/>
 <CartDrawer />

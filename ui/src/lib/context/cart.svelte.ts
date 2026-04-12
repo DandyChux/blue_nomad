@@ -9,6 +9,7 @@ type CartItem = {
 	variationName: string;
 	price: number;
 	quantity: number;
+	imageUrl: string;
 };
 
 export class CartState {
@@ -37,6 +38,7 @@ export class CartState {
 			variationName: variation.item_variation_data.name,
 			price: priceCents / 100,
 			quantity: 1,
+			imageUrl: product.image_url || "",
 		});
 
 		// Automatically open the cart when an item is added
