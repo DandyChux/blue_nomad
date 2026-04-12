@@ -155,7 +155,7 @@
 		variant="link"
 		href="/shop"
 	>
-		Explore Shop
+		Explore <br /> Shop
 	</Button>
 </section>
 

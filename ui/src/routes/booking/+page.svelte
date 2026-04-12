@@ -120,7 +120,16 @@
 		<Video
 			poster="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/hero-poster.jpg"
 			class="absolute inset-0 w-full h-full object-cover opacity-60"
-			src="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/videos/Blue%20Nomad%20-%20Treatment%20V1.webm"
+			sources={[
+				{
+					src: "https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/videos/Blue%20Nomad%20-%20Treatment%20V1.webm",
+					type: "video/webm",
+				},
+				{
+					src: "https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/videos/Blue%20Nomad%20-%20Treatment%20V1.mp4",
+					type: "video/mp4",
+				},
+			]}
 		/>
 
 		<!-- Gradient Overlay -->
