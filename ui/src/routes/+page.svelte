@@ -64,7 +64,7 @@
 	class="relative p-0 text-brand-white bg-studio-background bg-cover bg-no-repeat bg-center"
 >
 	<div
-		class="flex flex-col m-[auto_0] pl-14 md:pl-8 pt-16 pb-8 gap-8 lg:gap-12 place-self-center"
+		class="flex flex-col m-[auto_0] pl-4 md:pl-8 pt-16 pb-8 gap-8 lg:gap-12 place-self-center"
 	>
 		<p class="uppercase w-full md:w-auto text-2xl lg:text-4xl">
 			<span>modern wellness</span>
@@ -140,7 +140,7 @@
 
 <!-- Treatments Section -->
 <section class="lg:flex-col items-center" id="treatments">
-	<h1 class="uppercase">Treatments</h1>
+	<h1 class="uppercase font-medium">Treatments</h1>
 	<p class="text-lg lg:text-xl text-center">
 		Tradition meets science for skin health and well-being
 	</p>
@@ -149,7 +149,7 @@
 	<Button
 		class={buttonVariants({
 			variant: "outline",
-			class: "uppercase mt-20 lg:mt-36 rounded-full text-center font-bold h-auto place-self-center font-source-code-pro",
+			class: "uppercase mt-10 lg:mt-36 rounded-full text-center font-bold h-auto place-self-center font-source-code-pro",
 			size: "xl",
 		})}
 		variant="link"

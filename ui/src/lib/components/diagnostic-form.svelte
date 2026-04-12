@@ -164,11 +164,11 @@
 	<form method="POST" use:enhance class="max-w-2xl mx-auto">
 		<!-- Header -->
 		<div class="pb-8 mb-10 border-b border-foreground/20">
-			<h2 class="uppercase tracking-tight mb-2">
+			<h2 class="font-medium uppercase tracking-tight mb-2">
 				Express Skin Diagnostic
 			</h2>
 			<p
-				class="font-source-code-pro text-xs uppercase tracking-widest text-muted-foreground leading-relaxed"
+				class="font-spectral text-sm uppercase tracking-widest leading-relaxed"
 			>
 				A personalized skin review designed to simplify your skin care
 				and support long-term skin health.
@@ -186,7 +186,7 @@
 						class="flex flex-col items-center gap-1.5 flex-1 group transition-colors"
 					>
 						<span
-							class="font-source-code-pro text-lg tabular-nums transition-all duration-300
+							class="font-spectral text-lg tabular-nums transition-all duration-300
 								{i < currentStep
 								? 'text-foreground'
 								: i === currentStep
@@ -196,7 +196,7 @@
 							{String(i + 1).padStart(2, "0")}
 						</span>
 						<span
-							class="font-source-code-pro text-[10px] uppercase tracking-[0.15em] hidden sm:block transition-colors duration-300
+							class="font-spectral text-sm uppercase tracking-[0.15em] hidden sm:block transition-colors duration-300
 								{i === currentStep
 								? 'text-foreground font-bold'
 								: i < currentStep
@@ -225,7 +225,7 @@
 			</div>
 
 			<p
-				class="font-source-code-pro text-[10px] uppercase tracking-[0.2em] text-muted-foreground text-center mt-4"
+				class="font-spectral text-sm uppercase tracking-[0.2em] text-center mt-4"
 			>
 				Step {currentStep + 1} of {totalSteps}
 			</p>
@@ -236,7 +236,7 @@
 			<div class="border border-destructive/30 p-5 mb-8">
 				{#each stepErrors as error}
 					<p
-						class="text-xs font-source-code-pro uppercase tracking-wide text-destructive"
+						class="text-sm font-spectral uppercase tracking-wide text-destructive"
 					>
 						{error}
 					</p>
@@ -251,7 +251,7 @@
 					<Form.Control>
 						{#snippet children({ props })}
 							<Form.Label
-								class="text-[10px] font-source-code-pro uppercase tracking-[0.2em] text-muted-foreground font-normal mb-8 block"
+								class="text-sm font-spectral uppercase tracking-[0.2em] font-normal mb-8 block"
 							>
 								Which best describes your skin most days?
 								<span class="text-destructive">*</span>
@@ -270,7 +270,7 @@
 										/>
 										<Form.Label
 											for={`skin-${option}`}
-											class="font-source-code-pro font-normal text-xs leading-relaxed cursor-pointer"
+											class="font-spectral font-normal text-sm leading-relaxed cursor-pointer"
 											>{option}</Form.Label
 										>
 									</div>
@@ -283,22 +283,20 @@
 									/>
 									<Form.Label
 										for="skin-other"
-										class="font-source-code-pro font-normal text-xs"
+										class="font-spectral font-normal text-sm"
 										>Other:</Form.Label
 									>
 									<Input
 										bind:value={$formData.skinTypeOther}
 										oninput={() =>
 											($formData.skinType = "Other")}
-										class="border-0 border-b border-foreground/20 rounded-none px-0 h-7 shadow-none focus-visible:ring-0 focus-visible:border-foreground max-w-[250px] font-source-code-pro text-xs"
+										class="border-0 border-b border-foreground/20 rounded-none px-0 h-7 shadow-none focus-visible:ring-0 focus-visible:border-foreground max-w-[250px] font-spectral text-sm"
 									/>
 								</div>
 							</RadioGroup.Root>
 						{/snippet}
 					</Form.Control>
-					<Form.FieldErrors
-						class="font-source-code-pro text-xs mt-2"
-					/>
+					<Form.FieldErrors class="font-spectral text-sm mt-2" />
 				</Form.Field>
 			</div>
 		{/if}
@@ -309,7 +307,7 @@
 				<!-- Products -->
 				<Form.Fieldset {form} name="products">
 					<Form.Legend
-						class="text-[10px] font-source-code-pro uppercase tracking-[0.2em] text-muted-foreground font-normal mb-6"
+						class="text-sm font-spectral uppercase tracking-[0.2em] font-normal mb-6"
 					>
 						What facial skin care products are you currently using?
 						<span class="text-destructive">*</span>
@@ -339,7 +337,7 @@
 											class="border-foreground/30 data-[state=checked]:bg-foreground data-[state=checked]:border-foreground data-[state=checked]:text-background"
 										/>
 										<Form.Label
-											class="font-source-code-pro font-normal text-xs cursor-pointer"
+											class="font-spectral font-normal text-sm cursor-pointer"
 											>{option}</Form.Label
 										>
 									</div>
@@ -363,8 +361,7 @@
 								}}
 								class="border-foreground/30 data-[state=checked]:bg-foreground data-[state=checked]:border-foreground data-[state=checked]:text-background"
 							/>
-							<Label
-								class="font-source-code-pro font-normal text-xs"
+							<Label class="font-spectral font-normal text-sm"
 								>Other:</Label
 							>
 							<Input
@@ -377,13 +374,11 @@
 										];
 									}
 								}}
-								class="border-0 border-b border-foreground/20 rounded-none px-0 h-7 shadow-none focus-visible:ring-0 focus-visible:border-foreground max-w-[250px] font-source-code-pro text-xs"
+								class="border-0 border-b border-foreground/20 rounded-none px-0 h-7 shadow-none focus-visible:ring-0 focus-visible:border-foreground max-w-[250px] font-spectral text-sm"
 							/>
 						</div>
 					</div>
-					<Form.FieldErrors
-						class="font-source-code-pro text-xs mt-2"
-					/>
+					<Form.FieldErrors class="font-spectral text-sm mt-2" />
 				</Form.Fieldset>
 
 				<div class="h-px bg-foreground/10"></div>
@@ -391,7 +386,7 @@
 				<!-- Ingredients -->
 				<Form.Fieldset {form} name="ingredients">
 					<Form.Legend
-						class="text-[10px] font-source-code-pro uppercase tracking-[0.2em] text-muted-foreground font-normal mb-6"
+						class="text-sm font-spectral uppercase tracking-[0.2em] font-normal mb-6"
 					>
 						Are you currently using any of the following
 						ingredients?
@@ -422,7 +417,7 @@
 											class="border-foreground/30 data-[state=checked]:bg-foreground data-[state=checked]:border-foreground data-[state=checked]:text-background"
 										/>
 										<Form.Label
-											class="font-source-code-pro font-normal text-xs cursor-pointer"
+											class="font-spectral font-normal text-sm cursor-pointer"
 											>{option}</Form.Label
 										>
 									</div>
@@ -448,8 +443,7 @@
 								}}
 								class="border-foreground/30 data-[state=checked]:bg-foreground data-[state=checked]:border-foreground data-[state=checked]:text-background"
 							/>
-							<Label
-								class="font-source-code-pro font-normal text-xs"
+							<Label class="font-spectral font-normal text-sm"
 								>Other:</Label
 							>
 							<Input
@@ -464,13 +458,11 @@
 										];
 									}
 								}}
-								class="border-0 border-b border-foreground/20 rounded-none px-0 h-7 shadow-none focus-visible:ring-0 focus-visible:border-foreground max-w-[250px] font-source-code-pro text-xs"
+								class="border-0 border-b border-foreground/20 rounded-none px-0 h-7 shadow-none focus-visible:ring-0 focus-visible:border-foreground max-w-[250px] font-spectral text-sm"
 							/>
 						</div>
 					</div>
-					<Form.FieldErrors
-						class="font-source-code-pro text-xs mt-2"
-					/>
+					<Form.FieldErrors class="font-spectral text-sm mt-2" />
 				</Form.Fieldset>
 
 				<!-- Specific Products -->
@@ -478,7 +470,7 @@
 					<Form.Control>
 						{#snippet children({ props })}
 							<Form.Label
-								class="text-[10px] font-source-code-pro uppercase tracking-[0.2em] text-muted-foreground font-normal"
+								class="text-sm font-spectral uppercase tracking-[0.2em] font-normal"
 							>
 								List specific products and brands you're using
 							</Form.Label>
@@ -486,13 +478,11 @@
 								{...props}
 								bind:value={$formData.specificProducts}
 								placeholder="e.g. Dieux Air Angel Moisturizer, Dermalogica Microfoliant..."
-								class="border-0 border-b border-foreground/20 rounded-none px-0 shadow-none focus-visible:ring-0 focus-visible:border-foreground mt-3 font-source-code-pro text-xs w-full"
+								class="border-0 border-b border-foreground/20 rounded-none px-0 shadow-none focus-visible:ring-0 focus-visible:border-foreground mt-3 font-spectral text-sm w-full"
 							/>
 						{/snippet}
 					</Form.Control>
-					<Form.FieldErrors
-						class="font-source-code-pro text-xs mt-2"
-					/>
+					<Form.FieldErrors class="font-spectral text-sm mt-2" />
 				</Form.Field>
 			</div>
 		{/if}
@@ -502,7 +492,7 @@
 			<div>
 				<Form.Fieldset {form} name="concerns">
 					<Form.Legend
-						class="text-[10px] font-source-code-pro uppercase tracking-[0.2em] text-muted-foreground font-normal mb-6"
+						class="text-sm font-spectral uppercase tracking-[0.2em] font-normal mb-6"
 					>
 						What are your skin concerns? Choose up to 2.
 						<span class="text-destructive">*</span>
@@ -536,7 +526,7 @@
 											}}
 										/>
 										<Form.Label
-											class="font-source-code-pro font-normal text-xs cursor-pointer
+											class="font-spectral font-normal text-sm cursor-pointer
 												{disabled ? 'text-muted-foreground/40' : ''}">{option}</Form.Label
 										>
 									</div>
@@ -563,7 +553,7 @@
 								}}
 							/>
 							<Label
-								class="font-source-code-pro font-normal text-xs
+								class="font-spectral font-normal text-sm
 									{concernOtherDisabled ? 'text-muted-foreground/40' : ''}">Other:</Label
 							>
 							<Input
@@ -580,13 +570,11 @@
 										];
 									}
 								}}
-								class="border-0 border-b border-foreground/20 rounded-none px-0 h-7 shadow-none focus-visible:ring-0 focus-visible:border-foreground max-w-[250px] font-source-code-pro text-xs"
+								class="border-0 border-b border-foreground/20 rounded-none px-0 h-7 shadow-none focus-visible:ring-0 focus-visible:border-foreground max-w-[250px] font-spectral text-sm"
 							/>
 						</div>
 					</div>
-					<Form.FieldErrors
-						class="font-source-code-pro text-xs mt-2"
-					/>
+					<Form.FieldErrors class="font-spectral text-sm mt-2" />
 				</Form.Fieldset>
 			</div>
 		{/if}
@@ -598,7 +586,7 @@
 					<Form.Control>
 						{#snippet children({ props })}
 							<Form.Label
-								class="text-[10px] font-source-code-pro uppercase tracking-[0.2em] text-muted-foreground font-normal"
+								class="text-sm font-spectral uppercase tracking-[0.2em] font-normal"
 							>
 								Email Address <span class="text-destructive"
 									>*</span
@@ -609,21 +597,19 @@
 								type="email"
 								bind:value={$formData.email}
 								placeholder="your@email.com"
-								class="border-0 border-b border-foreground/20 rounded-none px-0 shadow-none focus-visible:ring-0 focus-visible:border-foreground mt-3 font-source-code-pro text-sm md:w-3/4"
+								class="border-0 border-b border-foreground/20 rounded-none px-0 shadow-none focus-visible:ring-0 focus-visible:border-foreground mt-3 font-spectral text-sm md:w-3/4"
 								required
 							/>
 						{/snippet}
 					</Form.Control>
-					<Form.FieldErrors
-						class="font-source-code-pro text-xs mt-2"
-					/>
+					<Form.FieldErrors class="font-spectral text-sm mt-2" />
 				</Form.Field>
 
 				<Form.Field {form} name="firstName">
 					<Form.Control>
 						{#snippet children({ props })}
 							<Form.Label
-								class="text-[10px] font-source-code-pro uppercase tracking-[0.2em] text-muted-foreground font-normal"
+								class="text-sm font-spectral uppercase tracking-[0.2em] font-normal"
 							>
 								First Name <span class="text-destructive"
 									>*</span
@@ -633,13 +619,11 @@
 								{...props}
 								bind:value={$formData.firstName}
 								placeholder="Your first name"
-								class="border-0 border-b border-foreground/20 rounded-none px-0 shadow-none focus-visible:ring-0 focus-visible:border-foreground mt-3 font-source-code-pro text-sm md:w-3/4"
+								class="border-0 border-b border-foreground/20 rounded-none px-0 shadow-none focus-visible:ring-0 focus-visible:border-foreground mt-3 font-spectral text-sm md:w-3/4"
 							/>
 						{/snippet}
 					</Form.Control>
-					<Form.FieldErrors
-						class="font-source-code-pro text-xs mt-2"
-					/>
+					<Form.FieldErrors class="font-spectral text-sm mt-2" />
 				</Form.Field>
 			</div>
 		{/if}
@@ -654,7 +638,7 @@
 						type="button"
 						variant="outline"
 						onclick={prevStep}
-						class="uppercase rounded-full h-12 px-8 border-foreground text-foreground hover:bg-foreground hover:text-background font-source-code-pro text-[10px] tracking-[0.15em] transition-all"
+						class="uppercase rounded-full h-12 px-8 border-foreground text-foreground hover:bg-foreground hover:text-background font-spectral text-sm tracking-[0.15em] transition-all"
 					>
 						← Back
 					</Button>
@@ -664,7 +648,7 @@
 					<Button
 						type="button"
 						onclick={nextStep}
-						class="uppercase rounded-full h-12 px-10 bg-foreground text-primary-foreground hover:bg-foreground/90 font-source-code-pro text-[10px] tracking-[0.15em]"
+						class="uppercase rounded-full h-12 px-10 bg-foreground text-primary-foreground hover:bg-foreground/90 font-spectral text-sm tracking-[0.15em]"
 					>
 						Next →
 					</Button>
@@ -672,7 +656,7 @@
 					<Button
 						type="submit"
 						disabled={$submitting}
-						class="uppercase rounded-full h-12 px-10 bg-foreground text-primary-foreground hover:bg-foreground/90 font-source-code-pro text-[10px] tracking-[0.15em]"
+						class="uppercase rounded-full h-12 px-10 bg-foreground text-primary-foreground hover:bg-foreground/90 font-spectral text-sm tracking-[0.15em]"
 					>
 						{$submitting ? "Submitting..." : "Submit"}
 					</Button>
@@ -682,7 +666,7 @@
 			<button
 				type="button"
 				onclick={clearForm}
-				class="text-[10px] font-source-code-pro uppercase tracking-[0.15em] text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+				class="text-sm font-spectral uppercase tracking-[0.15em] hover:text-foreground transition-colors cursor-pointer"
 			>
 				Clear form
 			</button>

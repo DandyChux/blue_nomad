@@ -72,11 +72,7 @@
 <section class="min-h-screen w-full flex-col px-0">
 	<!-- Header & Filters Bar -->
 	<div class="w-full pt-28 lg:pt-36 pb-8 px-6 md:px-12 lg:px-16">
-		<h1
-			class="uppercase text-4xl lg:text-6xl tracking-tighter font-light mb-8"
-		>
-			Shop
-		</h1>
+		<h1 class="uppercase text-2xl lg:text-[5rem] font-500 mb-8">Shop</h1>
 
 		<div
 			class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6"

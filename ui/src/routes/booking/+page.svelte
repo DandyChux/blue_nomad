@@ -148,10 +148,14 @@
 				Blue Nomad Skin Health Studio
 			</p>
 			<h1
-				class="uppercase text-5xl md:text-7xl lg:text-8xl tracking-tighter font-light text-white leading-[0.9] mb-6"
+				class="uppercase text-2xl lg:text-4xl tracking-tighter font-light text-brand-white leading-[0.9] mb-6"
 				in:fly={{ y: 20, duration: 600, delay: 300 }}
 			>
-				Your skin <br />Our practice
+				<span>Your Skin</span>
+				<br />
+				<span class="pl-4 md:pl-8">Our Practice</span>
+				<!-- <br />
+				<span class="pl-8 md:pl-16">Everything Around</span> -->
 			</h1>
 			<p
 				class="text-white/70 text-lg md:text-xl max-w-xl leading-relaxed font-light"
@@ -168,7 +172,7 @@
 					class="font-source-code-pro text-[10px] uppercase tracking-widest text-white/40 underline"
 					href={`/booking/${featuredTreatmentId}`}
 				>
-					Book a Treatment
+					Book Facial Skin Therapy
 				</a>
 			</div>
 		</div>
@@ -385,9 +389,10 @@
 							<span
 								class="font-source-code-pro text-[11px] font-bold"
 							>
-								{getDuration(service)} min — ${getPrice(
-									service,
-								)}
+								{getDuration(service)} min{getPrice(service) !==
+								"0"
+									? ` — $${getPrice(service)}`
+									: ""}
 							</span>
 						</div>
 					</a>

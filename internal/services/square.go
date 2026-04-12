@@ -46,15 +46,16 @@ type SearchAvailabilityRequest struct {
 
 // CreateBookingRequest for headless booking
 type CreateBookingRequest struct {
-	ServiceVariationID string `json:"service_variation_id"`
-	TeamMemberID       string `json:"team_member_id"`
-	StartAt            string `json:"start_at"`
-	GivenName          string `json:"given_name"`
-	FamilyName         string `json:"family_name"`
-	EmailAddress       string `json:"email_address"`
-	PhoneNumber        string `json:"phone_number"`
-	ServiceName        string `json:"service_name"`
-	PriceCents         int64  `json:"price_cents"`
+	ServiceVariationID      string `json:"service_variation_id"`
+	TeamMemberID            string `json:"team_member_id"`
+	ServiceVariationVersion int64  `json:"service_variation_version"`
+	StartAt                 string `json:"start_at"`
+	GivenName               string `json:"given_name"`
+	FamilyName              string `json:"family_name"`
+	EmailAddress            string `json:"email_address"`
+	PhoneNumber             string `json:"phone_number"`
+	ServiceName             string `json:"service_name"`
+	PriceCents              int64  `json:"price_cents"`
 }
 
 // NewSquareClient initializes a new Square API client
@@ -274,8 +275,9 @@ func (s *SquareClient) CreateBooking(ctx context.Context, req CreateBookingReque
 			"customer_id": custResult.Customer.ID,
 			"appointment_segments": []map[string]interface{}{
 				{
-					"service_variation_id": req.ServiceVariationID,
-					"team_member_id":       req.TeamMemberID,
+					"service_variation_id":      req.ServiceVariationID,
+					"team_member_id":            req.TeamMemberID,
+					"service_variation_version": req.ServiceVariationVersion,
 				},
 			},
 		},

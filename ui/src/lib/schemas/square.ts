@@ -137,6 +137,7 @@ export const AvailabilitySlotSchema = z.object({
 				duration_minutes: z.number().int(),
 				service_variation_id: z.string(),
 				team_member_id: z.string(),
+				service_variation_version: z.number().int(),
 			}),
 		)
 		.optional(),
@@ -155,6 +156,7 @@ export const SearchAvailabilityResponseSchema = z.object({
 export const CreateBookingRequestSchema = z.object({
 	service_variation_id: z.string().min(1, "Service variation is required"),
 	team_member_id: z.string().min(1, "Team member is required"),
+	service_variation_version: z.number().int(),
 	start_at: z.string().min(1, "Please select a time slot"),
 	given_name: z.string().min(1, "First name is required"),
 	family_name: z.string().min(1, "Last name is required"),

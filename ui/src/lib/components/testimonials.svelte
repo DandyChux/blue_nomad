@@ -72,7 +72,7 @@
 				class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center"
 			>
 				<h2
-					class="font-medium uppercase text-xl md:text-2xl lg:text-4xl mb-2"
+					class="uppercase text-xl md:text-2xl lg:text-4xl mb-2 font-medium"
 				>
 					Earned Love
 				</h2>
@@ -143,7 +143,7 @@
 		<!-- Mobile Layout -->
 		<div class="flex flex-col items-center gap-4 mt-16 md:hidden relative">
 			<div class="flex flex-col items-center mb-4">
-				<h2 class="font-medium uppercase text-xl lg:text-2xl">
+				<h2 class="uppercase text-xl lg:text-2xl font-medium">
 					Earned Love
 				</h2>
 				<p class="text-lg lg:text-xl">Blue Nomad makes me...</p>
@@ -177,7 +177,7 @@
 							>
 								{testimonial.name}, {testimonial.profession}
 								<p
-									class="text-center font-source-code-pro text-xs opacity-80"
+									class="font-normal lowercase text-center font-source-code-pro text-xs opacity-80"
 								>
 									"{testimonial.description}"
 								</p>

@@ -21,7 +21,7 @@
 		</h1>
 
 		<p
-			class="font-source-code-pro text-xs uppercase tracking-[0.15em] text-muted-foreground leading-loose mb-12"
+			class="font-spectral text-xs uppercase tracking-[0.15em] leading-loose mb-12"
 		>
 			Your skin assessment and recommendations will follow via email
 			shortly. Please allow up to 6 hours for delivery. We may follow up
@@ -44,7 +44,7 @@
 				variant="link"
 				href="/shop"
 				class={buttonVariants({
-					class: "uppercase rounded-full h-auto py-3 px-10 font-source-code-pro text-[10px] tracking-[0.15em]",
+					class: "uppercase rounded-full h-auto py-3 px-10 font-spectral text-[10px] tracking-[0.15em]",
 				})}
 			>
 				Shop <br /> skin care

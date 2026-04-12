@@ -48,7 +48,11 @@
 	let isDesktopMenuOpen = $state(false);
 
 	let pathname = $derived(page.url.pathname);
-	let isLightPage = $derived(pathname === "/" || pathname === "/nomadsland");
+	let isLightPage = $derived(
+		pathname === "/" ||
+			pathname === "/nomadsland" ||
+			pathname === "/booking",
+	);
 </script>
 
 <header

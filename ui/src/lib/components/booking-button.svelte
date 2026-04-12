@@ -28,7 +28,7 @@
 				id="booking-button"
 				class={buttonVariants({
 					variant: "default",
-					class: "rounded-full no-underline bg-black text-[10px] md:text-sm text-white border-2 border-black uppercase font-source-code-pro font-bold hover:bg-transparent hover:text-black h-auto",
+					class: "rounded-full no-underline bg-black text-sm text-white border-2 border-black uppercase font-source-code-pro font-bold hover:bg-transparent hover:text-black h-auto",
 					size: "xl",
 				})}
 				variant="link"

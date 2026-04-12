@@ -35,7 +35,7 @@
 	<!-- Back Link -->
 	<a
 		href="/shop"
-		class="inline-block font-source-code-pro text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors mb-10"
+		class="inline-block font-source-code-pro text-[10px] uppercase tracking-widest hover:text-foreground transition-colors mb-10"
 	>
 		&larr; Back to Shop
 	</a>
@@ -102,7 +102,7 @@
 			<!-- Category Badge -->
 			{#if categoryName}
 				<span
-					class="font-source-code-pro text-[12px] uppercase tracking-widest text-muted-foreground"
+					class="font-source-code-pro text-[12px] uppercase tracking-widest"
 				>
 					{categoryName}
 				</span>
@@ -110,7 +110,7 @@
 
 			<!-- Name -->
 			<h1
-				class="uppercase text-4xl lg:text-5xl tracking-tighter font-light leading-[0.95]"
+				class="uppercase text-xl lg:text-3xl font-medium leading-[0.95]"
 			>
 				{itemData.name}
 			</h1>
@@ -122,7 +122,7 @@
 			{#if variations.length > 1}
 				<div class="space-y-3">
 					<span
-						class="font-source-code-pro text-[10px] uppercase tracking-widest text-muted-foreground block"
+						class="font-source-code-pro text-[10px] uppercase tracking-widest block"
 					>
 						Options
 					</span>
@@ -152,7 +152,7 @@
 			{#if itemData.description}
 				<div class="border-t border-border pt-8">
 					<p
-						class="text-base leading-relaxed text-muted-foreground font-source-code-pro"
+						class="text-base leading-relaxed font-spectral text-xl lg:text-2xl"
 					>
 						{itemData.description}
 					</p>
@@ -161,7 +161,7 @@
 
 			<!-- Add to Bag -->
 			<Button
-				class="w-full uppercase rounded-none h-16 bg-card/90 text-primary-foreground hover:bg-card/80 text-sm font-source-code-pro tracking-widest mt-4"
+				class="w-full uppercase rounded-none h-16 hover:bg-transparent hover:text-foreground border border-black text-primary-foreground text-sm font-source-code-pro tracking-widest mt-4"
 				onclick={() => cart.add(product, selectedVariation)}
 			>
 				Add to Bag — ${price}
@@ -169,7 +169,7 @@
 
 			<!-- Extra Details -->
 			<div
-				class="border-t border-border pt-8 space-y-4 font-source-code-pro text-[11px] uppercase tracking-widest text-muted-foreground"
+				class="border-t border-border pt-8 space-y-4 font-source-code-pro text-[11px] uppercase tracking-widest"
 			>
 				{#if selectedVariation?.item_variation_data?.sku}
 					<p>SKU: {selectedVariation.item_variation_data.sku}</p>

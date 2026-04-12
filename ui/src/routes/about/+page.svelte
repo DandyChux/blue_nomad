@@ -34,7 +34,7 @@
 			</p>
 
 			<h1
-				class="col-start-2 row-start-1 uppercase md:text-end self-start justify-self-center text-2xl lg:text-[5rem] lg:leading-[6.5rem] order-1 md:order-none md:col-start-3"
+				class="font-medium col-start-2 row-start-1 uppercase md:text-end self-start justify-self-center text-2xl lg:text-[5rem] lg:leading-[6.5rem] order-1 md:order-none md:col-start-3"
 			>
 				Our <br />
 				Story

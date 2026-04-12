@@ -109,6 +109,9 @@
 			}>("/booking/create", {
 				service_variation_id: variation?.id,
 				team_member_id: teamMemberId,
+				service_variation_version:
+					booking.selectedSlot?.appointment_segments?.[0]
+						?.service_variation_version,
 				start_at: booking.time,
 				given_name: booking.customer.first,
 				family_name: booking.customer.last,
@@ -220,9 +223,7 @@
 		<div class="flex flex-col gap-8 lg:py-8">
 			<!-- Service Info (Always Visible) -->
 			<div class="space-y-6 border-b border-border pb-8">
-				<h1
-					class="uppercase text-4xl lg:text-5xl tracking-tighter font-light leading-[0.95]"
-				>
+				<h1 class="uppercase font-light leading-[0.95]">
 					{itemData.name}
 				</h1>
 
@@ -234,7 +235,9 @@
 				</div>
 
 				{#if itemData.description}
-					<p class="text-base leading-relaxed text-foreground/80">
+					<p
+						class="text-base leading-relaxed text-black font-spectral"
+					>
 						{itemData.description}
 					</p>
 				{/if}
@@ -454,6 +457,24 @@
 							<span class="text-foreground/80">Price</span>
 							<span>${price}</span>
 						</div>
+					</div>
+
+					<!-- Cancellation Policy -->
+					<div
+						class="space-y-3 border border-border/50 p-6 bg-black/5 dark:bg-white/5"
+					>
+						<h3
+							class="font-source-code-pro text-[10px] uppercase tracking-widest text-foreground/80"
+						>
+							Cancellation Policy
+						</h3>
+						<p class="text-sm leading-relaxed text-foreground/70">
+							Cancellations or reschedules must be made at least
+							<strong class="text-foreground">24 hours</strong> before
+							your appointment. Late cancellations or no-shows may be
+							subject to a fee equal to the full service price. By continuing,
+							you agree to these terms.
+						</p>
 					</div>
 
 					{#if booking.error}
