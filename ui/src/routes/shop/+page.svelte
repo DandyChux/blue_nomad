@@ -45,16 +45,48 @@
 		300,
 	);
 
+	function ordinalForView(
+		product: (typeof data.products)[number],
+		categoryId: string,
+	): number {
+		const cats = product.item_data?.categories ?? [];
+
+		// When a specific category is selected, use that category's ordinal —
+		// Square stores per-category ordering separately.
+		if (categoryId) {
+			const match = cats.find((c) => c.id === categoryId);
+			if (match) return match.ordinal;
+		}
+
+		// "All" view: prefer the reporting category's ordinal (which is what
+		// the Square dashboard uses for the global list).
+		const rep = product.item_data?.reporting_category;
+		if (rep && typeof rep.ordinal === "number") return rep.ordinal;
+
+		// Fall back to the lowest ordinal across any category, then Infinity
+		// so unsorted items sink to the bottom rather than randomly bubbling.
+		if (cats.length > 0) {
+			return Math.min(...cats.map((c) => c.ordinal));
+		}
+		return Number.POSITIVE_INFINITY;
+	}
+
 	let filteredProducts = $derived(
-		data.products.filter((product) => {
-			const name = product.item_data?.name?.toLowerCase() || "";
-			const categoryId = product.item_data?.categories?.[0]?.id || "";
-			const matchesSearch = name.includes(searchQuery.toLowerCase());
-			const matchesCategory = activeCategory
-				? categoryId === activeCategory
-				: true;
-			return matchesSearch && matchesCategory;
-		}),
+		data.products
+			.filter((product) => {
+				const name = product.item_data?.name?.toLowerCase() || "";
+				const categoryId = product.item_data?.categories?.[0]?.id || "";
+				const matchesSearch = name.includes(searchQuery.toLowerCase());
+				const matchesCategory = activeCategory
+					? categoryId === activeCategory
+					: true;
+				return matchesSearch && matchesCategory;
+			})
+			.toSorted(
+				(a, b) =>
+					ordinalForView(a, activeCategory) -
+					ordinalForView(b, activeCategory),
+			),
 	);
 
 	let paginatedProducts = $derived(
@@ -72,7 +104,7 @@
 <section class="min-h-screen w-full flex-col px-0">
 	<!-- Header & Filters Bar -->
 	<div class="w-full pt-28 lg:pt-36 pb-8 px-6 md:px-12 lg:px-16">
-		<h1 class="uppercase text-2xl lg:text-[5rem] font-500 mb-8">Shop</h1>
+		<h1 class="uppercase text-2xl lg:text-[5rem] font-500! mb-8">Shop</h1>
 
 		<div
 			class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
@@ -145,14 +177,18 @@
 			>
 				{#each paginatedProducts as product (product.id)}
 					{@const itemData = product.item_data}
-					{@const firstVariation =
-						itemData.variations?.[0]?.item_variation_data}
+					{@const variations = itemData.variations ?? []}
 					{@const price = (
-						(firstVariation?.price_money?.amount || 0) / 100
+						(variations[0]?.item_variation_data?.price_money
+							?.amount || 0) / 100
 					).toFixed(2)}
-					{@const isSoldOut = (
-						firstVariation?.location_overrides || []
-					).some((o) => o.sold_out === true)}
+					{@const isSoldOut =
+						variations.length > 0 &&
+						variations.every((v) =>
+							(
+								v.item_variation_data?.location_overrides ?? []
+							).some((o) => o.sold_out === true),
+						)}
 
 					<a
 						href="/shop/{product.id}"
@@ -167,7 +203,9 @@
 							<Picture
 								src={product.image_url || ""}
 								alt={itemData.name}
-								class="w-full h-full object-cover transition-transform duration-700"
+								class="w-full h-full object-cover transition-transform duration-700 {isSoldOut
+									? 'opacity-60 grayscale'
+									: ''}"
 								loading="lazy"
 								sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
 								sources={product.image_url
@@ -216,13 +254,19 @@
 							class="flex items-center justify-between gap-4 px-4 py-4 bg-transparent"
 						>
 							<h2
-								class="uppercase text-sm tracking-tight leading-tight line-clamp-1"
+								class="uppercase text-sm tracking-tight leading-tight line-clamp-1 {isSoldOut
+									? 'text-foreground/50'
+									: ''}"
 							>
 								{itemData.name}
 							</h2>
-							<span class="font-source-code-pro text-sm shrink-0"
-								>${price}</span
+							<span
+								class="font-source-code-pro text-sm shrink-0 {isSoldOut
+									? 'line-through text-foreground/50'
+									: ''}"
 							>
+								${price}
+							</span>
 						</div>
 					</a>
 				{/each}

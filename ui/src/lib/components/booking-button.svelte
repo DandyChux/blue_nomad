@@ -1,8 +1,17 @@
 <script lang="ts">
 	import { trackEvent } from "$lib/analytics.svelte";
 	import Button, { buttonVariants } from "./ui/button/button.svelte";
+	import { page } from "$app/state";
 
 	let hidden = $state(false);
+
+	const pathname = page.url.pathname;
+
+	const blackList = ["/diagnosis"];
+
+	if (blackList.includes(pathname)) {
+		hidden = true;
+	}
 
 	function handleClose() {
 		hidden = true;

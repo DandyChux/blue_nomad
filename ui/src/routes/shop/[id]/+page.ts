@@ -19,7 +19,11 @@ export const load: PageLoad = async ({ params }) => {
 		// Find the specific product by ID
 		const product = allObjects.find(
 			(obj): obj is CatalogItem =>
-				obj.type === "ITEM" && obj.id === params.id,
+				obj.type === "ITEM" &&
+				obj.id === params.id &&
+				obj.is_deleted !== true &&
+				obj.item_data?.ecom_visibility === "VISIBLE" &&
+				obj.item_data?.product_type !== "APPOINTMENTS_SERVICE",
 		);
 
 		if (!product) {

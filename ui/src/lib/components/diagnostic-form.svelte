@@ -636,7 +636,7 @@
 
 		<!-- Navigation -->
 		<div
-			class="flex items-center justify-between border-t border-foreground/20 pt-8 mt-12"
+			class="flex flex-col space-y-2 md:space-y-0 md:flex-row items-center justify-between border-t border-foreground/20 pt-8 mt-12"
 		>
 			<div class="flex gap-3">
 				{#if currentStep > 0}

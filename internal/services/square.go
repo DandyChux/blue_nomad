@@ -85,7 +85,39 @@ func NewSquareClient(accessToken, version string) *SquareClient {
 }
 
 func (s *SquareClient) GetCatalogItems(ctx context.Context) (json.RawMessage, error) {
-	return s.fetchCatalogTypes(ctx, "ITEM,CATEGORY,IMAGE")
+	raw, err := s.fetchCatalogTypes(ctx, "ITEM,CATEGORY,IMAGE")
+	if err != nil {
+		return nil, err
+	}
+
+	var page struct {
+		Objects []json.RawMessage `json:"objects"`
+	}
+	if err := json.Unmarshal(raw, &page); err != nil {
+		return nil, err
+	}
+
+	filtered := make([]json.RawMessage, 0, len(page.Objects))
+	for _, obj := range page.Objects {
+		// Peek just enough to decide whether it's an appointment service.
+		var probe struct {
+			Type     string `json:"type"`
+			ItemData struct {
+				ProductType string `json:"product_type"`
+			} `json:"item_data"`
+		}
+		if err := json.Unmarshal(obj, &probe); err != nil {
+			// If we can't even parse the type, keep it — let the UI deal.
+			filtered = append(filtered, obj)
+			continue
+		}
+		if probe.Type == "ITEM" && probe.ItemData.ProductType == "APPOINTMENTS_SERVICE" {
+			continue
+		}
+		filtered = append(filtered, obj)
+	}
+
+	return json.Marshal(map[string]any{"objects": filtered})
 }
 
 // GetBookingServices fetches all appointment services from the catalog

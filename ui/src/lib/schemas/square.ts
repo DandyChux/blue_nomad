@@ -55,6 +55,12 @@ export const CatalogItemDataSchema = z.object({
 			ordinal: z.number(),
 		}),
 	),
+	reporting_category: z
+		.object({
+			id: z.string(),
+			ordinal: z.number(),
+		})
+		.optional(),
 	ecom_available: z.boolean(),
 	ecom_visibility: z.enum(["VISIBLE", "UNINDEXED", "UNAVAILABLE", "HIDDEN"]),
 	product_type: z.string(),

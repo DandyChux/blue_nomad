@@ -15,29 +15,37 @@ export const load: PageLoad = async ({ params }) => {
 				.map((img: any) => [img.id, img.image_data?.url]),
 		);
 
+		// Build a category -> minimum ordinal map from items so the filter bar
+		// reflects the dashboard's ordering.
+		const categoryOrdinal = new Map<string, number>();
+		for (const obj of allObjects) {
+			if (obj.type !== "ITEM") continue;
+			for (const c of obj.item_data?.categories ?? []) {
+				const prev = categoryOrdinal.get(c.id);
+				if (prev === undefined || c.ordinal < prev) {
+					categoryOrdinal.set(c.id, c.ordinal);
+				}
+			}
+		}
+
 		const categories = allObjects
 			.filter((obj) => obj.type === "CATEGORY")
 			.filter((cat) => cat.category_data.name !== "Treatments")
 			.map((cat) => ({
 				id: cat.id,
 				name: cat.category_data?.name || "Unknown Category",
-			}));
+				ordinal:
+					categoryOrdinal.get(cat.id) ?? Number.POSITIVE_INFINITY,
+			}))
+			.sort((a, b) => a.ordinal - b.ordinal);
 
 		const products = allObjects
 			.filter((obj): obj is CatalogItem => {
 				if (obj.type !== "ITEM") return false;
 				if (obj.is_deleted) return false;
 				if (obj.item_data.ecom_visibility !== "VISIBLE") return false;
-
-				const variations = obj.item_data.variations ?? [];
-				if (variations.length === 0) return false;
-
-				const everyVariationSoldOut = variations.every((v) =>
-					(v.item_variation_data?.location_overrides ?? []).some(
-						(o) => o.sold_out === true,
-					),
-				);
-				if (everyVariationSoldOut) return false;
+				if (obj.item_data.product_type === "APPOINTMENTS_SERVICE")
+					return false;
 
 				return true;
 			})
