@@ -45,28 +45,29 @@ func (h *DiagnosticHandler) Submit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Basic validation
-	if req.Email == "" || req.FirstName == "" {
-		http.Error(w, "Email and first name are required", http.StatusBadRequest)
-		return
-	}
-
-	// ── 1. Send email ───────────────────────────────
-	if err := h.sendNotificationEmail(&req); err != nil {
-		slog.Error("failed to send diagnostic email", "error", err, "email", req.Email)
-		http.Error(w, "Failed to send notification", http.StatusInternalServerError)
-		return
-	}
-
-	// ── 2. Add contact to HubSpot ──────────────────────────────────────────
+	// Persist to HubSpot synchronously — that's the durable record.
 	properties := map[string]any{
 		"firstname": req.FirstName,
 	}
-
 	if _, err := h.newsletter.AddContact(r.Context(), req.Email, properties); err != nil {
-		// Log but don't fail the request — the email was already sent
-		slog.Warn("failed to add diagnostic contact to HubSpot", "error", err, "email", req.Email)
+		// Soft-fail: HubSpot is the source of truth, but a transient failure
+		// shouldn't block the user. Log loudly and move on.
+		slog.Warn("failed to add diagnostic contact to HubSpot",
+			"error", err, "email", req.Email)
 	}
+
+	// Fire the admin notification email asynchronously so SMTP latency
+	// (or outright failure) doesn't block the user's response.
+	go func(req DiagnosticRequest) {
+		if err := h.sendNotificationEmail(&req); err != nil {
+			slog.Error("failed to send diagnostic email",
+				"error", err,
+				"email", req.Email,
+			)
+			http.Error(w, "Failed to send notification", http.StatusInternalServerError)
+			return
+		}
+	}(req)
 
 	slog.Info("diagnostic submitted", "email", req.Email, "name", req.FirstName)
 

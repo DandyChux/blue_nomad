@@ -9,6 +9,7 @@ type CartItem = {
 	variationName: string;
 	price: number;
 	quantity: number;
+	maxQuantity: number | null;
 	imageUrl: string;
 };
 
@@ -16,15 +17,48 @@ export class CartState {
 	items = $state<CartItem[]>([]);
 	isOpen = $state(false);
 
-	// Total price derived from state
-	total = $derived(this.items.reduce((sum, item) => sum + item.price, 0));
+	// Total price across all lines (price * quantity)
+	total = $derived(
+		this.items.reduce((sum, item) => sum + item.price * item.quantity, 0),
+	);
 
-	add(product: CatalogItem, variation: CatalogVariation) {
-		// Square uses cents (e.g., 1500 = $15.00)
+	/**
+	 * Adds (or increments) a variation in the cart.
+	 *
+	 * - If the variation is already in the cart, bumps the quantity by one.
+	 * - Caps the quantity at `maxQuantity` when stock info is available.
+	 *
+	 * @param maxQuantity - Optional available stock count for the variation.
+	 *                      Pass `null` when the variation is not inventory-tracked.
+	 * @returns true if the item was added/incremented, false if it was already
+	 *          at (or above) its stock cap.
+	 */
+	add(
+		product: CatalogItem,
+		variation: CatalogVariation,
+		maxQuantity: number | null = null,
+	): boolean {
 		const priceCents =
 			variation.item_variation_data?.price_money?.amount || 0;
 
-		// Bulletproof ID generator for local network testing
+		// Merge duplicates: find an existing line for this variation
+		const existing = this.items.find((i) => i.id === variation.id);
+
+		if (existing) {
+			if (maxQuantity !== null) existing.maxQuantity = maxQuantity;
+			if (
+				existing.maxQuantity !== null &&
+				existing.quantity >= existing.maxQuantity
+			) {
+				return false;
+			}
+			existing.quantity += 1;
+			this.isOpen = true;
+			return true;
+		}
+
+		if (maxQuantity !== null && maxQuantity <= 0) return false;
+
 		const safeId =
 			typeof crypto !== "undefined" && crypto.randomUUID
 				? crypto.randomUUID()
@@ -38,11 +72,40 @@ export class CartState {
 			variationName: variation.item_variation_data.name,
 			price: priceCents / 100,
 			quantity: 1,
+			maxQuantity,
 			imageUrl: product.image_url || "",
 		});
 
-		// Automatically open the cart when an item is added
 		this.isOpen = true;
+		return true;
+	}
+
+	setQuantity(cartItemId: string, quantity: number) {
+		const item = this.items.find((i) => i.cartItemId === cartItemId);
+		if (!item) return;
+		let next = Math.max(1, Math.floor(quantity));
+		if (item.maxQuantity !== null) next = Math.min(next, item.maxQuantity);
+		item.quantity = next;
+	}
+
+	increment(cartItemId: string): boolean {
+		const item = this.items.find((i) => i.cartItemId === cartItemId);
+		if (!item) return false;
+		if (item.maxQuantity !== null && item.quantity >= item.maxQuantity) {
+			return false;
+		}
+		item.quantity += 1;
+		return true;
+	}
+
+	decrement(cartItemId: string) {
+		const item = this.items.find((i) => i.cartItemId === cartItemId);
+		if (!item) return;
+		if (item.quantity <= 1) {
+			this.remove(cartItemId);
+			return;
+		}
+		item.quantity -= 1;
 	}
 
 	remove(cartItemId: string) {

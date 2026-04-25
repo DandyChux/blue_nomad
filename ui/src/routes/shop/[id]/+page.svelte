@@ -15,13 +15,32 @@
 	const imageUrls = $derived(data.imageUrls);
 	const categoryName = $derived(data.categoryName);
 
-	// Track which variation the user has selected
+	// Per-variation sold-out map
+	const variationSoldOut = $derived(
+		variations.map((v) =>
+			(v.item_variation_data?.location_overrides || []).some(
+				(o) => o.sold_out === true,
+			),
+		),
+	);
+
+	// Default to the first in-stock variation; fall back to index 0
 	let selectedVariationIndex = $state(0);
+	$effect(() => {
+		const firstAvailable = variationSoldOut.findIndex((s) => !s);
+		if (firstAvailable !== -1 && variationSoldOut[selectedVariationIndex]) {
+			selectedVariationIndex = firstAvailable;
+		}
+	});
+
 	const selectedVariation = $derived(variations[selectedVariationIndex]);
 	const priceCents = $derived(
 		selectedVariation?.item_variation_data?.price_money?.amount || 0,
 	);
 	const price = $derived((priceCents / 100).toFixed(2));
+	const isSoldOut = $derived(
+		variationSoldOut[selectedVariationIndex] ?? false,
+	);
 
 	// Track which image is currently displayed
 	let activeImageIndex = $state(0);
@@ -128,11 +147,18 @@
 					</span>
 					<div class="flex flex-wrap gap-2">
 						{#each variations as variation, i}
+							{@const variationIsSoldOut = variationSoldOut[i]}
 							<button
-								class="px-5 py-3 border font-source-code-pro text-[11px] uppercase tracking-wider transition-colors {selectedVariationIndex ===
-								i
+								type="button"
+								disabled={variationIsSoldOut}
+								aria-pressed={selectedVariationIndex === i}
+								class="px-5 py-3 border font-source-code-pro text-[11px] uppercase tracking-wider transition-colors
+									{selectedVariationIndex === i
 									? 'bg-foreground text-background border-foreground'
-									: 'border-border hover:border-foreground'}"
+									: 'border-border hover:border-foreground'}
+									{variationIsSoldOut
+									? 'opacity-50 cursor-not-allowed line-through hover:border-border'
+									: ''}"
 								onclick={() => (selectedVariationIndex = i)}
 							>
 								{variation.item_variation_data.name}
@@ -141,6 +167,9 @@
 										variation.item_variation_data
 											.price_money.amount / 100
 									).toFixed(2)}
+								{/if}
+								{#if variationIsSoldOut}
+									<span class="ml-2">· Sold out</span>
 								{/if}
 							</button>
 						{/each}
@@ -159,12 +188,13 @@
 				</div>
 			{/if}
 
-			<!-- Add to Bag -->
 			<Button
-				class="w-full uppercase rounded-none h-16 hover:bg-transparent hover:text-foreground border border-black text-primary-foreground text-sm font-source-code-pro tracking-widest mt-4"
-				onclick={() => cart.add(product, selectedVariation)}
+				class="w-full uppercase rounded-none h-16 hover:bg-transparent hover:text-foreground border border-black text-primary-foreground text-sm font-source-code-pro tracking-widest mt-4 disabled:opacity-50"
+				disabled={isSoldOut || !selectedVariation}
+				onclick={() =>
+					selectedVariation && cart.add(product, selectedVariation)}
 			>
-				Add to Bag — ${price}
+				{isSoldOut ? "Sold Out" : `Add to Bag — $${price}`}
 			</Button>
 
 			<!-- Extra Details -->

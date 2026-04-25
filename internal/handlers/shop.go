@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"errors"
 	"log/slog"
 	"net/http"
 
@@ -48,6 +49,25 @@ func (h *ShopHandler) CreateCheckoutLink(w http.ResponseWriter, r *http.Request)
 	// Call the Square service to generate the link
 	checkoutURL, err := h.square.CreatePaymentLink(r.Context(), req)
 	if err != nil {
+		var stockErr *services.InsufficientStockError
+		if errors.As(err, &stockErr) {
+			slog.Info("checkout blocked by inventory",
+				"variation_id", stockErr.VariationID,
+				"requested", stockErr.Requested,
+				"available", stockErr.Available,
+			)
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusConflict)
+			json.NewEncoder(w).Encode(map[string]any{
+				"error":        "insufficient_stock",
+				"message":      "One or more items in your bag are no longer available in the quantity requested.",
+				"variation_id": stockErr.VariationID,
+				"requested":    stockErr.Requested,
+				"available":    stockErr.Available,
+			})
+			return
+		}
+
 		slog.Error("failed to create square payment link", "error", err)
 		http.Error(w, "Checkout initialization failed", http.StatusBadGateway)
 		return

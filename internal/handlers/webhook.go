@@ -158,52 +158,13 @@ func (h *WebhookHandler) HandleSquareWebhook(w http.ResponseWriter, r *http.Requ
 
 	switch payload.Type {
 	case "payment.created", "payment.updated":
-		payment := payload.Data.Object.Payment
+		h.handlePaymentEvent(payload)
 
-		if payment.Status == "COMPLETED" {
-			slog.Info("✅ Payment COMPLETED!",
-				"payment_id", payment.ID,
-				"order_id", payment.OrderID,
-				"amount", payment.AmountMoney.Amount,
-			)
+	case "booking.created":
+		h.handleBookingCreated(payload)
 
-			// --- FULFILLMENT EMAIL LOGIC ---
-			adminEmail := os.Getenv("ADMIN_EMAIL")
-			if adminEmail == "" {
-				adminEmail = os.Getenv("EMAIL_USERNAME")
-			}
-
-			// Square amounts are in cents (e.g., 1500 = $15.00)
-			formattedAmount := fmt.Sprintf("%.2f", float64(payment.AmountMoney.Amount)/100.0)
-
-			msg := &services.EmailMessage{
-				To:      []string{adminEmail},
-				Subject: fmt.Sprintf("New Blue Nomad Order Paid: %s", payment.OrderID),
-				BodyText: fmt.Sprintf(
-					"New Order Received!\n\nOrder ID: %s\nPayment ID: %s\nAmount: $%s %s\n\nPlease check your Square Dashboard for shipping details.",
-					payment.OrderID, payment.ID, formattedAmount, payment.AmountMoney.Currency,
-				),
-				BodyHTML: fmt.Sprintf(`
-					<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-						<h2 style="color: #000; text-transform: uppercase;">New Order Received</h2>
-						<p>A payment has been successfully completed via Square Checkout.</p>
-						<div style="background-color: #f9fafb; padding: 20px; border-radius: 4px; margin: 20px 0;">
-							<p><strong>Order ID:</strong> %s</p>
-							<p><strong>Payment ID:</strong> %s</p>
-							<p><strong>Total Amount:</strong> $%s %s</p>
-						</div>
-						<p>Log in to your <a href="https://squareup.com/dashboard/orders">Square Dashboard</a> to view the customer's shipping address and fulfill the order.</p>
-					</div>
-				`, payment.OrderID, payment.ID, formattedAmount, payment.AmountMoney.Currency),
-			}
-
-			// Send the email and log any errors
-			if err := services.SendEmail(msg); err != nil {
-				slog.Error("Failed to send fulfillment notification email", "error", err, "order_id", payment.OrderID)
-			} else {
-				slog.Info("Fulfillment notification sent to admin", "order_id", payment.OrderID)
-			}
-		}
+	case "booking.updated":
+		h.handleBookingUpdated(payload)
 
 	default:
 		slog.Debug("Unhandled Square event type ignored", "type", payload.Type)
@@ -323,6 +284,105 @@ func (h *WebhookHandler) handleBookingCreated(payload SquareWebhookPayload) {
 		slog.Error("Failed to send booking notification email", "error", err, "booking_id", booking.ID)
 	} else {
 		slog.Info("Booking notification sent to admin", "booking_id", booking.ID)
+	}
+}
+
+// handleBookingUpdated notifies the admin when a booking changes state
+// (confirmation, cancellation, reschedule, decline, etc.). Square fires
+// booking.updated for any of these transitions, so we translate the status
+// into a human-readable subject line and include the full context in the body.
+func (h *WebhookHandler) handleBookingUpdated(payload SquareWebhookPayload) {
+	booking := payload.Data.Object.Booking
+
+	startAt, err := time.Parse(time.RFC3339, booking.StartAt)
+	var formattedDate, formattedTime string
+	if err == nil {
+		if loc, lerr := time.LoadLocation("America/New_York"); lerr == nil {
+			startAt = startAt.In(loc)
+		}
+		formattedDate = startAt.Format("Monday, January 2, 2006")
+		formattedTime = startAt.Format("3:04 PM")
+	} else {
+		formattedDate = booking.StartAt
+	}
+
+	var durationMin int
+	var serviceVariationID string
+	if len(booking.AppointmentSegments) > 0 {
+		durationMin = booking.AppointmentSegments[0].DurationMinutes
+		serviceVariationID = booking.AppointmentSegments[0].ServiceVariationID
+	}
+
+	// Map Square's status to a friendly subject prefix
+	statusLabel := bookingStatusLabel(booking.Status)
+
+	slog.Info("📅 Booking UPDATED",
+		"booking_id", booking.ID,
+		"status", booking.Status,
+		"version", booking.Version,
+		"start_at", booking.StartAt,
+		"customer_id", booking.CustomerID,
+	)
+
+	adminEmail := os.Getenv("ADMIN_EMAIL")
+	if adminEmail == "" {
+		adminEmail = os.Getenv("EMAIL_USERNAME")
+	}
+
+	subject := fmt.Sprintf("Booking %s: %s at %s", statusLabel, formattedDate, formattedTime)
+
+	msg := &services.EmailMessage{
+		To:      []string{adminEmail},
+		Subject: subject,
+		BodyText: fmt.Sprintf(
+			"Booking %s\n\nBooking ID: %s\nStatus: %s\nDate: %s\nTime: %s\nDuration: %d minutes\nCustomer ID: %s\nService Variation: %s\nVersion: %d\n\nReview in your Square Dashboard for full details.",
+			statusLabel, booking.ID, booking.Status, formattedDate, formattedTime,
+			durationMin, booking.CustomerID, serviceVariationID, booking.Version,
+		),
+		BodyHTML: fmt.Sprintf(`
+			<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+				<h2 style="color: #000; text-transform: uppercase;">Booking %s</h2>
+				<p>An existing appointment was updated on Square.</p>
+				<div style="background-color: #f9fafb; padding: 20px; border-radius: 4px; margin: 20px 0;">
+					<p><strong>Date:</strong> %s</p>
+					<p><strong>Time:</strong> %s</p>
+					<p><strong>Duration:</strong> %d minutes</p>
+					<p><strong>New Status:</strong> %s</p>
+					<p><strong>Booking ID:</strong> %s</p>
+					<p><strong>Version:</strong> %d</p>
+				</div>
+				<p><a href="https://squareup.com/dashboard/appointments">Open in Square Dashboard</a></p>
+			</div>
+		`, statusLabel, formattedDate, formattedTime, durationMin, booking.Status, booking.ID, booking.Version),
+	}
+
+	if err := services.SendEmail(msg); err != nil {
+		slog.Error("Failed to send booking update email", "error", err, "booking_id", booking.ID)
+	} else {
+		slog.Info("Booking update notification sent to admin", "booking_id", booking.ID)
+	}
+}
+
+// bookingStatusLabel maps Square booking statuses to human-friendly text.
+func bookingStatusLabel(status string) string {
+	switch status {
+	case "ACCEPTED":
+		return "Confirmed"
+	case "PENDING":
+		return "Pending"
+	case "DECLINED":
+		return "Declined"
+	case "CANCELLED_BY_CUSTOMER":
+		return "Cancelled (by customer)"
+	case "CANCELLED_BY_SELLER":
+		return "Cancelled (by seller)"
+	case "NO_SHOW":
+		return "No-show"
+	default:
+		if status == "" {
+			return "Updated"
+		}
+		return status
 	}
 }
 

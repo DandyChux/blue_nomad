@@ -3,41 +3,93 @@ import { goto } from "$app/navigation";
 export const BASE_URL = "/api";
 
 /**
- * Custom API error class with additional context
+ * The shape the backend uses for JSON error bodies. Any subset of fields is OK.
+ */
+export interface ApiErrorBody {
+	error?: string;
+	message?: string;
+	details?: unknown;
+	[key: string]: unknown;
+}
+
+/**
+ * Custom API error class that preserves the server response so callers can
+ * render richer messages (e.g. insufficient-stock details on 409).
  */
 export class ApiError extends Error {
 	public readonly status: number;
 	public readonly statusText: string;
-	public readonly data: unknown;
+	/** Parsed JSON body if the server returned JSON, otherwise the raw text. */
+	public readonly data: ApiErrorBody | string | null;
+	/** Short machine code. Prefers `error` field from JSON body. */
+	public readonly code: string | null;
+	/** Request URL for debugging. */
+	public readonly url: string;
 
-	constructor(
-		message: string,
-		status: number,
-		statusText: string,
-		data?: unknown,
-	) {
-		super(message);
+	constructor(opts: {
+		message: string;
+		status: number;
+		statusText: string;
+		data: ApiErrorBody | string | null;
+		url: string;
+	}) {
+		super(opts.message);
 		this.name = "ApiError";
-		this.status = status;
-		this.statusText = statusText;
-		this.data = data;
+		this.status = opts.status;
+		this.statusText = opts.statusText;
+		this.data = opts.data;
+		this.url = opts.url;
+		this.code =
+			(isJsonBody(opts.data) && typeof opts.data.error === "string"
+				? opts.data.error
+				: null) ?? null;
 	}
 
+	/** Human-readable message for toasts / alerts. */
+	get userMessage(): string {
+		if (isJsonBody(this.data)) {
+			if (typeof this.data.message === "string" && this.data.message) {
+				return this.data.message;
+			}
+			if (typeof this.data.error === "string" && this.data.error) {
+				return this.data.error;
+			}
+		} else if (typeof this.data === "string" && this.data.trim()) {
+			return this.data;
+		}
+		return this.message || this.statusText || "Request failed";
+	}
+
+	/** Typed accessor for callers that know the expected JSON shape. */
+	body<T extends ApiErrorBody = ApiErrorBody>(): T | null {
+		return isJsonBody(this.data) ? (this.data as T) : null;
+	}
+
+	get isBadRequest(): boolean {
+		return this.status === 400;
+	}
 	get isUnauthorized(): boolean {
 		return this.status === 401;
 	}
-
 	get isForbidden(): boolean {
 		return this.status === 403;
 	}
-
 	get isNotFound(): boolean {
 		return this.status === 404;
 	}
-
+	get isConflict(): boolean {
+		return this.status === 409;
+	}
+	get isRateLimited(): boolean {
+		return this.status === 429;
+	}
 	get isServerError(): boolean {
 		return this.status >= 500;
 	}
+}
+
+function isJsonBody(v: unknown): v is ApiErrorBody {
+	return !!v && typeof v === "object" && !Array.isArray(v);
 }
 
 /**
@@ -76,56 +128,96 @@ function buildUrl(
 }
 
 /**
- * Core request function
+ * Parse an error response preserving JSON when possible, falling back to text.
+ * Uses the raw text buffer so we never throw while building the error.
  */
+async function parseErrorBody(
+	response: Response,
+): Promise<ApiErrorBody | string | null> {
+	let raw = "";
+	try {
+		raw = await response.text();
+	} catch {
+		return null;
+	}
+	if (!raw) return null;
+
+	const contentType = response.headers.get("content-type") || "";
+	if (contentType.includes("application/json")) {
+		try {
+			return JSON.parse(raw) as ApiErrorBody;
+		} catch {
+			return raw;
+		}
+	}
+
+	// Some backends return JSON without the header — give it one best-effort try
+	try {
+		return JSON.parse(raw) as ApiErrorBody;
+	} catch {
+		return raw;
+	}
+}
+
 async function request<T>(
 	endpoint: string,
 	config: RequestConfig = {},
 ): Promise<T> {
 	const { body, params, headers: customHeaders, ...fetchConfig } = config;
-
 	const url = buildUrl(endpoint, params);
 
 	const headers: HeadersInit = {
 		"Content-Type": "application/json",
+		Accept: "application/json",
 		...customHeaders,
 	};
 
 	const response = await fetch(url, {
 		...fetchConfig,
 		headers,
-		credentials: "include", // Always include cookies for auth
-		body: body ? JSON.stringify(body) : undefined,
+		credentials: "include",
+		body: body !== undefined ? JSON.stringify(body) : undefined,
 	});
 
-	// Handle non-OK responses
 	if (!response.ok) {
-		let errorData: unknown;
-		try {
-			errorData = await response.json();
-		} catch {
-			errorData = await response.text();
+		const data = await parseErrorBody(response);
+
+		let message = response.statusText || `HTTP ${response.status}`;
+		if (isJsonBody(data)) {
+			if (typeof data.message === "string" && data.message) {
+				message = data.message;
+			} else if (typeof data.error === "string" && data.error) {
+				message = data.error;
+			}
+		} else if (typeof data === "string" && data.trim()) {
+			message = data.trim();
 		}
 
-		const errorMessage =
-			(errorData as { message?: string })?.message ||
-			(errorData as { error?: string })?.error ||
-			response.statusText;
-
-		throw new ApiError(
-			errorMessage,
-			response.status,
-			response.statusText,
-			errorData,
-		);
+		throw new ApiError({
+			message,
+			status: response.status,
+			statusText: response.statusText,
+			data,
+			url,
+		});
 	}
 
-	// Handle empty responses (204 No Content)
 	if (response.status === 204) {
 		return undefined as T;
 	}
 
-	// Parse JSON response
+	// Empty body success path (e.g. 200 with no content)
+	const contentType = response.headers.get("content-type") || "";
+	if (!contentType.includes("application/json")) {
+		const text = await response.text();
+		if (!text) return undefined as T;
+		try {
+			return JSON.parse(text) as T;
+		} catch {
+			return text as unknown as T;
+		}
+	}
+
 	try {
 		return (await response.json()) as T;
 	} catch {

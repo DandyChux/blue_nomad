@@ -145,16 +145,22 @@
 			>
 				{#each paginatedProducts as product (product.id)}
 					{@const itemData = product.item_data}
+					{@const firstVariation =
+						itemData.variations?.[0]?.item_variation_data}
 					{@const price = (
-						(itemData.variations?.[0]?.item_variation_data
-							?.price_money?.amount || 0) / 100
+						(firstVariation?.price_money?.amount || 0) / 100
 					).toFixed(2)}
+					{@const isSoldOut = (
+						firstVariation?.location_overrides || []
+					).some((o) => o.sold_out === true)}
 
 					<a
 						href="/shop/{product.id}"
 						class="group relative bg-background overflow-hidden flex flex-col"
+						aria-label={isSoldOut
+							? `${itemData.name} — sold out`
+							: itemData.name}
 					>
-						<!-- Image -->
 						<div
 							class="relative w-full aspect-[3/4] overflow-hidden bg-muted"
 						>
@@ -178,6 +184,14 @@
 										]
 									: []}
 							/>
+
+							{#if isSoldOut}
+								<span
+									class="absolute top-3 left-3 bg-black text-white text-[10px] font-source-code-pro uppercase tracking-widest px-2 py-1"
+								>
+									Sold Out
+								</span>
+							{/if}
 
 							<!-- Hover Overlay with Description -->
 							<div

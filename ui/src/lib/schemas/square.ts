@@ -8,6 +8,18 @@ export const SquareMoneySchema = z.object({
 
 // The variation of an item (e.g., "Small", "Large", or just "Regular" if no variants)
 // This is where the price actually lives in Square!
+export const CatalogItemVariationLocationOverrideSchema = z.object({
+	location_id: z.string().optional(),
+	price_money: SquareMoneySchema.optional(),
+	pricing_type: z.string().optional(),
+	track_inventory: z.boolean().optional(),
+	inventory_alert_type: z.string().optional(),
+	sold_out: z.boolean().optional(),
+	sold_out_valid_until: z.string().optional(),
+});
+
+// The variation of an item (e.g., "Small", "Large", or just "Regular" if no variants)
+// This is where the price actually lives in Square!
 export const CatalogItemVariationDataSchema = z.object({
 	item_id: z.string(),
 	name: z.string(),
@@ -17,6 +29,9 @@ export const CatalogItemVariationDataSchema = z.object({
 	pricing_type: z.string().optional(),
 	available_for_booking: z.boolean().optional(),
 	service_duration: z.number().optional(),
+	location_overrides: z
+		.array(CatalogItemVariationLocationOverrideSchema)
+		.optional(),
 });
 
 export const CatalogItemVariationSchema = z.object({

@@ -2,31 +2,79 @@
 	import { getCart } from "$lib/context/cart.svelte";
 	import { Button } from "$lib/components/ui/button";
 	import * as Sheet from "$lib/components/ui/sheet";
-	import apiClient from "$lib/api";
+	import apiClient, { ApiError } from "$lib/api";
 	import { goto } from "$app/navigation";
 	import Picture from "./picture.svelte";
+	import { toast } from "svelte-sonner";
 
 	const cart = getCart();
 	let isCheckingOut = $state(false);
+
+	type StockErrorBody = {
+		error?: string;
+		message?: string;
+		variation_id?: string;
+		requested?: number;
+		available?: number;
+	};
 
 	async function handleCheckout() {
 		if (cart.items.length === 0) return;
 
 		isCheckingOut = true;
 		try {
-			// Send the cart payload directly to your Go backend
-			const response = await apiClient.post<any>("/checkout", {
-				items: cart.items,
-			});
+			const response = await apiClient.post<{ url?: string }>(
+				"/checkout",
+				{
+					items: cart.items.map((i) => ({
+						id: i.id,
+						quantity: i.quantity,
+					})),
+				},
+			);
 
 			if (response.url) {
-				window.location = response.url;
+				window.location.href = response.url;
 			} else {
-				console.error("No URL returned from Go backend");
-				alert("Checkout failed. Please try again.");
+				toast.error("Checkout failed. Please try again.");
 			}
-		} catch (error) {
-			console.error("Checkout error:", error);
+		} catch (err) {
+			if (err instanceof ApiError && err.isConflict) {
+				const body = err.body<StockErrorBody>();
+				const line = cart.items.find(
+					(i) => i.id === body?.variation_id,
+				);
+				const name = line
+					? `${line.name}${line.variationName ? ` (${line.variationName})` : ""}`
+					: "An item in your bag";
+
+				if (
+					body &&
+					typeof body.available === "number" &&
+					typeof body.requested === "number"
+				) {
+					// Clamp the cart so the user can retry cleanly
+					if (line && body.available > 0) {
+						cart.setQuantity(line.cartItemId, body.available);
+					} else if (line) {
+						cart.remove(line.cartItemId);
+					}
+
+					toast.error(
+						`${name} only has ${body.available} left (you requested ${body.requested}). Your bag has been updated — please review and try again.`,
+					);
+				} else {
+					toast.error(
+						err.userMessage ||
+							"Some items in your bag are no longer available.",
+					);
+				}
+			} else if (err instanceof ApiError) {
+				toast.error(err.userMessage);
+			} else {
+				console.error("Checkout error:", err);
+				toast.error("Checkout failed. Please try again.");
+			}
 		} finally {
 			isCheckingOut = false;
 		}

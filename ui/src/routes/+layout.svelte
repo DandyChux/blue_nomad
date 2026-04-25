@@ -59,14 +59,14 @@
 	<!-- Open Graph -->
 	<meta property="og:type" content="website" />
 	<meta property="og:locale" content="en_US" />
-	<meta property="og:url" content="https://bluenomad.com" />
+	<meta property="og:url" content="https://bluenomadworld.com" />
 	<meta property="og:site_name" content="Blue Nomad" />
 	<meta property="og:title" content="Blue Nomad" />
 	<meta
 		property="og:description"
 		content="Blue Nomad is a private skin health studio in the heart of New York City."
 	/>
-	<meta property="og:image" content="https://bluenomad.com/icon.ico" />
+	<meta property="og:image" content="https://bluenomadworld.com/icon.ico" />
 	<meta property="og:image:width" content="800" />
 	<meta property="og:image:height" content="600" />
 	<meta property="og:image:alt" content="Blue Nomad" />

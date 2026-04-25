@@ -5,7 +5,7 @@
 	import { Input } from "$lib/components/ui/input";
 	import { Label } from "$lib/components/ui/label";
 	import { Calendar } from "$lib/components/ui/calendar"; // shadcn
-	import { apiClient } from "$lib/api";
+	import { apiClient, ApiError } from "$lib/api";
 	import {
 		CalendarDate,
 		today,
@@ -60,6 +60,7 @@
 
 	async function loadServices() {
 		isLoading = true;
+		errorMsg = "";
 		try {
 			const res =
 				await apiClient.get<CatalogListResponse>("/booking/services");
@@ -69,8 +70,11 @@
 						obj.type === "ITEM" &&
 						obj.item_data?.product_type === "APPOINTMENTS_SERVICE",
 				) || [];
-		} catch (e) {
-			errorMsg = "Failed to load treatments.";
+		} catch (err) {
+			errorMsg =
+				err instanceof ApiError
+					? err.userMessage
+					: "Failed to load treatments.";
 		} finally {
 			isLoading = false;
 		}
@@ -81,7 +85,7 @@
 		isLoading = true;
 		errorMsg = "";
 
-		const dateStr = date.toString(); // YYYY-MM-DD
+		const dateStr = date.toString();
 		const startAt = `${dateStr}T00:00:00Z`;
 		const endAt = `${dateStr}T23:59:59Z`;
 
@@ -95,8 +99,11 @@
 				},
 			);
 			availableSlots = res.availabilities || [];
-		} catch (e) {
-			errorMsg = "Error fetching times.";
+		} catch (err) {
+			errorMsg =
+				err instanceof ApiError
+					? err.userMessage
+					: "Error fetching times.";
 			availableSlots = [];
 		} finally {
 			isLoading = false;
@@ -110,6 +117,7 @@
 
 	async function confirmBooking() {
 		isLoading = true;
+		errorMsg = "";
 		try {
 			await apiClient.post("/booking/create", {
 				service_variation_id: selectedVariationId,
@@ -120,8 +128,16 @@
 				phone_number: phone,
 			});
 			step = 4;
-		} catch (e) {
-			errorMsg = "Slot no longer available. Please try another.";
+		} catch (err) {
+			if (err instanceof ApiError) {
+				// 409/410 typically means the slot got taken; everything else
+				// gets the server-provided message verbatim.
+				errorMsg = err.isConflict
+					? "That slot was just booked by someone else. Please pick another time."
+					: err.userMessage;
+			} else {
+				errorMsg = "Slot no longer available. Please try another.";
+			}
 		} finally {
 			isLoading = false;
 		}

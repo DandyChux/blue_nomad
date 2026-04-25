@@ -26,16 +26,23 @@ export const load: PageLoad = async ({ params }) => {
 		const products = allObjects
 			.filter((obj): obj is CatalogItem => {
 				if (obj.type !== "ITEM") return false;
-
 				if (obj.is_deleted) return false;
-
 				if (obj.item_data.ecom_visibility !== "VISIBLE") return false;
+
+				const variations = obj.item_data.variations ?? [];
+				if (variations.length === 0) return false;
+
+				const everyVariationSoldOut = variations.every((v) =>
+					(v.item_variation_data?.location_overrides ?? []).some(
+						(o) => o.sold_out === true,
+					),
+				);
+				if (everyVariationSoldOut) return false;
 
 				return true;
 			})
 			.map((product) => {
 				const primaryImageId = product.item_data?.image_ids?.[0];
-
 				const primaryImageUrl = primaryImageId
 					? imageMap.get(primaryImageId)
 					: "https://via.placeholder.com/400x500?text=No+Image";

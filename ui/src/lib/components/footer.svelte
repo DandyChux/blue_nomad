@@ -2,7 +2,7 @@
 	import { Button } from "$lib/components/ui/button";
 	import { Input } from "$lib/components/ui/input";
 	import { cn, generateSrcSet } from "$lib/utils";
-	import apiClient from "$lib/api";
+	import apiClient, { ApiError } from "$lib/api";
 	import { toast } from "svelte-sonner";
 	import FooterGradient from "$lib/assets/footer_gradient.png";
 	import { navLinks } from "$lib/components/navbar.svelte";
@@ -42,6 +42,15 @@
 		} catch (error) {
 			console.error("Subscription error:", error);
 
+			if (
+				error instanceof ApiError &&
+				(error.isBadRequest || error.isConflict)
+			) {
+				toast.error(error.userMessage);
+				isSubmitting = false;
+				return;
+			}
+
 			// Fallback: send email notification
 			try {
 				const response = await apiClient.post<{ message?: string }>(
@@ -62,10 +71,12 @@
 						"Failed to subscribe. Please try again or contact us directly.",
 					);
 				}
-			} catch {
-				toast.error(
-					"Failed to subscribe. Please try again or contact us directly.",
-				);
+			} catch (fallbackErr) {
+				const msg =
+					fallbackErr instanceof ApiError
+						? fallbackErr.userMessage
+						: "Failed to subscribe. Please try again or contact us directly.";
+				toast.error(msg);
 			}
 		} finally {
 			isSubmitting = false;

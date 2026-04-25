@@ -6,11 +6,13 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"net"
 	"net/smtp"
 	"os"
 	"path/filepath"
 	"strings"
 	"sync"
+	"time"
 )
 
 var (
@@ -134,8 +136,14 @@ func sendSMTP(config EmailConfig, msg *EmailMessage, body []byte) error {
 		ServerName: config.Host,
 	}
 
-	// Connect to server
-	client, err := smtp.Dial(addr)
+	dialer := &net.Dialer{Timeout: 30 * time.Second}
+	conn, err := dialer.Dial("tcp", addr)
+	if err != nil {
+		return fmt.Errorf("failed to connect to SMTP server: %w", err)
+	}
+	_ = conn.SetDeadline(time.Now().Add(60 * time.Second))
+
+	client, err := smtp.NewClient(conn, config.Host)
 	if err != nil {
 		return fmt.Errorf("failed to connect to SMTP server: %w", err)
 	}
@@ -175,8 +183,7 @@ func sendSMTP(config EmailConfig, msg *EmailMessage, body []byte) error {
 		return fmt.Errorf("failed to write email data: %w", err)
 	}
 
-	err = w.Close()
-	if err != nil {
+	if err = w.Close(); err != nil {
 		return fmt.Errorf("failed to close data connection: %w", err)
 	}
 

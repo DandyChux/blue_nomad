@@ -5,7 +5,7 @@
 	import { Calendar } from "$lib/components/ui/calendar";
 	import Picture from "$lib/components/picture.svelte";
 	import { generateSrcSet } from "$lib/utils";
-	import { apiClient } from "$lib/api";
+	import { apiClient, ApiError } from "$lib/api";
 	import {
 		today,
 		getLocalTimeZone,
@@ -61,6 +61,7 @@
 		booking.time = "";
 		booking.selectedSlot = undefined;
 		booking.isLoading = true;
+		booking.error = "";
 		try {
 			const res = await apiClient.post<SearchAvailabilityResponse>(
 				"/booking/availability",
@@ -71,8 +72,12 @@
 				},
 			);
 			booking.slots = res.availabilities || [];
-		} catch {
-			booking.error = "Error fetching times.";
+		} catch (err) {
+			booking.error =
+				err instanceof ApiError
+					? err.userMessage
+					: "Error fetching times.";
+			booking.slots = [];
 		} finally {
 			booking.isLoading = false;
 		}
@@ -142,9 +147,15 @@
 				// Redirect to Square-hosted checkout (same pattern as shop)
 				window.location.href = result.checkout_url;
 			}
-		} catch {
-			booking.error =
-				"Could not complete booking. The slot may no longer be available.";
+		} catch (err) {
+			if (err instanceof ApiError) {
+				booking.error = err.isConflict
+					? "That time slot is no longer available. Please pick another."
+					: err.userMessage;
+			} else {
+				booking.error =
+					"Could not complete booking. The slot may no longer be available.";
+			}
 		} finally {
 			booking.isLoading = false;
 		}

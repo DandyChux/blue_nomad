@@ -13,7 +13,7 @@
 	import { Checkbox } from "$lib/components/ui/checkbox";
 	import { diagnosticSchema } from "$lib/schemas";
 	import { Label } from "./ui/label";
-	import apiClient from "$lib/api";
+	import apiClient, { ApiError } from "$lib/api";
 	import { toast } from "svelte-sonner";
 	import { goto } from "$app/navigation";
 
@@ -34,7 +34,13 @@
 					);
 				} catch (error) {
 					console.error("Submission error:", error);
-					toast.error("Network error. Please check your connection.");
+					if (error instanceof ApiError) {
+						toast.error(error.userMessage);
+					} else {
+						toast.error(
+							"Network error. Please check your connection.",
+						);
+					}
 				}
 			}
 		},

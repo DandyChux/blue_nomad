@@ -155,51 +155,158 @@ func (s *SquareClient) ProcessPayment(ctx context.Context, req PaymentRequest) (
 	return resp.Body, nil
 }
 
-// Add this to your SquareClient
+// --- Inventory ---
+
+// InventoryCount represents a single variation's available quantity at a location.
+type InventoryCount struct {
+	CatalogObjectID string `json:"catalog_object_id"`
+	State           string `json:"state"`
+	LocationID      string `json:"location_id"`
+	Quantity        string `json:"quantity"`
+}
+
+// GetInventoryCounts fetches IN_STOCK counts for the given catalog variation IDs
+// at this client's configured location. Returns a map of variation ID -> qty.
+// Variations that Square does not inventory-track will simply be absent from the map.
+func (s *SquareClient) GetInventoryCounts(ctx context.Context, variationIDs []string) (map[string]int64, error) {
+	counts := make(map[string]int64, len(variationIDs))
+	if len(variationIDs) == 0 {
+		return counts, nil
+	}
+
+	payload := map[string]interface{}{
+		"catalog_object_ids": variationIDs,
+		"location_ids":       []string{s.locationID},
+		"states":             []string{"IN_STOCK"},
+	}
+	bodyBytes, _ := json.Marshal(payload)
+
+	resp, err := s.http.Post(ctx, "/v2/inventory/counts/batch-retrieve", bytes.NewReader(bodyBytes))
+	if err != nil {
+		return nil, fmt.Errorf("inventory lookup failed: %w", err)
+	}
+
+	var result struct {
+		Counts []InventoryCount `json:"counts"`
+	}
+	if err := json.Unmarshal(resp.Body, &result); err != nil {
+		return nil, fmt.Errorf("failed to decode inventory response: %w", err)
+	}
+
+	for _, c := range result.Counts {
+		if c.State != "IN_STOCK" {
+			continue
+		}
+		qty, err := strconv.ParseInt(c.Quantity, 10, 64)
+		if err != nil {
+			continue
+		}
+		// If the same object appears more than once, keep the higher count for this location.
+		if existing, ok := counts[c.CatalogObjectID]; !ok || qty > existing {
+			counts[c.CatalogObjectID] = qty
+		}
+	}
+
+	return counts, nil
+}
+
+// InsufficientStockError is returned when the cart requests more than what's
+// available in Square's inventory for at least one line item.
+type InsufficientStockError struct {
+	VariationID string
+	Requested   int
+	Available   int64
+}
+
+func (e *InsufficientStockError) Error() string {
+	return fmt.Sprintf("insufficient stock for variation %s: requested %d, available %d",
+		e.VariationID, e.Requested, e.Available)
+}
+
+// CreatePaymentLink validates inventory, then creates a Square hosted checkout link
+// for the given cart. Returns *InsufficientStockError if any line exceeds available stock.
 func (s *SquareClient) CreatePaymentLink(ctx context.Context, cartData CheckoutRequest) (string, error) {
-	// 1. Build Square's expected Line Items array
-	var lineItems []map[string]interface{}
+	if len(cartData.Items) == 0 {
+		return "", fmt.Errorf("cart is empty")
+	}
+
+	// Collapse duplicate variations and collect IDs for inventory lookup
+	merged := make(map[string]int, len(cartData.Items))
+	order := make([]string, 0, len(cartData.Items))
 	for _, item := range cartData.Items {
+		if item.ID == "" || item.Quantity <= 0 {
+			continue
+		}
+		if _, seen := merged[item.ID]; !seen {
+			order = append(order, item.ID)
+		}
+		merged[item.ID] += item.Quantity
+	}
+	if len(merged) == 0 {
+		return "", fmt.Errorf("cart contains no valid items")
+	}
+
+	// Inventory check. Variations missing from the response are assumed
+	// untracked (service items, digital goods, etc.) and allowed through.
+	counts, err := s.GetInventoryCounts(ctx, order)
+	if err != nil {
+		return "", err
+	}
+	for _, id := range order {
+		requested := merged[id]
+		if available, tracked := counts[id]; tracked {
+			if int64(requested) > available {
+				return "", &InsufficientStockError{
+					VariationID: id,
+					Requested:   requested,
+					Available:   available,
+				}
+			}
+		}
+	}
+
+	// Build Square's expected Line Items array
+	lineItems := make([]map[string]interface{}, 0, len(order))
+	for _, id := range order {
 		lineItems = append(lineItems, map[string]interface{}{
-			"catalog_object_id": item.ID,
-			// Square specifically requires quantity to be a string!
-			"quantity": strconv.Itoa(item.Quantity),
+			"catalog_object_id": id,
+			"quantity":          strconv.Itoa(merged[id]),
 		})
 	}
 
-	// 2. Construct the CreatePaymentLink payload
+	// Construct the CreatePaymentLink payload
 	payload := map[string]interface{}{
 		// Idempotency key prevents double-charging if the network hiccups
 		"idempotency_key": uuid.New().String(),
 		"order": map[string]interface{}{
 			"location_id": s.locationID,
 			"line_items":  lineItems,
+			"pricing_options": map[string]interface{}{
+				"auto_apply_taxes":     true,
+				"auto_apply_discounts": true,
+			},
 		},
-		// Optional: Where to send them after they pay successfully
 		"checkout_options": map[string]interface{}{
-			"redirect_url": "https://bluenomad.com/shop/success",
+			"redirect_url":             "https://bluenomadworld.com/shop/success",
+			"ask_for_shipping_address": true,
 		},
 	}
 
 	bodyBytes, _ := json.Marshal(payload)
 
-	// 3. Make the POST request to Square
 	resp, err := s.http.Post(ctx, "/v2/online-checkout/payment-links", bytes.NewReader(bodyBytes))
 	if err != nil {
 		return "", fmt.Errorf("square api error: %w", err)
 	}
 
-	// 4. Parse the response to extract the long URL
 	var result struct {
 		PaymentLink struct {
 			URL string `json:"url"`
 		} `json:"payment_link"`
 	}
-
 	if err := json.Unmarshal(resp.Body, &result); err != nil {
 		return "", fmt.Errorf("failed to decode square payment link response: %w", err)
 	}
-
 	if result.PaymentLink.URL == "" {
 		return "", fmt.Errorf("square did not return a payment link url")
 	}
@@ -326,9 +433,13 @@ func (s *SquareClient) createBookingCheckoutLink(ctx context.Context, req Create
 					},
 				},
 			},
+			"pricing_options": map[string]interface{}{
+				"auto_apply_taxes":     true,
+				"auto_apply_discounts": true,
+			},
 		},
 		"checkout_options": map[string]interface{}{
-			"redirect_url": "https://bluenomad.com/booking/confirmed",
+			"redirect_url": "https://bluenomadworld.com/booking/confirmed",
 		},
 	}
 

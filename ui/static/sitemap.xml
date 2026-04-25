@@ -5,28 +5,28 @@
 
   <!-- Main pages -->
   <url>
-    <loc>https://bluenomad.com/</loc>
+    <loc>https://bluenomadworld.com/</loc>
     <lastmod>2025-09-28T07:06:23Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
 
   <url>
-    <loc>https://bluenomad.com/about</loc>
+    <loc>https://bluenomadworld.com/about</loc>
     <lastmod>2025-09-28T07:06:23Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://bluenomad.com/faq</loc>
+    <loc>https://bluenomadworld.com/faq</loc>
     <lastmod>2025-09-28T07:06:23Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
   <url>
-    <loc>https://bluenomad.com/nomadsland</loc>
+    <loc>https://bluenomadworld.com/nomadsland</loc>
     <lastmod>2025-09-28T07:06:23Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -34,14 +34,14 @@
 
   <!-- Legal pages -->
   <url>
-    <loc>https://bluenomad.com/privacy-policy</loc>
+    <loc>https://bluenomadworld.com/privacy-policy</loc>
     <lastmod>2025-09-28T07:06:23Z</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
 
   <url>
-    <loc>https://bluenomad.com/terms-and-conditions</loc>
+    <loc>https://bluenomadworld.com/terms-and-conditions</loc>
     <lastmod>2025-09-28T07:06:23Z</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
