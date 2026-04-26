@@ -108,18 +108,15 @@ func SendEmail(msg *EmailMessage) error {
 
 	// Content type based on body
 	if msg.BodyHTML != "" {
-		messageBuffer.WriteString("Content-Type: text/html; charset=UTF-8\r\n")
-		messageBuffer.WriteString("\r\n")
+		messageBuffer.WriteString("Content-Type: text/html; charset=UTF-8\r\n\r\n")
 		messageBuffer.WriteString(msg.BodyHTML)
 	} else if msg.BodyText != "" {
-		messageBuffer.WriteString("Content-Type: text/plain; charset=UTF-8\r\n")
-		messageBuffer.WriteString("\r\n")
+		messageBuffer.WriteString("Content-Type: text/plain; charset=UTF-8\r\n\r\n")
 		messageBuffer.WriteString(msg.BodyText)
 	} else {
 		return fmt.Errorf("no email body provided")
 	}
 
-	// Send via SMTP
 	return sendSMTP(config, msg, messageBuffer.Bytes())
 }
 

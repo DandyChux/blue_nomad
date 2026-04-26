@@ -12,6 +12,7 @@
 	import Picture from "$lib/components/picture.svelte";
 	import { debounce, cn, generateSrcSet } from "$lib/utils";
 	import { getCart } from "$lib/context/cart.svelte";
+	import Badge from "$lib/components/ui/badge/badge.svelte";
 
 	let { data } = $props();
 	const cart = getCart();
@@ -203,9 +204,7 @@
 							<Picture
 								src={product.image_url || ""}
 								alt={itemData.name}
-								class="w-full h-full object-cover transition-transform duration-700 {isSoldOut
-									? 'opacity-60 grayscale'
-									: ''}"
+								class="w-full h-full object-cover transition-transform duration-700"
 								loading="lazy"
 								sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
 								sources={product.image_url
@@ -224,11 +223,10 @@
 							/>
 
 							{#if isSoldOut}
-								<span
-									class="absolute top-3 left-3 bg-black text-white text-[10px] font-source-code-pro uppercase tracking-widest px-2 py-1"
+								<Badge
+									class="absolute top-3 left-3 tracking-widest text-white"
+									>Sold Out</Badge
 								>
-									Sold Out
-								</span>
 							{/if}
 
 							<!-- Hover Overlay with Description -->
