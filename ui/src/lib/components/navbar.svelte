@@ -38,10 +38,6 @@
 	function trackClick(label: string) {
 		if (label === "Gift Card") {
 			trackEvent("Clicked Gift Card");
-		} else if (label === "Book a Treatment") {
-			trackEvent("Clicked Treatment Booking");
-		} else if (label === "Shop") {
-			trackEvent("Clicked Shop");
 		}
 	}
 

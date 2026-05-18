@@ -13,6 +13,7 @@
 	import { debounce, cn, generateSrcSet } from "$lib/utils";
 	import { getCart } from "$lib/context/cart.svelte";
 	import Badge from "$lib/components/ui/badge/badge.svelte";
+	import { trackEvent } from "$lib/analytics.svelte.js";
 
 	let { data } = $props();
 	const cart = getCart();
@@ -197,6 +198,10 @@
 						aria-label={isSoldOut
 							? `${itemData.name} — sold out`
 							: itemData.name}
+						onclick={() =>
+							trackEvent("Clicked Product", {
+								props: { product: itemData.name },
+							})}
 					>
 						<div
 							class="relative w-full aspect-[3/4] overflow-hidden bg-muted"

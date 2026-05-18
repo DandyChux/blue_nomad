@@ -12,6 +12,7 @@
 	import Video from "$lib/components/video.svelte";
 	import InfiniteMovingCards from "$lib/components/infinite-moving-cards.svelte";
 	import { pressBrands } from "../+page.svelte";
+	import { trackEvent } from "$lib/analytics.svelte.js";
 
 	let { data } = $props();
 	const services = $derived(data.services as CatalogItem[]);
@@ -252,6 +253,10 @@
 					<a
 						href="/booking/{featured.id}"
 						class="group relative overflow-hidden md:col-span-2 md:row-span-2 flex flex-col bg-background"
+						onclick={() =>
+							trackEvent("Clicked Treatment", {
+								props: { treatment: featured.item_data.name },
+							})}
 					>
 						<div
 							class="relative w-full aspect-square md:aspect-auto md:h-full min-h-[500px] overflow-hidden bg-muted"
@@ -336,6 +341,10 @@
 									!isAlternate,
 							},
 						)}
+						onclick={() =>
+							trackEvent("Clicked Treatment", {
+								props: { treatment: service.item_data.name },
+							})}
 					>
 						<div
 							class="relative w-full aspect-[3/4] overflow-hidden bg-muted"

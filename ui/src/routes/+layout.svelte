@@ -15,7 +15,7 @@
 	import favicon from "$lib/assets/icon.ico";
 	import Navbar from "$lib/components/navbar.svelte";
 	import Footer from "$lib/components/footer.svelte";
-	import BookingButton from "$lib/components/booking-button.svelte";
+	import DiagnosticButton from "$lib/components/diagnostic-button.svelte";
 	import { initCart } from "$lib/context/cart.svelte";
 	import CartDrawer from "$lib/components/cart-drawer.svelte";
 	import { initBooking } from "$lib/context/booking.svelte";
@@ -79,5 +79,5 @@
 </main>
 
 <Footer />
-<BookingButton />
+<DiagnosticButton />
 <CartDrawer />
