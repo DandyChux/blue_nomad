@@ -158,13 +158,13 @@ func (h *WebhookHandler) HandleSquareWebhook(w http.ResponseWriter, r *http.Requ
 
 	switch payload.Type {
 	case "payment.created", "payment.updated":
-		h.handlePaymentEvent(payload)
+		go h.handlePaymentEvent(payload)
 
 	case "booking.created":
-		h.handleBookingCreated(payload)
+		go h.handleBookingCreated(payload)
 
 	case "booking.updated":
-		h.handleBookingUpdated(payload)
+		go h.handleBookingUpdated(payload)
 
 	default:
 		slog.Debug("Unhandled Square event type ignored", "type", payload.Type)
