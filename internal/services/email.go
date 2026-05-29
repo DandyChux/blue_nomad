@@ -2,17 +2,17 @@ package services
 
 import (
 	"bytes"
-	"crypto/tls"
+	"context"
 	"fmt"
 	"html/template"
 	"log"
-	"net"
-	"net/smtp"
 	"os"
 	"path/filepath"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/mailgun/mailgun-go/v4"
 )
 
 var (
@@ -22,11 +22,7 @@ var (
 
 // EmailConfig holds email configuration
 type EmailConfig struct {
-	Host     string
-	Port     string
-	Username string
-	Password string
-	From     string
+	From string
 }
 
 // EmailMessage represents an email message
@@ -44,22 +40,12 @@ type EmailMessage struct {
 // getConfig returns email configuration from environment
 func getConfig() EmailConfig {
 	config := EmailConfig{
-		Host:     os.Getenv("EMAIL_HOST"),
-		Port:     os.Getenv("EMAIL_PORT"),
-		Username: os.Getenv("EMAIL_USERNAME"),
-		Password: os.Getenv("EMAIL_PASSWORD"),
-		From:     os.Getenv("EMAIL_FROM"),
+		From: os.Getenv("EMAIL_FROM"),
 	}
 
 	// Default to Gmail if not specified
-	if config.Host == "" {
-		config.Host = "smtp.gmail.com"
-	}
-	if config.Port == "" {
-		config.Port = "587"
-	}
-	if config.From == "" && config.Username != "" {
-		config.From = config.Username
+	if config.From == "" {
+		config.From = "Blue Nomad <hello@mg.bluenomadworld.com>"
 	}
 
 	return config
@@ -69,8 +55,14 @@ func getConfig() EmailConfig {
 func SendEmail(msg *EmailMessage) error {
 	config := getConfig()
 
-	if config.Host == "" || config.Port == "" || config.Username == "" || config.Password == "" {
-		return fmt.Errorf("missing email configuration")
+	mailgunApiKey := os.Getenv("MAILGUN_API_KEY")
+	if mailgunApiKey == "" {
+		return fmt.Errorf("missing MAILGUN_API_KEY")
+	}
+
+	domain := os.Getenv("MAILGUN_DOMAIN")
+	if domain == "" {
+		domain = "mg.bluenomadworld.com"
 	}
 
 	// Process template if specified
@@ -86,107 +78,43 @@ func SendEmail(msg *EmailMessage) error {
 		}
 	}
 
-	// Build email content
-	var messageBuffer bytes.Buffer
-
-	// Headers
-	headers := map[string]string{
-		"From":         config.From,
-		"To":           strings.Join(msg.To, ", "),
-		"Subject":      msg.Subject,
-		"MIME-Version": "1.0",
-	}
-
-	if len(msg.Cc) > 0 {
-		headers["Cc"] = strings.Join(msg.Cc, ", ")
-	}
-
-	// Write headers
-	for k, v := range headers {
-		messageBuffer.WriteString(fmt.Sprintf("%s: %s\r\n", k, v))
-	}
-
-	// Content type based on body
-	if msg.BodyHTML != "" {
-		messageBuffer.WriteString("Content-Type: text/html; charset=UTF-8\r\n\r\n")
-		messageBuffer.WriteString(msg.BodyHTML)
-	} else if msg.BodyText != "" {
-		messageBuffer.WriteString("Content-Type: text/plain; charset=UTF-8\r\n\r\n")
-		messageBuffer.WriteString(msg.BodyText)
-	} else {
+	if msg.BodyHTML == "" && msg.BodyText == "" {
 		return fmt.Errorf("no email body provided")
 	}
 
-	return sendSMTP(config, msg, messageBuffer.Bytes())
-}
+	// Initialize the Mailgun client
+	mg := mailgun.NewMailgun(domain, mailgunApiKey)
 
-func sendSMTP(config EmailConfig, msg *EmailMessage, body []byte) error {
-	addr := fmt.Sprintf("%s:%s", config.Host, config.Port)
+	mgMessage := mailgun.NewMessage(config.From, msg.Subject, msg.BodyText)
 
-	// All recipients
-	recipients := append([]string{}, msg.To...)
-	recipients = append(recipients, msg.Cc...)
-	recipients = append(recipients, msg.Bcc...)
-
-	// TLS config
-	tlsConfig := &tls.Config{
-		ServerName: config.Host,
-	}
-
-	dialer := &net.Dialer{Timeout: 30 * time.Second}
-	conn, err := dialer.Dial("tcp", addr)
-	if err != nil {
-		return fmt.Errorf("failed to connect to SMTP server: %w", err)
-	}
-	_ = conn.SetDeadline(time.Now().Add(60 * time.Second))
-
-	client, err := smtp.NewClient(conn, config.Host)
-	if err != nil {
-		return fmt.Errorf("failed to connect to SMTP server: %w", err)
-	}
-	defer client.Close()
-
-	// Start TLS
-	if err = client.StartTLS(tlsConfig); err != nil {
-		return fmt.Errorf("failed to start TLS: %w", err)
-	}
-
-	// Authenticate
-	auth := smtp.PlainAuth("", config.Username, config.Password, config.Host)
-	if err = client.Auth(auth); err != nil {
-		return fmt.Errorf("authentication failed: %w", err)
-	}
-
-	// Set sender
-	if err = client.Mail(config.From); err != nil {
-		return fmt.Errorf("failed to set sender: %w", err)
+	if msg.BodyHTML != "" {
+		mgMessage.SetHTML(msg.BodyHTML)
 	}
 
 	// Add recipients
-	for _, recipient := range recipients {
-		if err = client.Rcpt(recipient); err != nil {
-			return fmt.Errorf("failed to add recipient %s: %w", recipient, err)
+	for _, to := range msg.To {
+		if err := mgMessage.AddRecipient(to); err != nil {
+			return fmt.Errorf("failed to add recipient %s: %w", to, err)
 		}
 	}
+	for _, cc := range msg.Cc {
+		mgMessage.AddCC(cc)
+	}
+	for _, bcc := range msg.Bcc {
+		mgMessage.AddBCC(bcc)
+	}
 
-	// Send email data
-	w, err := client.Data()
+	// Create contexxt with a timeout for the API call
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
+	defer cancel()
+
+	// Send the message
+	_, id, err := mg.Send(ctx, mgMessage)
 	if err != nil {
-		return fmt.Errorf("failed to open data connection: %w", err)
+		return fmt.Errorf("failed to send email via Mailgun: %w", err)
 	}
 
-	_, err = w.Write(body)
-	if err != nil {
-		return fmt.Errorf("failed to write email data: %w", err)
-	}
-
-	if err = w.Close(); err != nil {
-		return fmt.Errorf("failed to close data connection: %w", err)
-	}
-
-	client.Quit()
-
-	log.Printf("Email sent to %v with subject: %s", msg.To, msg.Subject)
+	log.Printf("Email sent via Mailgun w/ ID: %s", id)
 	return nil
 }
 
@@ -195,6 +123,9 @@ func SendSubscriptionNotification(subscriberEmail string) error {
 	adminEmail := os.Getenv("ADMIN_EMAIL")
 	if adminEmail == "" {
 		adminEmail = os.Getenv("EMAIL_USERNAME")
+	}
+	if adminEmail == "" {
+		adminEmail = "hello@bluenomad.nyc"
 	}
 
 	return SendEmail(&EmailMessage{
