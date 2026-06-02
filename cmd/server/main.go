@@ -1,11 +1,16 @@
 package main
 
 import (
+	"context"
+	"errors"
 	"log"
 	"log/slog"
 	"net/http"
 	"os"
+	"os/signal"
 	"path/filepath"
+	"syscall"
+	"time"
 
 	"github.com/dandychux/blue_nomad/internal/handlers"
 	"github.com/dandychux/blue_nomad/internal/middleware"
@@ -69,7 +74,9 @@ func (rw *responseWriter) WriteHeader(code int) {
 }
 
 func main() {
-	// Load environment variables
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+
 	err := godotenv.Load()
 	if err != nil {
 		log.Println("No .env file found, using environment variables")
@@ -86,6 +93,14 @@ func main() {
 
 	// ── Initialize services ────────────────────────────────────────────────
 	services.InitS3Client()
+
+	pgPool, err := services.NewPostgresPool(ctx)
+	if err != nil {
+		log.Fatalf("Failed to connect to Postgres: %v", err)
+	}
+	defer pgPool.Close()
+
+	webhookQueue := services.NewWebhookQueue(pgPool)
 
 	sanityClient := services.NewSanityClient(
 		os.Getenv("SANITY_PROJECT_ID"),
@@ -107,11 +122,19 @@ func main() {
 		os.Getenv("SQUARE_WEBHOOK_URL"),
 		sanityClient,
 		squareClient,
+		webhookQueue,
 	)
 	postHandler := handlers.NewPostHandler(sanityClient)
 	shopHandler := handlers.NewShopHandler(squareClient)
 	bookingHandler := handlers.NewBookingHandler(squareClient)
 	diagnosticHandler := handlers.NewDiagnosticHandler(newsletterHandler)
+
+	squareWorker := services.NewWebhookWorker(
+		webhookQueue,
+		services.WebhookProviderSquare,
+		webhookHandler,
+	)
+	go squareWorker.Start(ctx)
 
 	// ── API routes ────────────────────────────────────────────────
 	api := http.NewServeMux()
@@ -166,8 +189,26 @@ func main() {
 	if p := os.Getenv("PORT"); p != "" {
 		port = ":" + p
 	}
-	slog.Info("Server starting on", "port", port)
-	if err := http.ListenAndServe(port, handler); err != nil {
-		log.Fatalf("Failed to start server: %v", err)
+
+	server := &http.Server{
+		Addr:    port,
+		Handler: handler,
+	}
+
+	go func() {
+		slog.Info("Server starting on", "port", port)
+		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Fatalf("Failed to start server: %v", err)
+		}
+	}()
+
+	<-ctx.Done()
+	slog.Info("Shutdown signal received")
+
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	if err := server.Shutdown(shutdownCtx); err != nil {
+		slog.Error("Failed to shut down server", "error", err)
 	}
 }

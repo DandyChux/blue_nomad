@@ -68,6 +68,7 @@ type WebhookHandler struct {
 	squareWebhookURL   string
 	sanity             *services.SanityClient
 	square             *services.SquareClient
+	queue              *services.WebhookQueue
 
 	mu            sync.RWMutex
 	lastInvalidAt time.Time
@@ -75,13 +76,14 @@ type WebhookHandler struct {
 }
 
 // Updated Constructor
-func NewWebhookHandler(secret, squareSignatureKey, squareWebhookURL string, sanity *services.SanityClient, square *services.SquareClient) *WebhookHandler {
+func NewWebhookHandler(secret, squareSignatureKey, squareWebhookURL string, sanity *services.SanityClient, square *services.SquareClient, queue *services.WebhookQueue) *WebhookHandler {
 	return &WebhookHandler{
 		secret:             secret,
 		squareSignatureKey: squareSignatureKey,
 		squareWebhookURL:   squareWebhookURL,
 		sanity:             sanity,
 		square:             square,
+		queue:              queue,
 	}
 }
 
@@ -158,37 +160,80 @@ func (h *WebhookHandler) HandleSquareWebhook(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	slog.Info("Square Webhook Received", "event_type", payload.Type)
+	if payload.EventID == "" || payload.Type == "" {
+		slog.Warn("Square webhook missing event metadata",
+			"event_id", payload.EventID,
+			"event_type", payload.Type,
+		)
+		http.Error(w, "Invalid Square event", http.StatusBadRequest)
+		return
+	}
 
-	go func() {
-		switch payload.Type {
-		case "payment.created":
-			h.handlePaymentEvent(payload)
+	inserted, err := h.queue.Enqueue(r.Context(), services.EnqueueWebhookEventParams{
+		Provider:  services.WebhookProviderSquare,
+		EventID:   payload.EventID,
+		EventType: payload.Type,
+		Payload:   body,
+	})
+	if err != nil {
+		// Important: do NOT return 200 if we failed to persist the webhook.
+		// Let Square retry because durability is the point of this queue.
+		slog.Error("Failed to persist Square webhook event",
+			"error", err,
+			"event_id", payload.EventID,
+			"event_type", payload.Type,
+		)
+		http.Error(w, "Webhook persistence unavailable", http.StatusServiceUnavailable)
+		return
+	}
 
-		case "booking.created":
-			h.handleBookingCreated(payload)
-
-		case "booking.updated":
-			h.handleBookingUpdated(payload)
-
-		default:
-			slog.Debug("Unhandled Square event type ignored", "type", payload.Type)
-		}
-	}()
+	if !inserted {
+		slog.Info("Duplicate Square webhook ignored",
+			"event_id", payload.EventID,
+			"event_type", payload.Type,
+		)
+	}
 
 	w.WriteHeader(http.StatusOK)
 }
 
-func (h *WebhookHandler) handlePaymentEvent(payload SquareWebhookPayload) {
+func (h *WebhookHandler) ProcessQueuedWebhook(ctx context.Context, provider string, rawPayload []byte) error {
+	if provider != services.WebhookProviderSquare {
+		return fmt.Errorf("unsupported webhook provider: %s", provider)
+	}
+
+	var payload SquareWebhookPayload
+	if err := json.Unmarshal(rawPayload, &payload); err != nil {
+		return fmt.Errorf("unmarshal queued Square webhook payload: %w", err)
+	}
+
+	switch payload.Type {
+	case "payment.created":
+		return h.handlePaymentEvent(ctx, payload)
+	case "booking.created":
+		return h.handleBookingCreated(ctx, payload)
+	case "booking.updated":
+		return h.handleBookingUpdated(ctx, payload)
+	default:
+		slog.Debug("Unhandled queued Square event ignored", "type", payload.Type, "event_id", payload.EventID)
+		return nil
+	}
+}
+
+func (h *WebhookHandler) handlePaymentEvent(ctx context.Context, payload SquareWebhookPayload) error {
 	payment := payload.Data.Object.Payment
 
-	if payment.Status != "COMPLETED" {
-		return
+	if payment.Status != "APPROVED" {
+		slog.Debug("Ignoring payment event with non-booking-ready status",
+			"payment_id", payment.ID,
+			"status", payment.Status,
+		)
+		return nil
 	}
 
 	if payment.OrderID == "" {
 		slog.Debug("Ignoring completed payment without order ID", "payment_id", payment.ID)
-		return
+		return nil
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -196,12 +241,7 @@ func (h *WebhookHandler) handlePaymentEvent(payload SquareWebhookPayload) {
 
 	order, err := h.square.GetOrder(ctx, payment.OrderID)
 	if err != nil {
-		slog.Error("Failed to retrieve Square order for payment",
-			"error", err,
-			"payment_id", payment.ID,
-			"order_id", payment.OrderID,
-		)
-		return
+		return fmt.Errorf("retrieve Square order %s for payment %s: %w", payment.OrderID, payment.ID, err)
 	}
 
 	bookingID, ok := bookingIDFromReference(order.ReferenceID)
@@ -211,17 +251,12 @@ func (h *WebhookHandler) handlePaymentEvent(payload SquareWebhookPayload) {
 			"order_id", payment.OrderID,
 			"reference_id", order.ReferenceID,
 		)
-		return
+		return nil
 	}
 
 	booking, err := h.square.GetBooking(ctx, bookingID)
 	if err != nil {
-		slog.Error("Failed to retrieve booking for completed booking payment",
-			"error", err,
-			"booking_id", bookingID,
-			"payment_id", payment.ID,
-		)
-		return
+		return fmt.Errorf("retrieve Square booking %s for payment %s: %w", bookingID, payment.ID, err)
 	}
 
 	startAt, err := time.Parse(time.RFC3339, booking.StartAt)
@@ -242,22 +277,18 @@ func (h *WebhookHandler) handlePaymentEvent(payload SquareWebhookPayload) {
 		durationMin = booking.AppointmentSegments[0].DurationMinutes
 	}
 
-	adminEmail := os.Getenv("ADMIN_EMAIL")
+	adminEmail := notificationEmail()
 	if adminEmail == "" {
-		adminEmail = os.Getenv("EMAIL_USERNAME")
-	}
-	if adminEmail == "" {
-		slog.Warn("No admin email configured for booking payment notification")
-		return
+		return fmt.Errorf("ADMIN_EMAIL or EMAIL_USERNAME must be configured")
 	}
 
 	formattedAmount := fmt.Sprintf("%.2f", float64(payment.AmountMoney.Amount)/100.0)
 
 	msg := &services.EmailMessage{
 		To:      []string{adminEmail},
-		Subject: fmt.Sprintf("New Blue Nomad Order Paid: %s", payment.OrderID),
+		Subject: fmt.Sprintf("New Blue Nomad Booking: %s at %s", formattedDate, formattedTime),
 		BodyText: fmt.Sprintf(
-			"A booking payment has been completed.\n\nBooking ID: %s\nStatus: %s\nDate: %s\nTime: %s\nDuration: %d minutes\nCustomer ID: %s\nPayment ID: %s\nOrder ID: %s\nAmount: $%s %s\n\nThis appointment is still pending manual approval in Square.",
+			"A new appointment request has been created.\n\nBooking ID: %s\nStatus: %s\nDate: %s\nTime: %s\nDuration: %d minutes\nCustomer ID: %s\nPayment ID: %s\nOrder ID: %s\nAmount: $%s %s\n\nThis appointment is still pending manual approval in Square.",
 			booking.ID,
 			booking.Status,
 			formattedDate,
@@ -271,8 +302,8 @@ func (h *WebhookHandler) handlePaymentEvent(payload SquareWebhookPayload) {
 		),
 		BodyHTML: fmt.Sprintf(`
 			<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-				<h2 style="color: #000; text-transform: uppercase;">Booking Paid</h2>
-				<p>A client completed payment for a booking.</p>
+				<h2 style="color: #000; text-transform: uppercase;">New Appointment Request</h2>
+				<p>A new appointment has been created via the Blue Nomad website.</p>
 				<div style="background-color: #f9fafb; padding: 20px; border-radius: 4px; margin: 20px 0;">
 					<p><strong>Booking ID:</strong> %s</p>
 					<p><strong>Status:</strong> %s</p>
@@ -291,8 +322,7 @@ func (h *WebhookHandler) handlePaymentEvent(payload SquareWebhookPayload) {
 	}
 
 	if err := services.SendEmail(msg); err != nil {
-		slog.Error("Failed to send fulfillment notification email", "error", err, "booking_id", booking.ID, "payment_id", payment.ID)
-		return
+		return fmt.Errorf("send booking notification email for booking %s: %w", booking.ID, err)
 	}
 
 	slog.Info("Booking payment notification sent",
@@ -300,9 +330,11 @@ func (h *WebhookHandler) handlePaymentEvent(payload SquareWebhookPayload) {
 		"payment_id", payment.ID,
 		"payment_status", payment.Status,
 	)
+
+	return nil
 }
 
-func (h *WebhookHandler) handleBookingCreated(payload SquareWebhookPayload) {
+func (h *WebhookHandler) handleBookingCreated(_ context.Context, payload SquareWebhookPayload) error {
 	booking := payload.Data.Object.Booking
 
 	slog.Info("📅 Booking CREATED",
@@ -311,13 +343,15 @@ func (h *WebhookHandler) handleBookingCreated(payload SquareWebhookPayload) {
 		"start_at", booking.StartAt,
 		"customer_id", booking.CustomerID,
 	)
+
+	return nil
 }
 
 // handleBookingUpdated notifies the admin when a booking changes state
 // (confirmation, cancellation, reschedule, decline, etc.). Square fires
 // booking.updated for any of these transitions, so we translate the status
 // into a human-readable subject line and include the full context in the body.
-func (h *WebhookHandler) handleBookingUpdated(payload SquareWebhookPayload) {
+func (h *WebhookHandler) handleBookingUpdated(_ context.Context, payload SquareWebhookPayload) error {
 	booking := payload.Data.Object.Booking
 
 	startAt, err := time.Parse(time.RFC3339, booking.StartAt)
@@ -352,9 +386,9 @@ func (h *WebhookHandler) handleBookingUpdated(payload SquareWebhookPayload) {
 			"customer_id", booking.CustomerID,
 		)
 
-		adminEmail := os.Getenv("ADMIN_EMAIL")
+		adminEmail := notificationEmail()
 		if adminEmail == "" {
-			adminEmail = os.Getenv("EMAIL_USERNAME")
+			return fmt.Errorf("ADMIN_EMAIL or EMAIL_USERNAME must be configured")
 		}
 
 		subject := fmt.Sprintf("Booking %s: %s at %s", statusLabel, formattedDate, formattedTime)
@@ -385,14 +419,15 @@ func (h *WebhookHandler) handleBookingUpdated(payload SquareWebhookPayload) {
 		}
 
 		if err := services.SendEmail(msg); err != nil {
-			slog.Error("Failed to send booking update email", "error", err, "booking_id", booking.ID)
-		} else {
-			slog.Info("Booking update notification sent to admin", "booking_id", booking.ID)
+			return fmt.Errorf("send booking update email for booking %s: %w", booking.ID, err)
 		}
+
+		slog.Info("Booking update notification sent", "booking_id", booking.ID)
+		return nil
 
 	default:
 		slog.Debug("Skipping non-final booking update", "booking_id", booking.ID, "status", booking.Status)
-		return
+		return nil
 	}
 }
 
@@ -425,15 +460,18 @@ func (h *WebhookHandler) verifySquareSignature(body, signature string) bool {
 		return false
 	}
 
-	// Square combines your Webhook URL + the raw body, and signs it with your Signature Key
 	message := h.squareWebhookURL + body
+
 	mac := hmac.New(sha256.New, []byte(h.squareSignatureKey))
 	mac.Write([]byte(message))
-
 	expectedMAC := mac.Sum(nil)
-	expectedSignature := base64.StdEncoding.EncodeToString(expectedMAC)
 
-	return expectedSignature == signature
+	providedMAC, err := base64.StdEncoding.DecodeString(signature)
+	if err != nil {
+		return false
+	}
+
+	return hmac.Equal(expectedMAC, providedMAC)
 }
 
 func describeEvent(p WebhookPayload) string {
@@ -458,4 +496,12 @@ func bookingIDFromReference(reference string) (string, bool) {
 	}
 
 	return bookingID, true
+}
+
+func notificationEmail() string {
+	adminEmail := os.Getenv("ADMIN_EMAIL")
+	if adminEmail != "" {
+		return adminEmail
+	}
+	return os.Getenv("EMAIL_USERNAME")
 }
