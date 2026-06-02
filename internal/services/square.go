@@ -436,13 +436,14 @@ func (s *SquareClient) CreateBooking(ctx context.Context, req CreateBookingReque
 	json.Unmarshal(bookResp.Body, &bookResult)
 
 	// 3. Create a Square-hosted checkout link for prepayment
-	checkoutURL, err := s.createBookingCheckoutLink(ctx, req)
+	bookingID := bookResult.Booking.ID
+	checkoutURL, err := s.createBookingCheckoutLink(ctx, req, bookingID)
 	if err != nil {
 		return nil, fmt.Errorf("checkout link creation failed: %w", err)
 	}
 
 	return &BookingResult{
-		BookingID:   bookResult.Booking.ID,
+		BookingID:   bookingID,
 		CheckoutURL: checkoutURL,
 	}, nil
 }
@@ -450,11 +451,12 @@ func (s *SquareClient) CreateBooking(ctx context.Context, req CreateBookingReque
 // createBookingCheckoutLink generates a Square payment link for a booking.
 // Uses an ad-hoc line item (service name + price) since APPOINTMENTS_SERVICE
 // catalog items may not be orderable through the checkout API.
-func (s *SquareClient) createBookingCheckoutLink(ctx context.Context, req CreateBookingRequest) (string, error) {
+func (s *SquareClient) createBookingCheckoutLink(ctx context.Context, req CreateBookingRequest, bookingID string) (string, error) {
 	payload := map[string]interface{}{
 		"idempotency_key": uuid.New().String(),
 		"order": map[string]interface{}{
-			"location_id": s.locationID,
+			"location_id":  s.locationID,
+			"reference_id": fmt.Sprintf("booking:%s", bookingID),
 			"line_items": []map[string]interface{}{
 				{
 					"name":     req.ServiceName,
@@ -496,6 +498,77 @@ func (s *SquareClient) createBookingCheckoutLink(ctx context.Context, req Create
 	}
 
 	return result.PaymentLink.URL, nil
+}
+
+type SquareAppointmentSegment struct {
+	DurationMinutes         int    `json:"duration_minutes"`
+	ServiceVariationID      string `json:"service_variation_id"`
+	TeamMemberID            string `json:"team_member_id"`
+	ServiceVariationVersion int64  `json:"service_variation_version"`
+}
+
+type SquareBooking struct {
+	ID                  string                     `json:"id"`
+	Version             int                        `json:"version"`
+	Status              string                     `json:"status"`
+	CreatedAt           string                     `json:"created_at"`
+	UpdatedAt           string                     `json:"updated_at"`
+	StartAt             string                     `json:"start_at"`
+	LocationID          string                     `json:"location_id"`
+	CustomerID          string                     `json:"customer_id"`
+	AppointmentSegments []SquareAppointmentSegment `json:"appointment_segments"`
+}
+
+type SquareOrder struct {
+	ID          string `json:"id"`
+	LocationID  string `json:"location_id"`
+	ReferenceID string `json:"reference_id"`
+}
+
+func (s *SquareClient) GetOrder(ctx context.Context, orderID string) (*SquareOrder, error) {
+	if orderID == "" {
+		return nil, fmt.Errorf("order id is required")
+	}
+
+	resp, err := s.http.Get(ctx, "/v2/orders/"+orderID, nil)
+	if err != nil {
+		return nil, fmt.Errorf("retrieve order failed: %w", err)
+	}
+
+	var result struct {
+		Order SquareOrder `json:"order"`
+	}
+	if err := json.Unmarshal(resp.Body, &result); err != nil {
+		return nil, fmt.Errorf("failed to decode order: %w", err)
+	}
+	if result.Order.ID == "" {
+		return nil, fmt.Errorf("square returned empty order for id %s", orderID)
+	}
+
+	return &result.Order, nil
+}
+
+func (s *SquareClient) GetBooking(ctx context.Context, bookingID string) (*SquareBooking, error) {
+	if bookingID == "" {
+		return nil, fmt.Errorf("booking id is required")
+	}
+
+	resp, err := s.http.Get(ctx, "/v2/bookings/"+bookingID, nil)
+	if err != nil {
+		return nil, fmt.Errorf("retrieve booking failed: %w", err)
+	}
+
+	var result struct {
+		Booking SquareBooking `json:"booking"`
+	}
+	if err := json.Unmarshal(resp.Body, &result); err != nil {
+		return nil, fmt.Errorf("failed to decode booking: %w", err)
+	}
+	if result.Booking.ID == "" {
+		return nil, fmt.Errorf("square returned empty booking for id %s", bookingID)
+	}
+
+	return &result.Booking, nil
 }
 
 // --- Helper Functions ---

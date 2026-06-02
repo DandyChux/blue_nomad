@@ -106,6 +106,7 @@ func main() {
 		os.Getenv("SQUARE_WEBHOOK_SIGNATURE_KEY"),
 		os.Getenv("SQUARE_WEBHOOK_URL"),
 		sanityClient,
+		squareClient,
 	)
 	postHandler := handlers.NewPostHandler(sanityClient)
 	shopHandler := handlers.NewShopHandler(squareClient)

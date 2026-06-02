@@ -146,6 +146,9 @@ func SendContactForm(name, email, subject, message string) error {
 	if adminEmail == "" {
 		adminEmail = os.Getenv("EMAIL_USERNAME")
 	}
+	if adminEmail == "" {
+		return fmt.Errorf("no admin email configured")
+	}
 
 	return SendEmail(&EmailMessage{
 		To:         []string{adminEmail},
