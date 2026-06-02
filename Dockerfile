@@ -39,8 +39,13 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 
+# Install goose CLI into /go/bin/goose
+RUN go install github.com/pressly/goose/v3/cmd/goose@v3.27.1
+
 COPY cmd/ ./cmd/
 COPY internal/ ./internal/
+COPY migrations/ ./migrations/
+
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o blue_nomad ./cmd/server
 
 # ---------------------------------------------------------------------------
@@ -53,11 +58,17 @@ WORKDIR /app
 # Copy the Go binary
 COPY --from=builder /app/blue_nomad .
 
+# Goose binary
+COPY --from=builder /go/bin/goose /usr/local/bin/goose
+
+# SQL migrations
+COPY --from=builder /app/migrations ./migrations
+
 # Copy the SvelteKit build output
 COPY --from=frontend /ui/build ./static/
 
-# Tell the Go server where to find static files
 ENV STATIC_DIR=./static
+
 HEALTHCHECK --interval=30s --timeout=3s \
   CMD curl -f http://localhost:8080/healthcheck || exit 1
 
