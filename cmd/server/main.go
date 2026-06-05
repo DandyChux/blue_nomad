@@ -101,6 +101,7 @@ func main() {
 	defer pgPool.Close()
 
 	webhookQueue := services.NewWebhookQueue(pgPool)
+	bookingStore := services.NewBookingRequestStore(pgPool)
 
 	sanityClient := services.NewSanityClient(
 		os.Getenv("SANITY_PROJECT_ID"),
@@ -114,6 +115,8 @@ func main() {
 		"2026-01-22",
 	)
 
+	bookingFlow := services.NewBookingFlowService(bookingStore, squareClient)
+
 	// ── Initialize handlers ────────────────────────────────────────────────
 	newsletterHandler := handlers.NewNewsletterHandler()
 	webhookHandler := handlers.NewWebhookHandler(
@@ -123,10 +126,11 @@ func main() {
 		sanityClient,
 		squareClient,
 		webhookQueue,
+		bookingFlow,
 	)
 	postHandler := handlers.NewPostHandler(sanityClient)
 	shopHandler := handlers.NewShopHandler(squareClient)
-	bookingHandler := handlers.NewBookingHandler(squareClient)
+	bookingHandler := handlers.NewBookingHandler(squareClient, bookingFlow)
 	diagnosticHandler := handlers.NewDiagnosticHandler(newsletterHandler)
 
 	squareWorker := services.NewWebhookWorker(
@@ -164,9 +168,11 @@ func main() {
 	api.HandleFunc("POST /checkout", shopHandler.CreateCheckoutLink)
 
 	// Booking
+	api.HandleFunc("GET /booking/config", bookingHandler.GetPaymentConfig)
 	api.HandleFunc("GET /booking/services", bookingHandler.GetServices)
 	api.HandleFunc("POST /booking/availability", bookingHandler.GetAvailability)
-	api.HandleFunc("POST /booking/create", bookingHandler.CreateBooking)
+	api.HandleFunc("POST /booking/request", bookingHandler.CreateRequest)
+	api.HandleFunc("POST /booking/requests/{id}/authorize", bookingHandler.AuthorizeAndBook)
 
 	// ── Static frontend files ───────────────────────────────────────────
 	staticDir := os.Getenv("STATIC_DIR")

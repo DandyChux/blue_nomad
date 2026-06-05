@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { Button } from "$lib/components/ui/button";
+	import { onMount } from "svelte";
 	import { fly } from "svelte/transition";
+	import { Button } from "$lib/components/ui/button";
 	import { pageTitle } from "../../+layout.svelte";
 
-	// Read the booking summary saved before redirect
 	let summary = $state<{
 		name: string;
 		service: string;
@@ -11,7 +11,7 @@
 		time: string;
 	} | null>(null);
 
-	$effect(() => {
+	onMount(() => {
 		try {
 			const stored = localStorage.getItem("bn_booking");
 			if (stored) {
@@ -25,7 +25,7 @@
 </script>
 
 <svelte:head>
-	<title>{pageTitle("Booking Confirmed")}</title>
+	<title>{pageTitle("Booking Request Submitted")}</title>
 </svelte:head>
 
 <section
@@ -35,25 +35,22 @@
 	<h2
 		class="uppercase text-7xl lg:text-[9rem] tracking-tighter leading-[0.85] font-light"
 	>
-		See <br /> You <br /> Soon.
+		Request <br /> Received.
 	</h2>
 
 	<div
 		class="font-source-code-pro uppercase text-[11px] tracking-[0.2em] space-y-2"
 	>
 		{#if summary}
-			<p class="text-foreground">
-				Confirmed for {summary.name}
-			</p>
-			<p class="text-foreground/80">
-				{summary.service}
-			</p>
+			<p class="text-foreground">Submitted for {summary.name}</p>
+			<p class="text-foreground/80">{summary.service}</p>
 			<p class="text-foreground/80">
 				{summary.date} &mdash; {summary.time}
 			</p>
 		{/if}
 		<p class="text-foreground/60 pt-2">
-			A confirmation email with your booking details is on its way
+			Your payment details were captured and your appointment request is
+			now awaiting manual approval.
 		</p>
 	</div>
 

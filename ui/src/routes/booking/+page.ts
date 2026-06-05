@@ -43,8 +43,6 @@ export const load: PageLoad = async ({ url }) => {
 				};
 			});
 
-		console.log(services);
-
 		return { services };
 	} catch (err) {
 		if (err instanceof ApiError && err.isNotFound) {

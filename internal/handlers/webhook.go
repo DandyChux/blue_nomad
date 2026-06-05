@@ -37,6 +37,8 @@ type SquareWebhookPayload struct {
 			Payment struct {
 				ID          string `json:"id"`
 				OrderID     string `json:"order_id"`
+				ReferenceID string `json:"reference_id"`
+				CustomerID  string `json:"customer_id"`
 				Status      string `json:"status"`
 				AmountMoney struct {
 					Amount   int64  `json:"amount"`
@@ -69,6 +71,7 @@ type WebhookHandler struct {
 	sanity             *services.SanityClient
 	square             *services.SquareClient
 	queue              *services.WebhookQueue
+	flow               *services.BookingFlowService
 
 	mu            sync.RWMutex
 	lastInvalidAt time.Time
@@ -76,7 +79,7 @@ type WebhookHandler struct {
 }
 
 // Updated Constructor
-func NewWebhookHandler(secret, squareSignatureKey, squareWebhookURL string, sanity *services.SanityClient, square *services.SquareClient, queue *services.WebhookQueue) *WebhookHandler {
+func NewWebhookHandler(secret, squareSignatureKey, squareWebhookURL string, sanity *services.SanityClient, square *services.SquareClient, queue *services.WebhookQueue, flow *services.BookingFlowService) *WebhookHandler {
 	return &WebhookHandler{
 		secret:             secret,
 		squareSignatureKey: squareSignatureKey,
@@ -84,6 +87,7 @@ func NewWebhookHandler(secret, squareSignatureKey, squareWebhookURL string, sani
 		sanity:             sanity,
 		square:             square,
 		queue:              queue,
+		flow:               flow,
 	}
 }
 
@@ -224,114 +228,93 @@ func (h *WebhookHandler) handlePaymentEvent(ctx context.Context, payload SquareW
 	payment := payload.Data.Object.Payment
 
 	if payment.Status != "APPROVED" {
-		slog.Debug("Ignoring payment event with non-booking-ready status",
+		slog.Debug("Ignoring payment event with non-approved status",
 			"payment_id", payment.ID,
 			"status", payment.Status,
 		)
 		return nil
 	}
 
-	if payment.OrderID == "" {
-		slog.Debug("Ignoring completed payment without order ID", "payment_id", payment.ID)
+	req, err := h.flow.RecoverApprovedPayment(ctx, services.ApprovedPaymentInfo{
+		ID:          payment.ID,
+		Status:      payment.Status,
+		ReferenceID: payment.ReferenceID,
+		CustomerID:  payment.CustomerID,
+		OrderID:     payment.OrderID,
+	})
+	if err != nil {
+		return err
+	}
+	if req == nil {
+		return nil
+	}
+	if req.Status != services.BookingRequestStatusBookingCreated {
+		return nil
+	}
+	if req.AdminNotifiedAt != nil {
 		return nil
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
-	order, err := h.square.GetOrder(ctx, payment.OrderID)
-	if err != nil {
-		return fmt.Errorf("retrieve Square order %s for payment %s: %w", payment.OrderID, payment.ID, err)
+	if err := h.sendBookingRequestNotification(req, payment.AmountMoney.Amount, payment.AmountMoney.Currency); err != nil {
+		return err
 	}
 
-	bookingID, ok := bookingIDFromReference(order.ReferenceID)
-	if !ok {
-		slog.Debug("Ignoring non-booking payment",
-			"payment_id", payment.ID,
-			"order_id", payment.OrderID,
-			"reference_id", order.ReferenceID,
-		)
-		return nil
-	}
+	return h.flow.MarkAdminNotified(ctx, req.ID)
+}
 
-	booking, err := h.square.GetBooking(ctx, bookingID)
-	if err != nil {
-		return fmt.Errorf("retrieve Square booking %s for payment %s: %w", bookingID, payment.ID, err)
-	}
-
-	startAt, err := time.Parse(time.RFC3339, booking.StartAt)
-	var formattedDate, formattedTime string
-	if err == nil {
-		if loc, lerr := time.LoadLocation("America/New_York"); lerr == nil {
-			startAt = startAt.In(loc)
-		}
-		formattedDate = startAt.Format("Monday, January 2, 2006")
-		formattedTime = startAt.Format("3:04 PM")
-	} else {
-		formattedDate = booking.StartAt
-		formattedTime = ""
-	}
-
-	var durationMin int
-	if len(booking.AppointmentSegments) > 0 {
-		durationMin = booking.AppointmentSegments[0].DurationMinutes
-	}
-
+func (h *WebhookHandler) sendBookingRequestNotification(req *services.BookingRequest, amountCents int64, currency string) error {
 	adminEmail := notificationEmail()
 	if adminEmail == "" {
 		return fmt.Errorf("ADMIN_EMAIL or EMAIL_USERNAME must be configured")
 	}
 
-	formattedAmount := fmt.Sprintf("%.2f", float64(payment.AmountMoney.Amount)/100.0)
+	startAt := req.StartAt
+	if loc, err := time.LoadLocation("America/New_York"); err == nil {
+		startAt = startAt.In(loc)
+	}
+
+	formattedDate := startAt.Format("Monday, January 2, 2006")
+	formattedTime := startAt.Format("3:04 PM")
+	formattedAmount := fmt.Sprintf("%.2f", float64(amountCents)/100.0)
 
 	msg := &services.EmailMessage{
 		To:      []string{adminEmail},
 		Subject: fmt.Sprintf("New Blue Nomad Booking: %s at %s", formattedDate, formattedTime),
 		BodyText: fmt.Sprintf(
-			"A new appointment request has been created.\n\nBooking ID: %s\nStatus: %s\nDate: %s\nTime: %s\nDuration: %d minutes\nCustomer ID: %s\nPayment ID: %s\nOrder ID: %s\nAmount: $%s %s\n\nThis appointment is still pending manual approval in Square.",
-			booking.ID,
-			booking.Status,
+			"A new appointment request has been created.\n\nBooking Request ID: %s\nBooking ID: %s\nStatus: %s\nDate: %s\nTime: %s\nService: %s\nAmount: $%s %s\nCustomer: %s %s\nEmail: %s\nPhone: %s\n\nPayment details have been captured and the Square booking has been created. The appointment is awaiting manual approval.",
+			req.ID,
+			req.SquareBookingID,
+			req.SquareBookingStatus,
 			formattedDate,
 			formattedTime,
-			durationMin,
-			booking.CustomerID,
-			payment.ID,
-			payment.OrderID,
+			req.ServiceName,
 			formattedAmount,
-			payment.AmountMoney.Currency,
+			currency,
+			req.GivenName,
+			req.FamilyName,
+			req.EmailAddress,
+			req.PhoneNumber,
 		),
 		BodyHTML: fmt.Sprintf(`
 			<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
 				<h2 style="color: #000; text-transform: uppercase;">New Appointment Request</h2>
 				<p>A new appointment has been created via the Blue Nomad website.</p>
 				<div style="background-color: #f9fafb; padding: 20px; border-radius: 4px; margin: 20px 0;">
-					<p><strong>Booking ID:</strong> %s</p>
-					<p><strong>Status:</strong> %s</p>
 					<p><strong>Date:</strong> %s</p>
 					<p><strong>Time:</strong> %s</p>
-					<p><strong>Duration:</strong> %d minutes</p>
-					<p><strong>Customer ID:</strong> %s</p>
-					<p><strong>Payment ID:</strong> %s</p>
-					<p><strong>Order ID:</strong> %s</p>
-					<p><strong>Total Amount:</strong> $%s %s</p>
+					<p><strong>Service:</strong> %s</p>
+					<p><strong>Booking ID:</strong> %s</p>
+					<p><strong>Amount:</strong> $%s %s</p>
+					<p><strong>Client:</strong> %s %s</p>
+					<p><strong>Email:</strong> %s</p>
 				</div>
-				<p>Payment details have been captured. This booking is awaiting manual approval in Square.</p>
+				<p>This booking is awaiting manual approval in Square.</p>
 				<p><a href="https://squareup.com/dashboard/appointments">Open in Square Appointments</a></p>
 			</div>
-		`, booking.ID, booking.Status, formattedDate, formattedTime, durationMin, booking.CustomerID, payment.ID, payment.OrderID, formattedAmount, payment.AmountMoney.Currency),
+		`, formattedDate, formattedTime, req.ServiceName, req.SquareBookingID, formattedAmount, currency, req.GivenName, req.FamilyName, req.EmailAddress),
 	}
 
-	if err := services.SendEmail(msg); err != nil {
-		return fmt.Errorf("send booking notification email for booking %s: %w", booking.ID, err)
-	}
-
-	slog.Info("Booking payment notification sent",
-		"booking_id", booking.ID,
-		"payment_id", payment.ID,
-		"payment_status", payment.Status,
-	)
-
-	return nil
+	return services.SendEmail(msg)
 }
 
 func (h *WebhookHandler) handleBookingCreated(_ context.Context, payload SquareWebhookPayload) error {
