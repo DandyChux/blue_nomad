@@ -60,6 +60,39 @@
 		},
 	});
 
+	function normalizePhone(raw: string): string {
+		const trimmed = raw.trim();
+		if (!trimmed) return "";
+
+		if (trimmed.startsWith("+")) {
+			const digits = "+" + trimmed.slice(1).replace(/\D/g, "");
+			if (/^\+\d{9,16}$/.test(digits)) return digits;
+			return "";
+		}
+
+		const digits = trimmed.replace(/\D/g, "");
+
+		// US 10-digit
+		if (digits.length === 10) {
+			return `+1${digits}`;
+		}
+
+		// US 11-digit starting with 1
+		if (digits.length === 11 && digits.startsWith("1")) {
+			return `+${digits}`;
+		}
+
+		return "";
+	}
+
+	const normalizedPhone = $derived(normalizePhone(booking.customer.phone));
+
+	const phoneValidationMessage = $derived(
+		booking.customer.phone && !normalizedPhone
+			? "Enter a valid mobile number"
+			: "",
+	);
+
 	const service = $derived(data.service);
 	const itemData = $derived(service.item_data);
 	const imageUrls = $derived(data.imageUrls);
@@ -85,6 +118,7 @@
 			booking.customer.first &&
 			booking.customer.last &&
 			booking.customer.email &&
+			normalizedPhone &&
 			booking.time,
 		),
 	);
@@ -296,7 +330,7 @@
 				given_name: booking.customer.first,
 				family_name: booking.customer.last,
 				email_address: booking.customer.email,
-				phone_number: booking.customer.phone,
+				phone_number: normalizedPhone,
 				service_name: itemData.name,
 				price_cents: priceCents,
 			},
@@ -341,7 +375,7 @@
 							givenName: booking.customer.first,
 							familyName: booking.customer.last,
 							email: booking.customer.email,
-							phone: booking.customer.phone,
+							phone: normalizedPhone,
 						},
 					},
 				);
@@ -411,7 +445,7 @@
 		class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20"
 	>
 		<div class="flex flex-col gap-4 lg:sticky lg:top-36 lg:self-start">
-			<div class="relative w-full aspect-[3/4] bg-muted overflow-hidden">
+			<div class="relative w-full aspect-3/4 bg-muted overflow-hidden">
 				{#key activeImageIndex}
 					<div in:fade={{ duration: 300 }} class="absolute inset-0">
 						<Picture
@@ -613,10 +647,20 @@
 						</Label>
 						<Input
 							type="tel"
+							inputmode="tel"
+							autocomplete="tel"
 							bind:value={booking.customer.phone}
-							placeholder="Optional"
+							required
+							placeholder="(555) 555-5555"
 							class="rounded-none border-0 border-b border-border bg-transparent px-0 h-12 focus-visible:ring-0 focus-visible:border-foreground shadow-none text-lg"
 						/>
+						{#if phoneValidationMessage}
+							<p
+								class="text-destructuive text-xs font-source-code-pro uppercase tracking-wide"
+							>
+								{phoneValidationMessage}
+							</p>
+						{/if}
 					</div>
 
 					<Button

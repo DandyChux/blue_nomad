@@ -83,7 +83,7 @@ func (h *BookingHandler) CreateRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if req.ServiceVariationID == "" || req.TeamMemberID == "" || req.StartAt == "" || req.EmailAddress == "" {
+	if req.ServiceVariationID == "" || req.TeamMemberID == "" || req.StartAt == "" || req.EmailAddress == "" || req.PhoneNumber == "" {
 		http.Error(w, "Missing required booking details", http.StatusBadRequest)
 		return
 	}

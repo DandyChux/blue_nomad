@@ -182,7 +182,7 @@ export const CreateBookingRequestSchema = z.object({
 	given_name: z.string().min(1, "First name is required"),
 	family_name: z.string().min(1, "Last name is required"),
 	email_address: z.email("Please enter a valid email"),
-	phone_number: z.string().optional(),
+	phone_number: z.string().min(1, "Phone number is required"),
 	service_name: z.string().min(1),
 	price_cents: z.number().int().positive(),
 });

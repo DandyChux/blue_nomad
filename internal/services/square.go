@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -607,4 +608,45 @@ func generateIdempotencyKey() string {
 		return fmt.Sprintf("%d_%d", time.Now().UnixNano(), os.Getpid())
 	}
 	return hex.EncodeToString(bytes)
+}
+
+func normalizeUSPhone(raw string) string {
+	raw = strings.TrimSpace(raw)
+	if raw == "" {
+		return ""
+	}
+
+	// Keep leading + if present, strip other non-digits
+	if strings.HasPrefix(raw, "+") {
+		digits := "+"
+		for _, r := range raw[1:] {
+			if r >= '0' && r <= '9' {
+				digits += string(r)
+			}
+		}
+		if len(digits) >= 10 && len(digits) <= 16 {
+			return digits
+		}
+		return ""
+	}
+
+	// Strip non-digits
+	digits := make([]rune, 0, len(raw))
+	for _, r := range raw {
+		if r >= '0' && r <= '9' {
+			digits = append(digits, r)
+		}
+	}
+
+	// Assume US numbers when 10 digits are entered
+	if len(digits) == 10 {
+		return "+1" + string(digits)
+	}
+
+	// Allow US 11-digit numbers starting with 1
+	if len(digits) == 11 && digits[0] == '1' {
+		return "+" + string(digits)
+	}
+
+	return ""
 }
