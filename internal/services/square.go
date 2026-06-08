@@ -510,7 +510,7 @@ func (s *SquareClient) CreateBookingCustomer(ctx context.Context, req CreateBook
 func (s *SquareClient) AuthorizeBookingPayment(ctx context.Context, req AuthorizeSquareBookingPaymentRequest) (*SquarePayment, error) {
 	payload := map[string]interface{}{
 		"source_id":       req.SourceID,
-		"idempotency_key": fmt.Sprintf("pa:%s", req.BookingRequestID),
+		"idempotency_key": generateIdempotencyKey(),
 		"autocomplete":    false,
 		"delay_action":    "CANCEL",
 		"amount_money": map[string]interface{}{
@@ -518,7 +518,7 @@ func (s *SquareClient) AuthorizeBookingPayment(ctx context.Context, req Authoriz
 			"currency": req.Currency,
 		},
 		"location_id":         s.locationID,
-		"reference_id":        fmt.Sprintf("booking_request:%s", req.BookingRequestID),
+		"reference_id":        uuid.New().String(),
 		"buyer_email_address": req.EmailAddress,
 		"buyer_phone_number":  req.PhoneNumber,
 		"note":                fmt.Sprintf("Blue Nomad booking request for %s", req.ServiceName),

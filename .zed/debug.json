@@ -11,14 +11,4 @@
 		"mode": "debug",
 		"cwd": "${ZED_WORKTREE_ROOT}/cmd/server",
 	},
-	// {
-	//    "adapter": "JavaScript",
-	//    "label": "Debug in Chrome",
-	//    "type": "chrome",
-	//    "request": "launch",
-	//    "url": "http://localhost:9339/",
-	//    "webRoot": "$ZED_WORKTREE_ROOT/src",
-	//    "console": "integratedTerminal",
-	//    "skipFiles": ["<node_internals>/**"]
-	//  }
 ]

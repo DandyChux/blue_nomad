@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"os"
@@ -142,7 +143,7 @@ func (h *BookingHandler) AuthorizeAndBook(w http.ResponseWriter, r *http.Request
 			http.Error(w, "That time slot is no longer available. Please pick another.", http.StatusConflict)
 		default:
 			slog.Error("failed to authorize booking payment and create booking", "error", err, "request_id", requestID)
-			http.Error(w, "Could not finalize booking", http.StatusUnprocessableEntity)
+			http.Error(w, fmt.Sprintf("failed to authorize booking payment and create booking: %v", err), http.StatusUnprocessableEntity)
 		}
 		return
 	}
