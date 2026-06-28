@@ -21,6 +21,7 @@
 	import { initBooking } from "$lib/context/booking.svelte";
 	import BookingDrawer from "$lib/components/booking-drawer.svelte";
 	import FloatingVideo from "$lib/components/floating-video.svelte";
+	import { Toaster } from "$lib/components/ui/sonner";
 
 	let { children } = $props();
 
@@ -79,5 +80,6 @@
 </main>
 
 <Footer />
-<DiagnosticButton />
+<!-- <DiagnosticButton /> -->
+<Toaster />
 <CartDrawer />

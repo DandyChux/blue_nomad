@@ -527,7 +527,7 @@
 					</h2>
 
 					<div
-						class="flex justify-center p-8 bg-black/5 dark:bg-white/5 backdrop-blur-sm border border-border"
+						class="flex justify-center p-8 bg-black/5 dark:bg-white/5 backdrop-blur-sm border border-border rounded-2xl"
 					>
 						<Calendar
 							type="single"
@@ -575,7 +575,9 @@
 					{/if}
 
 					<Button
-						class="w-full uppercase rounded-none h-16 bg-foreground text-background tracking-widest font-source-code-pro text-sm disabled:opacity-20 transition-opacity"
+						class="w-full uppercase tracking-widest font-source-code-pro text-sm rounded-2xl"
+						variant="outline"
+						size="xl"
 						disabled={!booking.time}
 						onclick={goToDetails}
 					>
@@ -664,7 +666,9 @@
 					</div>
 
 					<Button
-						class="w-full uppercase rounded-none h-16 bg-foreground text-background tracking-widest font-source-code-pro text-sm disabled:opacity-20 transition-opacity"
+						class="w-full uppercase tracking-widest font-source-code-pro text-sm rounded-2xl"
+						variant="outline"
+						size="xl"
 						onclick={goToPayment}
 						disabled={!canContinueFromDetails}
 					>

@@ -15,6 +15,8 @@ import (
 	"sync"
 	"time"
 
+	_ "time/tzdata"
+
 	"github.com/dandychux/blue_nomad/internal/services"
 )
 
@@ -268,13 +270,7 @@ func (h *WebhookHandler) sendBookingRequestNotification(req *services.BookingReq
 		return fmt.Errorf("ADMIN_EMAIL or EMAIL_USERNAME must be configured")
 	}
 
-	startAt := req.StartAt
-	if loc, err := time.LoadLocation("America/New_York"); err == nil {
-		startAt = startAt.In(loc)
-	}
-
-	formattedDate := startAt.Format("Monday, January 2, 2006")
-	formattedTime := startAt.Format("3:04 PM")
+	formattedDate, formattedTime := formatBookingTime(req.StartAt)
 	formattedAmount := fmt.Sprintf("%.2f", float64(amountCents)/100.0)
 
 	msg := &services.EmailMessage{
@@ -337,15 +333,9 @@ func (h *WebhookHandler) handleBookingCreated(_ context.Context, payload SquareW
 func (h *WebhookHandler) handleBookingUpdated(_ context.Context, payload SquareWebhookPayload) error {
 	booking := payload.Data.Object.Booking
 
-	startAt, err := time.Parse(time.RFC3339, booking.StartAt)
-	var formattedDate, formattedTime string
-	if err == nil {
-		if loc, lerr := time.LoadLocation("America/New_York"); lerr == nil {
-			startAt = startAt.In(loc)
-		}
-		formattedDate = startAt.Format("Monday, January 2, 2006")
-		formattedTime = startAt.Format("3:04 PM")
-	} else {
+	formattedDate, formattedTime, err := parseAndFormatBookingTime(booking.StartAt)
+	if err != nil {
+		slog.Warn("failed to parse booking start time", "start_at", booking.StartAt, "error", err)
 		formattedDate = booking.StartAt
 	}
 
@@ -357,7 +347,7 @@ func (h *WebhookHandler) handleBookingUpdated(_ context.Context, payload SquareW
 	}
 
 	switch booking.Status {
-	case "ACCEPTED", "DECLINED", "CANCELLED_BY_CUSTOMER", "CANCELLED_BY_SELLER", "NO_SHOW":
+	case "ACCEPTED", "DECLINED", "CANCELLED_BY_CUSTOMER", "NO_SHOW":
 		// Map Square's status to a friendly subject prefix
 		statusLabel := bookingStatusLabel(booking.Status)
 
@@ -414,6 +404,58 @@ func (h *WebhookHandler) handleBookingUpdated(_ context.Context, payload SquareW
 	}
 }
 
+// verifySquareSignature mathematically proves the request came from Square
+func (h *WebhookHandler) verifySquareSignature(body, signature string) bool {
+	if h.squareSignatureKey == "" || signature == "" {
+		return false
+	}
+
+	message := h.squareWebhookURL + body
+
+	mac := hmac.New(sha256.New, []byte(h.squareSignatureKey))
+	mac.Write([]byte(message))
+	expectedMAC := mac.Sum(nil)
+
+	providedMAC, err := base64.StdEncoding.DecodeString(signature)
+	if err != nil {
+		return false
+	}
+
+	return hmac.Equal(expectedMAC, providedMAC)
+}
+
+const defaultBusinessTimezone = "America/New_York"
+
+func bookingLocation() *time.Location {
+	tz := os.Getenv("BUSINESS_TIMEZONE")
+	if tz == "" {
+		tz = defaultBusinessTimezone
+	}
+
+	loc, err := time.LoadLocation(tz)
+	if err != nil {
+		slog.Error("failed to load booking timezone", "timezone", tz, "error", err)
+		return time.UTC
+	}
+
+	return loc
+}
+
+func formatBookingTime(t time.Time) (string, string) {
+	local := t.In(bookingLocation())
+	return local.Format("Monday, January 2, 2006"), local.Format("3:04 PM MST")
+}
+
+func parseAndFormatBookingTime(raw string) (string, string, error) {
+	t, err := time.Parse(time.RFC3339, raw)
+	if err != nil {
+		return raw, "", err
+	}
+
+	date, clock := formatBookingTime(t)
+	return date, clock, nil
+}
+
 // bookingStatusLabel maps Square booking statuses to human-friendly text.
 func bookingStatusLabel(status string) string {
 	switch status {
@@ -435,26 +477,6 @@ func bookingStatusLabel(status string) string {
 		}
 		return status
 	}
-}
-
-// verifySquareSignature mathematically proves the request came from Square
-func (h *WebhookHandler) verifySquareSignature(body, signature string) bool {
-	if h.squareSignatureKey == "" || signature == "" {
-		return false
-	}
-
-	message := h.squareWebhookURL + body
-
-	mac := hmac.New(sha256.New, []byte(h.squareSignatureKey))
-	mac.Write([]byte(message))
-	expectedMAC := mac.Sum(nil)
-
-	providedMAC, err := base64.StdEncoding.DecodeString(signature)
-	if err != nil {
-		return false
-	}
-
-	return hmac.Equal(expectedMAC, providedMAC)
 }
 
 func describeEvent(p WebhookPayload) string {

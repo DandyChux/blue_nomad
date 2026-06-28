@@ -36,5 +36,6 @@ clean:
 	@echo "Cleaning..."
 	rm -rf node_modules ui/build bin
 
+# usage: make migrate-up DATABASE_URL=<your_database_url>
 migrate-up:
-	@goose -dir migrations postgres "${DATABASE_URL}" up
+	@goose -dir migrations postgres "$(DATABASE_URL)" up

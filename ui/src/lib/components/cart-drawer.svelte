@@ -174,8 +174,25 @@
 					{isCheckingOut ? "Preparing bag..." : "Checkout"}
 				</Button>
 				<p class="text-center text-xs mt-4 font-source-code-pro w-full">
-					Shipping & taxes calculated at checkout.
+					Pickup-only checkout. Taxes calculated at checkout.
 				</p>
+
+				<div
+					class="mt-4 rounded-md border border-border bg-muted/30 p-4 text-left"
+				>
+					<p
+						class="font-source-code-pro text-[11px] uppercase tracking-widest"
+					>
+						In-studio pickup
+					</p>
+					<p
+						class="mt-2 text-sm leading-relaxed text-muted-foreground"
+					>
+						Orders are available for pickup at Blue Nomad in New
+						York City. You’ll receive confirmation after purchase
+						with next steps for pickup.
+					</p>
+				</div>
 			</Sheet.Footer>
 		{/if}
 	</Sheet.Content>

@@ -334,6 +334,8 @@ func (s *SquareClient) CreatePaymentLink(ctx context.Context, cartData CheckoutR
 	}
 
 	// Construct the CreatePaymentLink payload
+	pickupNote := "Pickup only at Blue Nomad, 1123 Broadway, #1014, New York, NY 10010. We'll contact you with pickup instructions after your oder is placed."
+
 	payload := map[string]interface{}{
 		// Idempotency key prevents double-charging if the network hiccups
 		"idempotency_key": uuid.New().String(),
@@ -344,11 +346,23 @@ func (s *SquareClient) CreatePaymentLink(ctx context.Context, cartData CheckoutR
 				"auto_apply_taxes":     true,
 				"auto_apply_discounts": true,
 			},
+			"fulfillments": []map[string]interface{}{
+				{
+					"type":  "PICKUP",
+					"state": "PROPOSED",
+					"pickup_details": map[string]interface{}{
+						"schedule_type": "ASAP",
+						"note":          pickupNote,
+					},
+				},
+			},
 		},
 		"checkout_options": map[string]interface{}{
 			"redirect_url":             "https://bluenomadworld.com/shop/success",
-			"ask_for_shipping_address": true,
+			"ask_for_shipping_address": false,
+			"merchant_support_email":   notificationEmail(),
 		},
+		"payment_note": "Blue Nomad order – pickup only",
 	}
 
 	bodyBytes, _ := json.Marshal(payload)
@@ -649,4 +663,12 @@ func normalizeUSPhone(raw string) string {
 	}
 
 	return ""
+}
+
+func notificationEmail() string {
+	adminEmail := os.Getenv("ADMIN_EMAIL")
+	if adminEmail != "" {
+		return adminEmail
+	}
+	return os.Getenv("EMAIL_USERNAME")
 }

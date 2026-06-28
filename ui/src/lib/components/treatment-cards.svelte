@@ -137,8 +137,6 @@
 		})}
 		variant="link"
 		href="/booking"
-		target="_blank"
-		rel="noopener noreferrer"
 	>
 		Book a <br />
 		Treatment

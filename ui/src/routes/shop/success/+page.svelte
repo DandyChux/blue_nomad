@@ -39,7 +39,7 @@
 
 		<p class="text-lg lg:text-xl mb-2">
 			Your order has been received. A confirmation email with your receipt
-			and shipping details will arrive shortly.
+			and pickup details will arrive shortly.
 		</p>
 
 		<p class="font-source-code-pro text-sm uppercase tracking-widest mb-8">

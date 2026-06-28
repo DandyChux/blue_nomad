@@ -1,9 +1,12 @@
 <script lang="ts">
 	import { Input } from "$lib/components/ui/input";
-	import { Button } from "$lib/components/ui/button";
+	import { Button, buttonVariants } from "$lib/components/ui/button";
 	import * as Pagination from "$lib/components/ui/pagination";
 	import * as Empty from "$lib/components/ui/empty";
+	import * as Item from "$lib/components/ui/item";
+	import * as Card from "$lib/components/ui/card";
 	import Picture from "$lib/components/picture.svelte";
+	import Rating from "$lib/components/rating.svelte";
 	import { generateSrcSet, debounce, cn } from "$lib/utils";
 	import { page } from "$app/state";
 	import { goto } from "$app/navigation";
@@ -11,7 +14,7 @@
 	import type { CatalogItem } from "$lib/schemas";
 	import Video from "$lib/components/video.svelte";
 	import InfiniteMovingCards from "$lib/components/infinite-moving-cards.svelte";
-	import { pressBrands } from "../+page.svelte";
+	import { pressBrands } from "$lib";
 	import { trackEvent } from "$lib/analytics.svelte.js";
 
 	let { data } = $props();
@@ -49,12 +52,19 @@
 	);
 
 	// Split into featured (first) and the rest
-	const featured = $derived(
+	const coreTreatment = $derived(
 		paginatedServices.find((s) => s.id === "TWYSCIC46EIMS3SD2A6UMJ5H") ??
 			paginatedServices[0] ??
 			null,
 	);
-	const remaining = $derived(paginatedServices.slice(1));
+	const remaining = $derived(
+		filteredServices.filter(
+			(s) =>
+				s.id !== "TWYSCIC46EIMS3SD2A6UMJ5H" &&
+				s.id !== "W3E6HQXJJYYRQXT5LXSCVVSF" &&
+				s.id !== "TP44ASSCFLTJZRS4THKLJMTF",
+		),
+	);
 
 	// Helpers
 	const getDuration = (s: CatalogItem) =>
@@ -71,20 +81,23 @@
 	// Search bar visibility toggle
 	let showSearch = $state(false);
 
-	let featuredTreatmentId = $derived(featured?.id ?? null);
+	let featuredTreatmentId = $derived(coreTreatment?.id ?? null);
 
 	const testimonials = [
 		{
 			quote: "Calming, relaxing, informative, honest. Highly recommend! My skin feels and looks great.",
 			author: "Anna, BK",
+			rating: 5,
 		},
 		{
 			quote: "Come here for a bespoke and private treatment in a space that feels like…a new home.",
 			author: "Siba, Bed-Stuy",
+			rating: 5,
 		},
 		{
 			quote: "What an incredible experience! 10/10 recommend!!! I'm hooked.",
 			author: "Ron, West Village",
+			rating: 5,
 		},
 	];
 
@@ -140,228 +153,332 @@
 
 		<!-- Hero Content -->
 		<div
-			class="absolute inset-0 flex flex-col justify-end px-6 md:px-12 lg:px-16 pb-16 lg:pb-24 max-w-5xl"
+			class="absolute inset-0 flex flex-col justify-end px-6 md:px-12 lg:px-16 pb-16 lg:pb-24 w-full"
 		>
 			<p
-				class="font-source-code-pro text-[11px] uppercase tracking-[0.3em] text-white/60 mb-4"
+				class="font-source-code-pro text-[11px] lg:text-[16px] uppercase tracking-[0.3em] text-white/60 mb-4 font-extrabold text-center lg:text-start"
 				in:fly={{ y: 10, duration: 600, delay: 200 }}
 			>
 				Blue Nomad Skin Health Studio
 			</p>
 			<h1
-				class="uppercase text-2xl lg:text-4xl tracking-tighter font-light text-brand-white leading-[0.9] mb-6"
+				class="uppercase text-center lg:text-left text-[32px] lg:text-[72px] tracking-tighter font-light text-brand-white leading-[0.9] mb-6"
 				in:fly={{ y: 20, duration: 600, delay: 300 }}
 			>
 				<span>Your Skin</span>
 				<br />
-				<span class="pl-4 md:pl-8">Our Practice</span>
+				Our Practice
 				<!-- <br />
 				<span class="pl-8 md:pl-16">Everything Around</span> -->
 			</h1>
 			<p
-				class="text-white/70 text-lg md:text-xl max-w-xl leading-relaxed font-light"
+				class="text-white/70 md:text-[18px] max-w-xl leading-relaxed font-light"
 				in:fly={{ y: 20, duration: 600, delay: 400 }}
 			>
 				Personalized treatments designed to restore, protect, and
 				support long-term skin health.
 			</p>
 
-			<!-- Scroll Indicator -->
-			<div class="mt-12 flex items-center gap-3" in:fade={{ delay: 800 }}>
-				<div class="w-[1px] h-12 bg-white/40 animate-pulse"></div>
-				<a
-					class="font-source-code-pro text-[10px] uppercase tracking-widest text-white/40 underline"
-					href={`/booking/${featuredTreatmentId}`}
-				>
-					Book Facial Skin Therapy
-				</a>
-			</div>
+			<Button
+				variant="link"
+				href={`/booking/${featuredTreatmentId}`}
+				size="xl"
+				class={buttonVariants({
+					variant: "outline",
+					class: "border-white text-white rounded-full mt-12 border self-center px-8 uppercase tracking-wide font-source-code-pro font-light hover:motion-safe:scale-125 hover:bg-white hover:text-black",
+				})}
+			>
+				Explore Treatments
+			</Button>
 		</div>
 	</div>
 
-	<!-- ======================== -->
-	<!-- FILTER BAR               -->
-	<!-- ======================== -->
-	<!-- <div
-		class="w-full px-6 md:px-12 lg:px-16 py-6 border-border flex items-center justify-between"
-	>
-		<p
-			class="font-source-code-pro text-[11px] uppercase tracking-widest text-muted-foreground"
-		>
-			{filteredServices.length} Treatments
-		</p>
-
-		<div class="flex items-center gap-4">
-			{#if showSearch}
-				<div in:fly={{ x: 20, duration: 300 }}>
-					<Input
-						type="text"
-						value={searchQuery}
-						oninput={(e) => debouncedSearch(e.currentTarget.value)}
-						placeholder="Search..."
-						autofocus
-						class="w-48 md:w-64 border-0 border-b border-border rounded-none bg-transparent font-source-code-pro text-sm focus-visible:ring-0 shadow-none px-0"
+	{#if paginatedServices.length === 0}
+		<div class="w-full flex justify-center py-32">
+			<Empty.Root
+				class="border border-dashed w-full max-w-xl min-h-[400px] flex flex-col items-center justify-center bg-transparent"
+			>
+				<Empty.Header>
+					<Empty.Title
+						class="uppercase font-source-code-pro font-normal tracking-widest text-sm"
+					>
+						No treatments found.
+					</Empty.Title>
+				</Empty.Header>
+			</Empty.Root>
+		</div>
+	{:else}
+		<div class="flex flex-col lg:flex-row">
+			{#if coreTreatment}
+				<div
+					class="relative group lg:flex-1 aspect-3/4 lg:aspect-auto overflow-hidden mx-8 my-20 lg:m-0"
+				>
+					<Picture
+						src={coreTreatment.image_url || ""}
+						alt={coreTreatment.item_data.name}
+						class="w-full h-full object-cover transition-transform duration-1000"
+						loading="eager"
+						sizes="(max-width: 768px) 100vw, 50vw"
+						sources={coreTreatment.image_url
+							? [
+									{
+										type: "image/webp",
+										srcset: generateSrcSet(
+											coreTreatment.image_url,
+											[600, 1000, 1600],
+											"webp",
+											85,
+										),
+									},
+								]
+							: []}
 					/>
+
+					<div class="absolute inset-0 bg-black/10" />
+					<!-- Mobile only description -->
+					<div
+						class="absolute inset-0 flex flex-col p-6 text-brand-white md:p-8 lg:hidden"
+					>
+						<div class="flex items-center">
+							<h2
+								class="font-source-code-pro text-[12px] uppercase font-semibold tracking-wider underline-offset-8 underline"
+							>
+								Core Treatment
+							</h2>
+							<p class="uppercase font-semibold ml-auto">
+								{getDuration(coreTreatment)} Min — ${getPrice(
+									coreTreatment,
+								)}
+							</p>
+						</div>
+						<p
+							class="uppercase text-4xl lg:text-7xl tracking-tighter font-light leading-[0.95] my-4"
+						>
+							{coreTreatment.item_data.name}
+						</p>
+						<p
+							class="leading-6 mb-6 font-source-code-pro font-medium line-clamp-3 text-ellipsis"
+						>
+							{coreTreatment.item_data.description ||
+								"A curated experience focused on restoration and results."}
+						</p>
+
+						<Button
+							variant="link"
+							href={`/booking/${coreTreatment.id}`}
+							class={buttonVariants({
+								variant: "outline",
+								class: "rounded-full uppercase border-white text-white mt-auto font-source-code-pro",
+								size: "xl",
+							})}
+							onclick={() =>
+								trackEvent("Clicked Treatment", {
+									props: {
+										treatment: coreTreatment.item_data.name,
+									},
+								})}
+						>
+							Book Now
+						</Button>
+					</div>
+				</div>
+				<div
+					class="float-right flex-1 px-4 lg:px-8 py-28 lg:py-40 hidden lg:block"
+				>
+					<h2
+						class="font-source-code-pro text-[18px] uppercase font-semibold tracking-wider underline-offset-8 block mb-12 underline"
+					>
+						Core Treatment
+					</h2>
+					<p
+						class="uppercase text-4xl lg:text-7xl tracking-tighter font-light leading-[0.95] my-4"
+					>
+						{coreTreatment.item_data.name}
+					</p>
+					<p
+						class="text-lg leading-relaxed mb-6 font-source-code-pro font-medium w-9/10 tracking-widest"
+					>
+						{coreTreatment.item_data.description ||
+							"A curated experience focused on restoration and results."}
+					</p>
+					<div class="space-y-6 font-source-code-pro">
+						<p
+							class="text-base uppercase tracking-widest font-semibold"
+						>
+							{getDuration(coreTreatment)} Min — ${getPrice(
+								coreTreatment,
+							)}
+						</p>
+						<Button
+							variant="link"
+							href={`/booking/${coreTreatment.id}`}
+							class={buttonVariants({
+								variant: "outline",
+								class: "rounded-full uppercase font-source-code-pro",
+								size: "xl",
+							})}
+							onclick={() =>
+								trackEvent("Clicked Treatment", {
+									props: {
+										treatment: coreTreatment.item_data.name,
+									},
+								})}
+						>
+							Book Now
+						</Button>
+					</div>
 				</div>
 			{/if}
-			<button
-				class="font-source-code-pro text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
-				onclick={() => {
-					showSearch = !showSearch;
-					if (!showSearch) debouncedSearch("");
-				}}
-			>
-				{showSearch ? "Close" : "Search"}
-			</button>
 		</div>
-	</div> -->
 
-	<div class="px-6 md:px-8 lg:px-12 pt-6">
-		<h4 class="text-base uppercase font-source-code-pro tracking-widest">
-			Treatments
-		</h4>
-		<p class="text-2xl text-foreground/70">
-			Advanced skin therapy, tailored to your skin.
-		</p>
-	</div>
+		<div
+			class="relative overflow-hidden px-6 py-10 md:px-10 md:py-14 lg:px-16 lg:py-20"
+		>
+			<!-- <div
+				aria-hidden="true"
+				class="pointer-events-none absolute inset-x-[18%] bottom-10 h-28 rounded-full blur-3xl"
+			></div> -->
 
-	<!-- ======================== -->
-	<!-- TREATMENT GRID            -->
-	<!-- ======================== -->
-	<div class="w-full px-4 md:px-8 lg:px-12 py-8 lg:py-12">
-		{#if paginatedServices.length === 0}
-			<div class="w-full flex justify-center py-32">
-				<Empty.Root
-					class="border border-dashed w-full max-w-xl min-h-[400px] flex flex-col items-center justify-center bg-transparent"
-				>
-					<Empty.Header>
-						<Empty.Title
-							class="uppercase font-source-code-pro font-normal tracking-widest text-sm"
-						>
-							No treatments found.
-						</Empty.Title>
-					</Empty.Header>
-				</Empty.Root>
-			</div>
-		{:else}
 			<div
-				class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4"
-				in:fade
+				class="mx-auto grid max-w-[1380px] grid-cols-2 items-start gap-x-4 gap-y-4 md:gap-x-8 lg:gap-x-10 lg:gap-y-8"
 			>
-				<!-- FEATURED: First treatment spans 2 cols + 2 rows -->
-				{#if featured}
-					<a
-						href="/booking/{featured.id}"
-						class="group relative overflow-hidden md:col-span-2 md:row-span-2 flex flex-col bg-background"
-						onclick={() =>
-							trackEvent("Clicked Treatment", {
-								props: { treatment: featured.item_data.name },
-							})}
+				<div class="col-start-1 row-start-1 justify-self-start">
+					<p
+						class="text-[36px] leading-none uppercase tracking-[-0.06em] lg:text-[48px]"
 					>
-						<div
-							class="relative w-full aspect-square md:aspect-auto md:h-full min-h-[500px] overflow-hidden bg-muted"
-						>
-							<Picture
-								src={featured.image_url || ""}
-								alt={featured.item_data.name}
-								class="w-full h-full object-cover transition-transform duration-1000"
-								loading="eager"
-								sizes="(max-width: 768px) 100vw, 50vw"
-								sources={featured.image_url
-									? [
-											{
-												type: "image/webp",
-												srcset: generateSrcSet(
-													featured.image_url,
-													[600, 1000, 1600],
-													"webp",
-													85,
-												),
-											},
-										]
-									: []}
-							/>
+						Before
+					</p>
+				</div>
 
-							<!-- Gradient overlay (always visible, intensifies on hover) -->
-							<div
-								class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent group-hover:from-black/80 transition-all duration-700"
-							></div>
+				<div class="justify-self-end lg:col-start-2 lg:row-start-1">
+					<p
+						class="text-left font-source-code-pro text-[12px] font-semibold uppercase leading-[1.35] tracking-[0.2em] lg:text-right lg:text-[1.5rem]"
+					>
+						10 days after
+						<br />
+						first facial
+					</p>
+				</div>
 
-							<!-- Content pinned to bottom -->
-							<div
-								class="absolute bottom-0 left-0 right-0 p-8 lg:p-10"
-							>
-								<span
-									class="font-source-code-pro text-[10px] uppercase tracking-[0.3em] text-white/50 block mb-3"
-								>
-									Core Treatment
-								</span>
-								<h2
-									class="uppercase text-3xl lg:text-4xl tracking-tighter text-white font-light leading-[0.95] mb-3"
-								>
-									{featured.item_data.name}
-								</h2>
-								<p
-									class="text-white/60 text-sm leading-relaxed line-clamp-2 max-w-md mb-4 font-source-code-pro"
-								>
-									{featured.item_data.description ||
-										"A curated experience focused on restoration and results."}
-								</p>
-								<div
-									class="flex items-center gap-6 font-source-code-pro"
-								>
-									<span
-										class="text-[11px] uppercase tracking-widest text-white/80"
-									>
-										{getDuration(featured)} Min — ${getPrice(
-											featured,
-										)}
-									</span>
-									<span
-										class="text-[10px] uppercase tracking-widest text-white/50 opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500"
-									>
-										Book Now &rarr;
-									</span>
-								</div>
-							</div>
-						</div>
-					</a>
-				{/if}
+				<Picture
+					src="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/Treatment%20After%20(Former).webp"
+					alt="Before facial skin therapy result"
+					class="col-start-1 row-start-2 aspect-[0.85] w-full rounded-[15px] object-cover shadow-[0_0_0_1px_rgba(255,255,255,0.28)_inset]"
+					loading="eager"
+					width={720}
+					height={950}
+					sizes="(max-width: 1023px) 50vw, 50vw"
+					sources={[
+						{
+							type: "image/webp",
+							srcset: generateSrcSet(
+								"https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/Treatment%20After%20(Former).webp",
+								[480, 768, 1024, 1440],
+								"webp",
+								85,
+							),
+						},
+					]}
+				/>
 
-				<!-- REMAINING: Standard cards -->
-				{#each remaining as service, index (service.id)}
-					{@const isAlternate = index % 3 === 0}
+				<Picture
+					src="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/Treatment%20After%20Final.webp"
+					alt="After 10 days facial skin therapy result"
+					class="col-start-2 row-start-2 aspect-[0.85] w-full rounded-[15px] object-cover shadow-[0_0_0_1px_rgba(255,255,255,0.28)_inset]"
+					loading="eager"
+					width={720}
+					height={950}
+					sizes="(max-width: 1023px) 50vw, 50vw"
+					sources={[
+						{
+							type: "image/webp",
+							srcset: generateSrcSet(
+								"https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/Treatment%20After%20Final.webp",
+								[480, 768, 1024, 1440],
+								"webp",
+								85,
+							),
+						},
+					]}
+				/>
+
+				<p
+					class="max-w-[31rem] font-source-code-pro text-[12px] font-semibold leading-[1.65] tracking-[0.18em] md:text-[1.05rem] lg:col-start-1 lg:row-start-3"
+				>
+					Our core Facial Skin Therapy, a personalized facial designed
+					to improve skin health and appearance.
+				</p>
+
+				<div class="col-start-2 row-start-3 justify-self-end">
+					<p
+						class="text-[36px] leading-none uppercase tracking-[-0.06em] lg:text-[48px]"
+					>
+						After
+					</p>
+				</div>
+
+				<Button
+					variant="link"
+					href={`/booking/${coreTreatment.id}`}
+					class={buttonVariants({
+						size: "lg",
+						variant: "outline",
+						class: "col-span-2 col-start-1 row-start-4 mt-6 w-fit place-self-center lg:place-self-end rounded-full px-14 lg:col-span-1 lg:col-start-1 lg:row-start-4 lg:mt-0 uppercase font-source-code-pro",
+					})}>Book Facial ST</Button
+				>
+				<Button
+					variant="link"
+					href="/shop"
+					class={buttonVariants({
+						size: "lg",
+						variant: "outline",
+						class: "hidden w-fit rounded-full px-14 lg:col-start-2 lg:row-start-4 lg:block lg:place-self-start uppercase font-source-code-pro",
+					})}>Shop</Button
+				>
+			</div>
+		</div>
+
+		<!-- Press Brands -->
+		<InfiniteMovingCards
+			items={pressBrands}
+			direction="right"
+			speed="normal"
+			class="mask-[linear-gradient(to_right,transparent_0%,white_20%,white_100%)] w-full max-w-[unset] my-16 hidden lg:block"
+		/>
+
+		<span
+			class="text-[32px] lg:text-[48px] uppercase text-center font-semibold"
+			>also available</span
+		>
+		<div
+			class="grid auto-rows-fr grid-cols-2 gap-3 px-8 lg:grid-cols-4 lg:gap-4"
+			in:fade
+		>
+			{#each remaining as service (service.id)}
+				<Card.Root
+					class="group relative flex h-full min-w-0 flex-col bg-transparent shadow-none ring-0"
+				>
 					<a
 						href="/booking/{service.id}"
-						class={cn(
-							"group relative overflow-hidden flex flex-col",
-							{
-								"bg-card text-primary-foreground": isAlternate,
-								"bg-secondary text-secondary-foreground":
-									!isAlternate,
-							},
-						)}
-						onclick={() =>
-							trackEvent("Clicked Treatment", {
-								props: { treatment: service.item_data.name },
-							})}
-					>
-						<div
-							class="relative w-full aspect-[3/4] overflow-hidden bg-muted"
-						>
+						aria-label={`Book ${service.item_data.name}`}
+						class="absolute inset-0 z-10"
+					></a>
+
+					<Card.Content class="rounded-lg bg-card p-2">
+						<div class="aspect-4/5 overflow-hidden rounded-lg">
 							<Picture
 								src={service.image_url || ""}
 								alt={service.item_data.name}
-								class="w-full h-full object-cover transition-transform duration-700"
+								class="block size-full object-cover"
 								loading="lazy"
-								sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+								sizes="(min-width: 1024px) 25vw, 50vw"
 								sources={service.image_url
 									? [
 											{
 												type: "image/webp",
 												srcset: generateSrcSet(
 													service.image_url,
-													[400, 800],
+													[320, 480, 640, 768],
 													"webp",
 													80,
 												),
@@ -369,120 +486,45 @@
 										]
 									: []}
 							/>
-
-							<!-- Hover Overlay -->
-							<div
-								class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-5"
-							>
-								<p
-									class="text-white text-sm leading-relaxed line-clamp-3 font-source-code-pro"
-								>
-									{service.item_data.description ||
-										"Tap to explore this treatment."}
-								</p>
-								<span
-									class="text-white/60 font-source-code-pro text-[10px] uppercase tracking-widest mt-3"
-								>
-									Book Now &rarr;
-								</span>
-							</div>
 						</div>
+					</Card.Content>
 
-						<!-- Footer -->
-						<div class="px-4 py-4 flex flex-col gap-1">
-							<h2
-								class="uppercase text-sm tracking-wide leading-tight line-clamp-1 font-extrabold"
-							>
-								{service.item_data.name}
-							</h2>
+					<Card.Footer
+						class="mt-auto hidden flex-col items-start bg-transparent text-foreground lg:flex"
+					>
+						<div class="flex items-center self-end">
 							<span
-								class="font-source-code-pro text-[11px] font-bold"
+								class="font-source-code-pro text-sm font-bold uppercase"
 							>
 								{getDuration(service)} min{getPrice(service) !==
 								"0"
 									? ` — $${getPrice(service)}`
-									: ""}
+									: " – Member Rate"}
 							</span>
 						</div>
-					</a>
-				{/each}
-			</div>
-		{/if}
+						<h2 class="text-xl uppercase">
+							{service.item_data.name}
+						</h2>
+					</Card.Footer>
+				</Card.Root>
+			{/each}
+		</div>
+	{/if}
 
-		<!-- Pagination -->
-		{#if filteredServices.length > perPage}
-			<div class="mt-16 pt-8 flex justify-center">
-				<Pagination.Root
-					count={filteredServices.length}
-					{perPage}
-					page={currentPage}
-				>
-					{#snippet children({ pages, currentPage: current })}
-						<Pagination.Content>
-							<Pagination.Item>
-								<Pagination.PrevButton
-									onclick={() =>
-										updateFilter(
-											"page",
-											Math.max(1, current - 1),
-										)}
-								/>
-							</Pagination.Item>
-							{#each pages as pg (pg.key)}
-								{#if pg.type === "ellipsis"}
-									<Pagination.Item
-										><Pagination.Ellipsis
-										/></Pagination.Item
-									>
-								{:else}
-									<Pagination.Item>
-										<Pagination.Link
-											page={pg}
-											isActive={current === pg.value}
-											onclick={() =>
-												updateFilter("page", pg.value)}
-										>
-											{pg.value}
-										</Pagination.Link>
-									</Pagination.Item>
-								{/if}
-							{/each}
-							<Pagination.Item>
-								<Pagination.NextButton
-									onclick={() =>
-										updateFilter(
-											"page",
-											Math.min(
-												Math.ceil(
-													filteredServices.length /
-														perPage,
-												),
-												current + 1,
-											),
-										)}
-								/>
-							</Pagination.Item>
-						</Pagination.Content>
-					{/snippet}
-				</Pagination.Root>
-			</div>
-		{/if}
-	</div>
+	<!-- Press Brands -->
+	<InfiniteMovingCards
+		items={pressBrands}
+		direction="right"
+		speed="normal"
+		class="mask-[linear-gradient(to_right,transparent_0%,white_20%,white_100%)] w-full max-w-[unset] my-16 lg:hidden"
+	/>
 
 	<!-- Testimonials -->
 	<div
-		class="w-full py-24 lg:py-32 px-6 md:px-12 lg:px-16 overflow-hidden"
+		class="w-full py-16 px-6 md:px-12 lg:px-16 overflow-hidden"
 		bind:this={testimonialsEl}
 	>
-		<p
-			class="text-sm font-semibold uppercase tracking-[0.3em] text-muted-foreground text-center mb-16"
-		>
-			Earned Love
-		</p>
-
-		<div
-			class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16"
-		>
+		<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-16">
 			{#if testimonialsVisible}
 				{#each testimonials as testimonial, i}
 					<div
@@ -497,16 +539,79 @@
 						>
 							{testimonial.author}
 						</span>
+						<Rating value={testimonial.rating} />
 					</div>
 				{/each}
 			{/if}
 		</div>
 	</div>
 
-	<InfiniteMovingCards
-		items={pressBrands}
-		direction="right"
-		speed="normal"
-		class="mask-[linear-gradient(to_right,transparent_0%,white_20%,white_100%)] max-w-[unset]"
-	/>
+	<div class="relative w-full py-8 px-4 lg:p-20">
+		<div class="absolute inset-0 m-0 -z-10">
+			<enhanced:img
+				src={"https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/IMG%20Glass.webp"}
+				alt="Background"
+				class="object-cover xl:object-cover object-center size-full"
+			/>
+		</div>
+
+		<div
+			class="w-full flex flex-col lg:flex-row space-y-8 lg:space-y-0 lg:space-x-20"
+		>
+			<Item.Root
+				variant="outline"
+				class="flex-col lg:flex-row text-cold-ivory border-2 border-warm-ivory rounded-2xl"
+			>
+				<Item.Header
+					class="uppercase text-primary-foreground/70 font-source-code-pro text-center"
+					>Membership</Item.Header
+				>
+				<Item.Content>
+					<Item.Title
+						class="uppercase text-warm-ivory text-2xl w-full justify-center lg:justify-start"
+						>Not a member yet?</Item.Title
+					>
+					<Item.Description
+						class="uppercase text-primary-foreground/75 font-source-code-pro text-lg"
+					>
+						Member rates on treatments & products
+					</Item.Description>
+				</Item.Content>
+				<Item.Actions class="place-self-center">
+					<Button
+						variant={"outline"}
+						class="uppercase border-inherit rounded-full px-8"
+						>Join Us</Button
+					>
+				</Item.Actions>
+			</Item.Root>
+
+			<Item.Root
+				variant={"outline"}
+				class="flex-col lg:flex-row text-cold-ivory border-2 border-warm-ivory rounded-2xl"
+			>
+				<Item.Header
+					class={"uppercase text-primary-foreground/70 font-source-code-pro text-center"}
+					>First Visit</Item.Header
+				>
+				<Item.Content>
+					<Item.Title
+						class={"uppercase text-warm-ivory text-2xl w-full justify-center lg:justify-start"}
+						>Not sure where to start</Item.Title
+					>
+					<Item.Description
+						class={"uppercase text-primary-foreground/75 font-source-code-pro text-lg"}
+						>Book a skin health consultant first</Item.Description
+					>
+				</Item.Content>
+				<Item.Actions>
+					<Button
+						variant={"outline"}
+						class="uppercase border-inherit rounded-full px-8"
+						>Explore</Button
+					>
+				</Item.Actions>
+			</Item.Root>
+		</div>
+	</div>
 </section>

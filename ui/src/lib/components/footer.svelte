@@ -16,6 +16,13 @@
 	let isSubmitting = $state(false);
 	let emailError = $state("");
 
+	let footerLinks = navLinks.concat([
+		{
+			label: "Skin Diagnostic",
+			href: "/diagnosis",
+		},
+	]);
+
 	function validateEmail(value: string): boolean {
 		const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 		return re.test(value);
@@ -115,7 +122,7 @@
 		<!-- Navigation -->
 		<div class="flex flex-col flex-1 h-full justify-between">
 			<nav class="inline-flex flex-col gap-4 tracking-wide">
-				{#each navLinks as link (link.label)}
+				{#each footerLinks as link (link.label)}
 					<a
 						href={link.href}
 						class="uppercase text-lg md:text-xl font-bold"

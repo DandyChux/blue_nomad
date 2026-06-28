@@ -29,6 +29,7 @@
 	--cold-ivory: oklch(0.88 0.03 87);
 	--pale-grey: oklch(0.87 0.02 17);
 	--brand-white: #f7f5ef;
+	--footer-background: oklch(0.8663 0.0077 17.31);
 
 	--background: oklch(0.9 0.03 80);
 	--foreground: oklch(0 0 0);
@@ -128,6 +129,7 @@
 	--color-cold-ivory: var(--cold-ivory);
 	--color-pale-grey: var(--pale-grey);
 	--color-brand-white: var(--brand-white);
+	--color-footer-background: var(--footer-background);
 }
 
 @theme {

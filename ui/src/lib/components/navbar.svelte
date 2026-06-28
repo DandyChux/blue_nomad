@@ -5,7 +5,6 @@
 	};
 
 	export const navLinks: NavItem[] = [
-		{ label: "Home", href: "/" },
 		{ label: "Our Story", href: "/about" },
 		{
 			label: "Book a Treatment",
@@ -21,7 +20,7 @@
 </script>
 
 <script lang="ts">
-	import { MenuIcon } from "@lucide/svelte";
+	import { icons, MenuIcon } from "@lucide/svelte";
 	import { Button } from "$lib/components/ui/button";
 	import * as Sheet from "$lib/components/ui/sheet";
 	import { cn, generateSrcSet } from "$lib/utils";
@@ -29,8 +28,32 @@
 	import { trackEvent } from "$lib/analytics.svelte";
 	import SearchBar from "./search-bar.svelte";
 	import { getCart } from "$lib/context/cart.svelte";
+	import Picture from "./picture.svelte";
+
+	let pathname = $derived(page.url.pathname);
+	let isLightPage = $derived(
+		pathname === "/" ||
+			pathname === "/nomadsland" ||
+			pathname === "/booking",
+	);
+	let scrolled = $state(false);
+	let useLightNav = $derived(isLightPage && !scrolled);
+	let navTextClass = $derived(
+		useLightNav ? "text-brand-white" : "text-black",
+	);
+	let logoSrc = $derived(
+		useLightNav
+			? "https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/blue-nomad-white.svg"
+			: "https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/blue-nomad.svg",
+	);
 
 	const cart = getCart();
+
+	const SCROLL_THRESHOLD = 40;
+
+	function handleScroll() {
+		scrolled = window.scrollY > SCROLL_THRESHOLD;
+	}
 
 	const isExternal = (url: string) =>
 		url.startsWith("http://") || url.startsWith("https://");
@@ -40,36 +63,40 @@
 			trackEvent("Clicked Gift Card");
 		}
 	}
-
-	let isDesktopMenuOpen = $state(false);
-
-	let pathname = $derived(page.url.pathname);
-	let isLightPage = $derived(
-		pathname === "/" ||
-			pathname === "/nomadsland" ||
-			pathname === "/booking",
-	);
 </script>
 
+<svelte:window onscroll={handleScroll} />
+
 <header
-	class="flex items-center justify-between absolute top-0 w-full bg-transparent p-4 md:p-6 z-1"
+	class="flex items-center justify-between fixed top-0 w-full bg-transparent backdrop-blur p-4 md:p-12 z-1"
+	class:scrolled
 >
-	<div class="flex items-center">
+	<div class="flex w-full items-center">
+		<!-- Mobile menu icon -->
+		<a href="/">
+			<Picture
+				src={useLightNav
+					? "https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/blue-nomad-small-white.svg"
+					: "https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/blue-nomad-small.svg"}
+				alt="Blue Nomad Logo"
+				class="w-6 lg:hidden"
+				loading="eager"
+			/>
+		</a>
+
 		<!-- Mobile menu -->
 		<Sheet.Root>
 			<Sheet.Trigger>
 				{#snippet child({ props })}
 					<Button
 						variant="ghost"
-						class="self-start w-auto h-fit md:hidden"
+						class="self-start w-auto h-fit ml-auto md:hidden"
 						{...props}
 					>
 						<MenuIcon
 							class={cn(
-								"size-6! lg:size-8! xl:size-10! text-black hover:cursor-pointer",
-								{
-									"text-brand-white": isLightPage,
-								},
+								"size-6! lg:size-8! xl:size-10! text-black hover:cursor-pointer transition-colors duration-300",
+								navTextClass,
 							)}
 							strokeWidth={2.5}
 						/>
@@ -101,48 +128,21 @@
 			</Sheet.Content>
 		</Sheet.Root>
 
-		<!-- Desktop menu toggle -->
-		<Button
-			variant="ghost"
-			class="hidden md:flex self-start w-auto h-fit hover:cursor-pointer hover:bg-transparent"
-			onclick={() => (isDesktopMenuOpen = !isDesktopMenuOpen)}
-		>
-			<!-- {#if isDesktopMenuOpen}
-				<MenuIcon
-					class={cn(
-						"!size-6 lg:!size-8 xl:!size-10 text-black -rotate-90",
-						{
-							"text-brand-white": isLightPage,
-						},
-					)}
-					strokeWidth={2.5}
-				/>
-			{:else}
-				<MenuIcon
-					class={cn("!size-6 lg:!size-8 xl:!size-10 text-black", {
-						"text-brand-white": isLightPage,
-					})}
-					strokeWidth={2.5}
-				/>
-			{/if} -->
-			<MenuIcon
-				class={cn("size-6! lg:size-8! xl:size-10! text-black", {
-					"text-brand-white": isLightPage,
-				})}
-				strokeWidth={2.5}
-			/>
-		</Button>
-
 		<!-- Desktop navigation -->
-		<nav
-			class={cn("hidden md:flex ml-8", {
-				"md:hidden": !isDesktopMenuOpen,
-			})}
-		>
+		<a href="/">
+			<Picture
+				src={logoSrc}
+				alt="Blue Nomad Logo"
+				class="w-44 h-auto hidden lg:block"
+				loading="eager"
+			/>
+		</a>
+		<nav class="hidden md:flex ml-auto">
 			<ul
-				class={cn("flex gap-8 *:uppercase text-black", {
-					"text-brand-white": isLightPage,
-				})}
+				class={cn(
+					"flex gap-8 *:uppercase text-black transition-colors duration-300",
+					navTextClass,
+				)}
 			>
 				{#each navLinks as item (item.label)}
 					<li
@@ -150,19 +150,13 @@
 					>
 						<a
 							href={item.href}
-							class={cn(
-								"font-semibold text-lg font-source-code-pro no-underline",
-								{
-									"text-brand-white": isLightPage,
-								},
-							)}
+							class={"font-semibold text-lg font-source-code-pro no-underline"}
 							rel="nofollow noopener noreferrer"
 							target={isExternal(item.href)
 								? "_blank"
 								: undefined}
 							onclick={() => {
 								trackClick(item.label);
-								isDesktopMenuOpen = false;
 							}}
 						>
 							{item.label}
@@ -173,7 +167,7 @@
 		</nav>
 	</div>
 
-	<div class="flex max-w-[500px] w-auto items-center justify-end">
+	<!-- <div class="flex max-w-[500px] w-auto items-center justify-end">
 		{#if pathname === "/shop"}
 			<Button onclick={() => cart.toggle()} variant="outline">
 				Cart ({cart.items.length})
@@ -204,5 +198,14 @@
 				/>
 			</a>
 		{/if}
-	</div>
+	</div> -->
 </header>
+
+<style>
+	header.scrolled {
+		background: transparent;
+		backdrop-filter: blur(16px);
+		-webkit-backdrop-filter: blur(16px);
+		border-bottom-color: rgba(255, 255, 255, 0.06);
+	}
+</style>

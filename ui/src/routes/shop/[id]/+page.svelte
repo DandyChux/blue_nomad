@@ -181,7 +181,7 @@
 			{#if itemData.description}
 				<div class="border-t border-border pt-8">
 					<p
-						class="text-base leading-relaxed font-spectral text-xl lg:text-2xl"
+						class="text-base leading-relaxed font-spectral lg:text-2xl"
 					>
 						{itemData.description}
 					</p>
@@ -204,7 +204,7 @@
 				{#if selectedVariation?.item_variation_data?.sku}
 					<p>SKU: {selectedVariation.item_variation_data.sku}</p>
 				{/if}
-				<p>Complimentary shipping on US orders $150+</p>
+				<p>In-studio pickup at Blue Nomad, New York City</p>
 			</div>
 		</div>
 	</div>
