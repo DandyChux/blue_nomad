@@ -258,7 +258,7 @@
 	a {
 		text-decoration: none;
 		text-decoration-line: none;
-		font-weight: 700 !important;
+		font-weight: 700;
 		font-family: inherit;
 
 		&:hover {

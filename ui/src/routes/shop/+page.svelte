@@ -107,12 +107,13 @@
 	<!-- Header & Filters Bar -->
 	<div class="w-full pt-28 lg:pt-36 pb-8 px-6 md:px-12 lg:px-16">
 		<h1 class="uppercase text-2xl lg:text-[5rem] font-500!">Shop</h1>
-		<p class="text-[14px] lg:text-[16px] font-harmony mb-4">
-			Available for in-studio pickup in New York City
+		<p class="text-[14px] lg:text-[16px] font-harmony my-6 lg:my-4">
+			Available for in-studio pickup or NYC delivery. Complimentary
+			delivery on orders over $150.
 		</p>
 
 		<div
-			class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
+			class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 my-6 lg:my-4"
 		>
 			<!-- Left: Category Filters -->
 			<div class="flex flex-wrap items-center gap-3">

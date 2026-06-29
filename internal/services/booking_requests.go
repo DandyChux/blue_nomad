@@ -40,6 +40,7 @@ type BookingRequest struct {
 	Currency                string
 
 	SquareCustomerID     string
+	SquareCardID         string
 	SquarePaymentID      string
 	SquarePaymentStatus  string
 	SquarePaymentOrderID string
@@ -129,6 +130,7 @@ func (s *BookingRequestStore) GetByID(ctx context.Context, id string) (*BookingR
 			price_cents,
 			currency,
 			square_customer_id,
+			square_card_id,
 			square_payment_id,
 			square_payment_status,
 			square_payment_order_id,
@@ -154,6 +156,49 @@ func (s *BookingRequestStore) GetByID(ctx context.Context, id string) (*BookingR
 	return req, nil
 }
 
+func (s *BookingRequestStore) GetBySquareBookingID(ctx context.Context, bookingID string) (*BookingRequest, error) {
+	row := s.db.QueryRow(ctx, `
+		SELECT
+			id,
+			status,
+			service_variation_id,
+			team_member_id,
+			service_variation_version,
+			start_at,
+			given_name,
+			family_name,
+			email_address,
+			phone_number,
+			service_name,
+			price_cents,
+			currency,
+			square_customer_id,
+			square_card_id,
+			square_payment_id,
+			square_payment_status,
+			square_payment_order_id,
+			square_booking_id,
+			square_booking_status,
+			payment_authorized_at,
+			booking_created_at,
+			admin_notified_at,
+			failure_reason,
+			created_at,
+			updated_at
+		FROM booking_requests
+		WHERE square_booking_id = $1
+	`, bookingID)
+
+	req, err := scanBookingRequest(row)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, ErrBookingRequestNotFound
+		}
+		return nil, err
+	}
+	return req, nil
+}
+
 func (s *BookingRequestStore) SaveSquareCustomerID(ctx context.Context, id, customerID string) error {
 	_, err := s.db.Exec(ctx, `
 		UPDATE booking_requests
@@ -164,6 +209,20 @@ func (s *BookingRequestStore) SaveSquareCustomerID(ctx context.Context, id, cust
 	if err != nil {
 		return fmt.Errorf("save square customer id: %w", err)
 	}
+	return nil
+}
+
+func (s *BookingRequestStore) SaveSquareCardID(ctx context.Context, id, cardID string) error {
+	_, err := s.db.Exec(ctx, `
+	UPDATE booking_requests
+	SET square_card_id = $2,
+		updated_at = NOW()
+	WHERE id = $1
+	`, id, cardID)
+	if err != nil {
+		return fmt.Errorf("save square card id: %w", err)
+	}
+
 	return nil
 }
 
@@ -249,6 +308,7 @@ func scanBookingRequest(row scanner) (*BookingRequest, error) {
 	var req BookingRequest
 	var phoneNumber sql.NullString
 	var squareCustomerID sql.NullString
+	var squareCardID sql.NullString
 	var squarePaymentID sql.NullString
 	var squarePaymentStatus sql.NullString
 	var squarePaymentOrderID sql.NullString
@@ -274,6 +334,7 @@ func scanBookingRequest(row scanner) (*BookingRequest, error) {
 		&req.PriceCents,
 		&req.Currency,
 		&squareCustomerID,
+		&squareCardID,
 		&squarePaymentID,
 		&squarePaymentStatus,
 		&squarePaymentOrderID,
@@ -292,6 +353,7 @@ func scanBookingRequest(row scanner) (*BookingRequest, error) {
 
 	req.PhoneNumber = phoneNumber.String
 	req.SquareCustomerID = squareCustomerID.String
+	req.SquareCardID = squareCardID.String
 	req.SquarePaymentID = squarePaymentID.String
 	req.SquarePaymentStatus = squarePaymentStatus.String
 	req.SquarePaymentOrderID = squarePaymentOrderID.String

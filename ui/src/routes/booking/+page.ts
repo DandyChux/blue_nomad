@@ -43,7 +43,12 @@ export const load: PageLoad = async ({ url }) => {
 				};
 			});
 
-		return { services };
+		return {
+			services,
+			navbar: {
+				variant: "light",
+			},
+		};
 	} catch (err) {
 		if (err instanceof ApiError && err.isNotFound) {
 			error(404, { message: "Catalog not found" });

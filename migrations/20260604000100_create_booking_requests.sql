@@ -29,6 +29,7 @@ CREATE TABLE booking_requests (
     square_payment_order_id TEXT,
     square_booking_id TEXT UNIQUE,
     square_booking_status TEXT,
+    square_card_id TEXT,
 
     payment_authorized_at TIMESTAMPTZ,
     booking_created_at TIMESTAMPTZ,
@@ -51,3 +52,6 @@ CREATE INDEX idx_booking_requests_email
 
 -- +goose Down
 DROP TABLE IF EXISTS booking_requests;
+DROP INDEX IF EXISTS idx_booking_requests_status_created_at;
+DROP INDEX IF EXISTS idx_booking_requests_start_at;
+DROP INDEX IF EXISTS idx_booking_requests_email;

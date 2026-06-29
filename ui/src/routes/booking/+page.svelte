@@ -153,16 +153,16 @@
 
 		<!-- Hero Content -->
 		<div
-			class="absolute inset-0 flex flex-col justify-end px-6 md:px-12 lg:px-16 pb-16 lg:pb-24 w-full"
+			class="absolute inset-0 text-brand-white flex flex-col justify-end px-6 md:px-12 lg:px-16 pb-16 lg:pb-24 w-full"
 		>
 			<p
-				class="font-source-code-pro text-[11px] lg:text-[16px] uppercase tracking-[0.3em] text-white/60 mb-4 font-extrabold text-center lg:text-start"
+				class="font-source-code-pro text-[11px] lg:text-[16px] uppercase tracking-[0.3em] text-brand-white/60 mb-4 font-extrabold text-center lg:text-start"
 				in:fly={{ y: 10, duration: 600, delay: 200 }}
 			>
 				Blue Nomad Skin Health Studio
 			</p>
 			<h1
-				class="uppercase text-center lg:text-left text-[32px] lg:text-[72px] tracking-tighter font-light text-brand-white leading-[0.9] mb-6"
+				class="uppercase text-center lg:text-left text-[32px] lg:text-[72px] tracking-tighter font-light leading-[0.9] mb-6"
 				in:fly={{ y: 20, duration: 600, delay: 300 }}
 			>
 				<span>Your Skin</span>
@@ -172,7 +172,7 @@
 				<span class="pl-8 md:pl-16">Everything Around</span> -->
 			</h1>
 			<p
-				class="text-white/70 md:text-[18px] max-w-xl leading-relaxed font-light"
+				class="text-brand-white/70 md:text-[18px] max-w-xl leading-relaxed font-light text-center"
 				in:fly={{ y: 20, duration: 600, delay: 400 }}
 			>
 				Personalized treatments designed to restore, protect, and
@@ -185,7 +185,7 @@
 				size="xl"
 				class={buttonVariants({
 					variant: "outline",
-					class: "border-white text-white rounded-full mt-12 border self-center px-8 uppercase tracking-wide font-source-code-pro font-light hover:motion-safe:scale-125 hover:bg-white hover:text-black",
+					class: "border-brand-white text-brand-white rounded-full mt-10 border self-center px-8 uppercase tracking-wide font-source-code-pro font-light hover:bg-brand-white hover:text-black",
 				})}
 			>
 				Explore Treatments
@@ -210,13 +210,13 @@
 	{:else}
 		<div class="flex flex-col lg:flex-row">
 			{#if coreTreatment}
-				<div
-					class="relative group lg:flex-1 aspect-3/4 lg:aspect-auto overflow-hidden mx-8 my-20 lg:m-0"
+				<Card.Root
+					class="relative group w-full p-4 overflow-hidden mx-auto my-10 lg:mx-0 lg:my-0 lg:w-[35%] lg:h-[1100px] lg:rounded-tl-none bg-transparent ring-0 shadow-none"
 				>
 					<Picture
 						src={coreTreatment.image_url || ""}
 						alt={coreTreatment.item_data.name}
-						class="w-full h-full object-cover transition-transform duration-1000"
+						class="size-full object-cover object-top"
 						loading="eager"
 						sizes="(max-width: 768px) 100vw, 50vw"
 						sources={coreTreatment.image_url
@@ -225,7 +225,7 @@
 										type: "image/webp",
 										srcset: generateSrcSet(
 											coreTreatment.image_url,
-											[600, 1000, 1600],
+											[400, 600],
 											"webp",
 											85,
 										),
@@ -234,10 +234,11 @@
 							: []}
 					/>
 
-					<div class="absolute inset-0 bg-black/10" />
+					<!-- <div class="absolute inset-0 bg-black/10" /> -->
+
 					<!-- Mobile only description -->
 					<div
-						class="absolute inset-0 flex flex-col p-6 text-brand-white md:p-8 lg:hidden"
+						class="absolute inset-0 flex flex-col p-6 text-warm-ivory md:p-8 lg:hidden"
 					>
 						<div class="flex items-center">
 							<h2
@@ -252,12 +253,12 @@
 							</p>
 						</div>
 						<p
-							class="uppercase text-4xl lg:text-7xl tracking-tighter font-light leading-[0.95] my-4"
+							class="uppercase text-[36px] lg:text-[44px] tracking-tighter font-light leading-[0.95] my-4"
 						>
 							{coreTreatment.item_data.name}
 						</p>
 						<p
-							class="leading-6 mb-6 font-source-code-pro font-medium line-clamp-3 text-ellipsis"
+							class="mb-6 font-source-code-pro font-medium line-clamp-3 text-ellipsis"
 						>
 							{coreTreatment.item_data.description ||
 								"A curated experience focused on restoration and results."}
@@ -268,7 +269,7 @@
 							href={`/booking/${coreTreatment.id}`}
 							class={buttonVariants({
 								variant: "outline",
-								class: "rounded-full uppercase border-white text-white mt-auto font-source-code-pro",
+								class: "rounded-full uppercase border-inherit text-inherit mt-[75%] font-source-code-pro w-fit mx-auto",
 								size: "xl",
 							})}
 							onclick={() =>
@@ -281,7 +282,7 @@
 							Book Now
 						</Button>
 					</div>
-				</div>
+				</Card.Root>
 				<div
 					class="float-right flex-1 px-4 lg:px-8 py-28 lg:py-40 hidden lg:block"
 				>
@@ -356,7 +357,7 @@
 					>
 						10 days after
 						<br />
-						first facial
+						first facial ST
 					</p>
 				</div>
 
@@ -447,16 +448,16 @@
 		/>
 
 		<span
-			class="text-[32px] lg:text-[48px] uppercase text-center font-semibold"
+			class="text-[32px] lg:text-[44px] uppercase text-center font-medium"
 			>also available</span
 		>
 		<div
-			class="grid auto-rows-fr grid-cols-2 gap-3 px-8 lg:grid-cols-4 lg:gap-4"
+			class="grid auto-rows-fr grid-cols-1 gap-[1px] lg:grid-cols-4 lg:gap-4 px-4"
 			in:fade
 		>
 			{#each remaining as service (service.id)}
 				<Card.Root
-					class="group relative flex h-full min-w-0 flex-col bg-transparent shadow-none ring-0"
+					class="group relative flex h-full min-w-0 flex-col bg-background lg:bg-transparent shadow-none ring-0 py-0 rounded-none gap-0 my-2 lg:rounded-lg"
 				>
 					<a
 						href="/booking/{service.id}"
@@ -464,8 +465,8 @@
 						class="absolute inset-0 z-10"
 					></a>
 
-					<Card.Content class="rounded-lg bg-card p-2">
-						<div class="aspect-4/5 overflow-hidden rounded-lg">
+					<Card.Content class="rounded-lg lg:bg-card p-2">
+						<div class="relative aspect-4/5 overflow-hidden">
 							<Picture
 								src={service.image_url || ""}
 								alt={service.item_data.name}
@@ -490,11 +491,11 @@
 					</Card.Content>
 
 					<Card.Footer
-						class="mt-auto hidden flex-col items-start bg-transparent text-foreground lg:flex"
+						class="items-center lg:items-start justify-between text-foreground lg:bg-transparent lg:flex-col lg:pt-4"
 					>
-						<div class="flex items-center self-end">
+						<div class="lg:self-end order-2 lg:order-1">
 							<span
-								class="font-source-code-pro text-sm font-bold uppercase"
+								class="font-source-code-pro text-[12px] lg:text-[14px] font-bold uppercase"
 							>
 								{getDuration(service)} min{getPrice(service) !==
 								"0"
@@ -502,7 +503,9 @@
 									: " – Member Rate"}
 							</span>
 						</div>
-						<h2 class="text-xl uppercase">
+						<h2
+							class="text-[14px] lg:text-[32px] uppercase order-1 lg:order-2 tracking-tight line-clamp-1 text-ellipsis"
+						>
 							{service.item_data.name}
 						</h2>
 					</Card.Footer>
@@ -521,7 +524,7 @@
 
 	<!-- Testimonials -->
 	<div
-		class="w-full py-16 px-6 md:px-12 lg:px-16 overflow-hidden"
+		class="w-full mb-8 lg:my-12 px-6 md:px-12 lg:px-16 overflow-hidden"
 		bind:this={testimonialsEl}
 	>
 		<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-16">
@@ -546,7 +549,7 @@
 		</div>
 	</div>
 
-	<div class="relative w-full py-8 px-4 lg:p-20">
+	<div class="relative w-full py-8 px-12 lg:p-20">
 		<div class="absolute inset-0 m-0 -z-10">
 			<enhanced:img
 				src={"https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/IMG%20Glass.webp"}
@@ -556,14 +559,14 @@
 		</div>
 
 		<div
-			class="w-full flex flex-col lg:flex-row space-y-8 lg:space-y-0 lg:space-x-20"
+			class="w-full flex flex-col lg:flex-row space-y-8 lg:space-y-0 lg:space-x-20 text-center"
 		>
 			<Item.Root
 				variant="outline"
-				class="flex-col lg:flex-row text-cold-ivory border-2 border-warm-ivory rounded-2xl"
+				class="px-8 flex-col lg:flex-row text-cold-ivory border-2 border-warm-ivory rounded-2xl"
 			>
 				<Item.Header
-					class="uppercase text-primary-foreground/70 font-source-code-pro text-center"
+					class="uppercase text-primary-foreground/70 font-source-code-pro"
 					>Membership</Item.Header
 				>
 				<Item.Content>
@@ -572,23 +575,26 @@
 						>Not a member yet?</Item.Title
 					>
 					<Item.Description
-						class="uppercase text-primary-foreground/75 font-source-code-pro text-lg"
+						class="uppercase text-primary-foreground/75 font-source-code-pro text-lg lg:text-start text-center"
 					>
 						Member rates on treatments & products
 					</Item.Description>
 				</Item.Content>
 				<Item.Actions class="place-self-center">
 					<Button
-						variant={"outline"}
-						class="uppercase border-inherit rounded-full px-8"
-						>Join Us</Button
+						variant="link"
+						href="/booking/NOOA4AKCT4RI77UR56IEL432"
+						class={buttonVariants({
+							variant: "outline",
+							class: "uppercase border-warm-ivory text-warm-ivory rounded-full px-8",
+						})}>Join</Button
 					>
 				</Item.Actions>
 			</Item.Root>
 
 			<Item.Root
 				variant={"outline"}
-				class="flex-col lg:flex-row text-cold-ivory border-2 border-warm-ivory rounded-2xl"
+				class="px-8 flex-col lg:flex-row text-cold-ivory border-2 border-warm-ivory rounded-2xl"
 			>
 				<Item.Header
 					class={"uppercase text-primary-foreground/70 font-source-code-pro text-center"}
@@ -600,15 +606,18 @@
 						>Not sure where to start</Item.Title
 					>
 					<Item.Description
-						class={"uppercase text-primary-foreground/75 font-source-code-pro text-lg"}
-						>Book a skin health consultant first</Item.Description
+						class={"uppercase text-primary-foreground/75 font-source-code-pro text-lg text-center lg:text-start"}
+						>Book a skin health consultation</Item.Description
 					>
 				</Item.Content>
 				<Item.Actions>
 					<Button
-						variant={"outline"}
-						class="uppercase border-inherit rounded-full px-8"
-						>Explore</Button
+						variant="link"
+						href="/booking/VPBLSPCLMIHKLXHLPE2BY3HL"
+						class={buttonVariants({
+							variant: "outline",
+							class: "uppercase border-warm-ivory text-warm-ivory rounded-full px-8",
+						})}>Explore</Button
 					>
 				</Item.Actions>
 			</Item.Root>

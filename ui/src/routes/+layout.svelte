@@ -80,6 +80,5 @@
 </main>
 
 <Footer />
-<!-- <DiagnosticButton /> -->
 <Toaster />
 <CartDrawer />

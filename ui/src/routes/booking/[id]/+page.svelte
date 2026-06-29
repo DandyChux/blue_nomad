@@ -34,7 +34,7 @@
 		status: string;
 	}
 
-	interface AuthorizeBookingResponse {
+	interface StoreCardAndBookResponse {
 		request_id: string;
 		booking_id?: string;
 		status: string;
@@ -370,7 +370,7 @@
 					{
 						amount: (priceCents / 100).toFixed(2),
 						currencyCode: "USD",
-						intent: "CHARGE",
+						intent: "STORE",
 						billingContact: {
 							givenName: booking.customer.first,
 							familyName: booking.customer.last,
@@ -382,8 +382,8 @@
 				verificationToken = verificationResult.token;
 			}
 
-			await apiClient.post<AuthorizeBookingResponse>(
-				`/booking/requests/${requestId}/authorize`,
+			await apiClient.post<StoreCardAndBookResponse>(
+				`/booking/requests/${requestId}/store-card`,
 				{
 					source_id: tokenResult.token,
 					verification_token: verificationToken,
@@ -547,7 +547,7 @@
 
 							{#if booking.isLoading}
 								<div class="grid grid-cols-3 gap-3">
-									{#each Array.from( { length: 6 }, ) as _, index (index)}
+									{#each Array.from( { length: 6 } ) as _, index (index)}
 										<div
 											class="h-12 bg-border/50 animate-pulse"
 										></div>
@@ -685,7 +685,7 @@
 					</button>
 
 					<h2 class="uppercase text-2xl tracking-tighter font-light">
-						Payment & Confirm
+						Payment Details & Confirm
 					</h2>
 
 					<div
@@ -740,10 +740,10 @@
 						</h3>
 
 						<p class="text-sm leading-relaxed text-foreground/70">
-							Enter your card details below to secure your
-							appointment request. Your payment method is
-							collected securely on-site and your appointment is
-							only created in Square after authorization succeeds.
+							Enter your card details below to save a payment
+							method on file for your appointment. Your card is
+							not charged online. Final payment is collected on
+							site after your treatment.
 						</p>
 
 						{#if payment.configLoading}

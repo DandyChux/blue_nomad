@@ -204,7 +204,8 @@
 				{#if selectedVariation?.item_variation_data?.sku}
 					<p>SKU: {selectedVariation.item_variation_data.sku}</p>
 				{/if}
-				<p>In-studio pickup at Blue Nomad, New York City</p>
+				<p>Available for in-studio pickup or NYC delivery.</p>
+				<p>Complimentary delivery on orders over $150.</p>
 			</div>
 		</div>
 	</div>

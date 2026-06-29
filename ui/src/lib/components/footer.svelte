@@ -18,6 +18,10 @@
 
 	let footerLinks = navLinks.concat([
 		{
+			label: "Gift Card",
+			href: "https://app.squareup.com/gift/ML665NPQYDHTJ/order",
+		},
+		{
 			label: "Skin Diagnostic",
 			href: "/diagnosis",
 		},
@@ -42,7 +46,7 @@
 		try {
 			await apiClient.post("/subscribe", { email });
 			toast.success(
-				"Thank you for signing up! You will now be added to our newsletter list.",
+				"Thank you for joining us. Look out for notes on skin health, culture, and reflections.",
 			);
 			window.plausible?.("Subscribe", { props: { email } });
 			email = "";
@@ -234,7 +238,6 @@
 			Developed by <a href="https://ceokoroji.dev" class="underline">
 				Chukwuma Okoroji
 			</a>
-			🖤
 		</p>
 	</address>
 </footer>

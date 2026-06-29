@@ -23,7 +23,7 @@
 				"https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Johanna/Look-1-519.webp",
 			hoverImage:
 				"https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Johanna/Look%201%20435.webp",
-			link: "https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start",
+			link: "/booking/TWYSCIC46EIMS3SD2A6UMJ5H",
 		},
 		{
 			title: "LED SkinBoost 30min",
@@ -34,7 +34,7 @@
 				"https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Mel/Look%202%20233.webp",
 			hoverImage:
 				"https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Mel/Look%202%20145.webp",
-			link: "https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start",
+			link: "/booking/JMC7AN5H5BJJPPJBEPVFMQDL",
 		},
 		{
 			title: "Facial ST Membership",
@@ -46,7 +46,7 @@
 			hoverImage:
 				"https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Ego/Ego.webp",
 			membersOnly: true,
-			link: "https://app.squareup.com/appointments/book/augj56g525h4rw/LSP68REJT9SVH/start",
+			link: "/booking/NOOA4AKCT4RI77UR56IEL432",
 		},
 	];
 </script>
@@ -65,6 +65,12 @@
 						: "text-primary-foreground",
 				)}
 			>
+				<a
+					href={treatment.link}
+					aria-label={`Book ${treatment.title}`}
+					class="absolute inset-0 z-10"
+				></a>
+
 				<Card.Header
 					class={cn("px-2 gap-0", isEven ? "order-1" : "order-2")}
 				>

@@ -107,7 +107,7 @@ func (h *BookingHandler) CreateRequest(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func (h *BookingHandler) AuthorizeAndBook(w http.ResponseWriter, r *http.Request) {
+func (h *BookingHandler) StoreCardAndBook(w http.ResponseWriter, r *http.Request) {
 	requestID := r.PathValue("id")
 	if requestID == "" {
 		http.Error(w, "Missing booking request id", http.StatusBadRequest)
@@ -120,17 +120,17 @@ func (h *BookingHandler) AuthorizeAndBook(w http.ResponseWriter, r *http.Request
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		slog.Warn("invalid booking authorization request body", "error", err)
+		slog.Warn("invalid store-card request body", "error", err)
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
 		return
 	}
 
 	if req.SourceID == "" {
-		http.Error(w, "Missing payment source_id", http.StatusBadRequest)
+		http.Error(w, "Missing card source_id", http.StatusBadRequest)
 		return
 	}
 
-	result, err := h.flow.AuthorizeAndBook(r.Context(), services.AuthorizeBookingPaymentInput{
+	result, err := h.flow.StoreCardAndBook(r.Context(), services.StoreCardAndBookInput{
 		BookingRequestID:  requestID,
 		SourceID:          req.SourceID,
 		VerificationToken: req.VerificationToken,
@@ -142,8 +142,8 @@ func (h *BookingHandler) AuthorizeAndBook(w http.ResponseWriter, r *http.Request
 		case err == services.ErrSlotNoLongerAvailable:
 			http.Error(w, "That time slot is no longer available. Please pick another.", http.StatusConflict)
 		default:
-			slog.Error("failed to authorize booking payment and create booking", "error", err, "request_id", requestID)
-			http.Error(w, fmt.Sprintf("failed to authorize booking payment and create booking: %v", err), http.StatusUnprocessableEntity)
+			slog.Error("failed to store card on file and create booking", "error", err, "request_id", requestID)
+			http.Error(w, fmt.Sprintf("failed to store card on file and create booking: %v", err), http.StatusUnprocessableEntity)
 		}
 		return
 	}

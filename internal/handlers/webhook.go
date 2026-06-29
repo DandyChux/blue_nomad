@@ -226,58 +226,27 @@ func (h *WebhookHandler) ProcessQueuedWebhook(ctx context.Context, provider stri
 	}
 }
 
-func (h *WebhookHandler) handlePaymentEvent(ctx context.Context, payload SquareWebhookPayload) error {
+func (h *WebhookHandler) handlePaymentEvent(_ context.Context, payload SquareWebhookPayload) error {
 	payment := payload.Data.Object.Payment
 
-	if payment.Status != "APPROVED" {
-		slog.Debug("Ignoring payment event with non-approved status",
-			"payment_id", payment.ID,
-			"status", payment.Status,
-		)
-		return nil
-	}
-
-	req, err := h.flow.RecoverApprovedPayment(ctx, services.ApprovedPaymentInfo{
-		ID:          payment.ID,
-		Status:      payment.Status,
-		ReferenceID: payment.ReferenceID,
-		CustomerID:  payment.CustomerID,
-		OrderID:     payment.OrderID,
-	})
-	if err != nil {
-		return err
-	}
-	if req == nil {
-		return nil
-	}
-	if req.Status != services.BookingRequestStatusBookingCreated {
-		return nil
-	}
-	if req.AdminNotifiedAt != nil {
-		return nil
-	}
-
-	if err := h.sendBookingRequestNotification(req, payment.AmountMoney.Amount, payment.AmountMoney.Currency); err != nil {
-		return err
-	}
-
-	return h.flow.MarkAdminNotified(ctx, req.ID)
+	slog.Debug("Ignoring Square payment event for booking flow", "payment_id", payment.ID, "status", payment.Status, "event_type", payload.Type)
+	return nil
 }
 
-func (h *WebhookHandler) sendBookingRequestNotification(req *services.BookingRequest, amountCents int64, currency string) error {
+func (h *WebhookHandler) sendBookingRequestNotification(req *services.BookingRequest) error {
 	adminEmail := notificationEmail()
 	if adminEmail == "" {
 		return fmt.Errorf("ADMIN_EMAIL or EMAIL_USERNAME must be configured")
 	}
 
 	formattedDate, formattedTime := formatBookingTime(req.StartAt)
-	formattedAmount := fmt.Sprintf("%.2f", float64(amountCents)/100.0)
+	formattedAmount := fmt.Sprintf("%.2f", float64(req.PriceCents)/100.0)
 
 	msg := &services.EmailMessage{
 		To:      []string{adminEmail},
 		Subject: fmt.Sprintf("New Blue Nomad Booking: %s at %s", formattedDate, formattedTime),
 		BodyText: fmt.Sprintf(
-			"A new appointment request has been created.\n\nBooking Request ID: %s\nBooking ID: %s\nStatus: %s\nDate: %s\nTime: %s\nService: %s\nAmount: $%s %s\nCustomer: %s %s\nEmail: %s\nPhone: %s\n\nPayment details have been captured and the Square booking has been created. The appointment is awaiting manual approval.",
+			"A new appointment request has been created.\n\nBooking Request ID: %s\nBooking ID: %s\nStatus: %s\nDate: %s\nTime: %s\nService: %s\nPrice: $%s %s\nCustomer: %s %s\nEmail: %s\nPhone: %s\n\nThe customer's card has been saved on file and the Square booking has been created. No payment has been charged online. Final payment should be collected on site in Square.",
 			req.ID,
 			req.SquareBookingID,
 			req.SquareBookingStatus,
@@ -285,7 +254,7 @@ func (h *WebhookHandler) sendBookingRequestNotification(req *services.BookingReq
 			formattedTime,
 			req.ServiceName,
 			formattedAmount,
-			currency,
+			req.Currency,
 			req.GivenName,
 			req.FamilyName,
 			req.EmailAddress,
@@ -300,20 +269,21 @@ func (h *WebhookHandler) sendBookingRequestNotification(req *services.BookingReq
 					<p><strong>Time:</strong> %s</p>
 					<p><strong>Service:</strong> %s</p>
 					<p><strong>Booking ID:</strong> %s</p>
-					<p><strong>Amount:</strong> $%s %s</p>
+					<p><strong>Price:</strong> $%s %s</p>
 					<p><strong>Client:</strong> %s %s</p>
 					<p><strong>Email:</strong> %s</p>
 				</div>
 				<p>This booking is awaiting manual approval in Square.</p>
+				<p>The customer's card was saved on file during booking.</p>
 				<p><a href="https://squareup.com/dashboard/appointments">Open in Square Appointments</a></p>
 			</div>
-		`, formattedDate, formattedTime, req.ServiceName, req.SquareBookingID, formattedAmount, currency, req.GivenName, req.FamilyName, req.EmailAddress),
+		`, formattedDate, formattedTime, req.ServiceName, req.SquareBookingID, formattedAmount, req.Currency, req.GivenName, req.FamilyName, req.EmailAddress),
 	}
 
 	return services.SendEmail(msg)
 }
 
-func (h *WebhookHandler) handleBookingCreated(_ context.Context, payload SquareWebhookPayload) error {
+func (h *WebhookHandler) handleBookingCreated(ctx context.Context, payload SquareWebhookPayload) error {
 	booking := payload.Data.Object.Booking
 
 	slog.Info("📅 Booking CREATED",
@@ -323,7 +293,24 @@ func (h *WebhookHandler) handleBookingCreated(_ context.Context, payload SquareW
 		"customer_id", booking.CustomerID,
 	)
 
-	return nil
+	req, err := h.flow.GetBySquareBookingID(ctx, booking.ID)
+	if err != nil {
+		if err == services.ErrBookingRequestNotFound {
+			slog.Debug("No local booking request found for booking.created", "booking_id", booking.ID)
+			return nil
+		}
+		return err
+	}
+
+	if req.AdminNotifiedAt != nil {
+		return nil
+	}
+
+	if err := h.sendBookingRequestNotification(req); err != nil {
+		return err
+	}
+
+	return h.flow.MarkAdminNotified(ctx, req.ID)
 }
 
 // handleBookingUpdated notifies the admin when a booking changes state

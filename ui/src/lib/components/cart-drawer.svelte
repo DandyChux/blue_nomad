@@ -3,12 +3,14 @@
 	import { Button } from "$lib/components/ui/button";
 	import * as Sheet from "$lib/components/ui/sheet";
 	import apiClient, { ApiError } from "$lib/api";
-	import { goto } from "$app/navigation";
 	import Picture from "./picture.svelte";
 	import { toast } from "svelte-sonner";
 
 	const cart = getCart();
 	let isCheckingOut = $state(false);
+	let itemCount = $derived(
+		cart.items.reduce((sum, item) => sum + item.quantity, 0),
+	);
 
 	type StockErrorBody = {
 		error?: string;
@@ -90,6 +92,14 @@
 			<Sheet.Title class="uppercase text-2xl font-normal">
 				Your Bag
 			</Sheet.Title>
+			{#if itemCount > 0}
+				<p
+					class="mt-1 font-source-code-pro text-xs uppercase tracking-wide"
+				>
+					{itemCount}
+					{itemCount === 1 ? "item" : "items"}
+				</p>
+			{/if}
 		</Sheet.Header>
 
 		<div class="flex-grow overflow-y-auto p-6 flex flex-col gap-6">
@@ -127,7 +137,7 @@
 
 						<div class="flex flex-col flex-grow justify-between">
 							<div>
-								<div class="flex justify-between">
+								<div class="flex justify-between gap-4">
 									<h3 class="uppercase text-sm leading-tight">
 										{item.name}
 									</h3>
@@ -139,13 +149,46 @@
 									{item.variationName}
 								</p>
 							</div>
-
-							<button
-								class="text-xs uppercase text-left hover:text-black transition-colors self-start underline underline-offset-4"
-								onclick={() => cart.remove(item.cartItemId)}
+							<div
+								class="mt-3 flex items-center justify-between gap-4"
 							>
-								Remove
-							</button>
+								<div
+									class="flex items-center gap-2 rounded-full border border-black px-1 py-1"
+								>
+									<Button
+										variant="ghost"
+										size="icon-xs"
+										class="rounded-full font-source-code-pro text-sm hover:bg-transparent hover:text-black"
+										aria-label={`Decrease quantity of ${item.name}`}
+										onclick={() =>
+											cart.decrement(item.cartItemId)}
+									>
+										−
+									</Button>
+									<span
+										class="min-w-6 text-center font-source-code-pro text-xs"
+									>
+										{item.quantity}
+									</span>
+									<Button
+										variant="ghost"
+										size="icon-xs"
+										class="rounded-full font-source-code-pro text-sm hover:bg-transparent hover:text-black"
+										aria-label={`Increase quantity of ${item.name}`}
+										onclick={() =>
+											cart.increment(item.cartItemId)}
+										disabled={item.maxQuantity !== null &&
+											item.quantity >= item.maxQuantity}
+									></Button>
+								</div>
+
+								<button
+									class="text-xs uppercase text-left hover:text-black transition-colors underline underline-offset-4"
+									onclick={() => cart.remove(item.cartItemId)}
+								>
+									Remove
+								</button>
+							</div>
 						</div>
 					</div>
 				{/each}
@@ -174,7 +217,7 @@
 					{isCheckingOut ? "Preparing bag..." : "Checkout"}
 				</Button>
 				<p class="text-center text-xs mt-4 font-source-code-pro w-full">
-					Pickup-only checkout. Taxes calculated at checkout.
+					Taxes calculated at checkout.
 				</p>
 
 				<div
@@ -188,9 +231,8 @@
 					<p
 						class="mt-2 text-sm leading-relaxed text-muted-foreground"
 					>
-						Orders are available for pickup at Blue Nomad in New
-						York City. You’ll receive confirmation after purchase
-						with next steps for pickup.
+						Orders are available for in-studio pickup or NYC
+						delivery.
 					</p>
 				</div>
 			</Sheet.Footer>

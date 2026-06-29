@@ -1,7 +1,7 @@
-import type { PageLoad } from './$types';
-import type { Post, SanityPost } from '$lib/schemas/post';
-import { apiClient } from '$lib/api';
-import { error } from '@sveltejs/kit';
+import type { PageLoad } from "./$types";
+import type { Post, SanityPost } from "$lib/schemas/post";
+import { apiClient } from "$lib/api";
+import { error } from "@sveltejs/kit";
 
 export const load: PageLoad = async () => {
 	let posts: Post[] = [];
@@ -16,11 +16,11 @@ export const load: PageLoad = async () => {
 			datetime: post._createdAt,
 			author: post.author
 				? {
-					name: post.author.name ?? "Blue Nomad",
-					role: "Founder",
-					href: "#",
-					imageUrl: "/images/blog/elie-profile.jpg",
-				}
+						name: post.author.name ?? "Blue Nomad",
+						role: "Founder",
+						href: "#",
+						imageUrl: "/images/blog/elie-profile.jpg",
+					}
 				: null,
 			imageUrl: post.imageUrl ?? "/studio_background.jpg",
 			categories: (post.categories ?? []).map((c: any) => c.title),
@@ -31,6 +31,10 @@ export const load: PageLoad = async () => {
 	}
 
 	return {
-		posts
+		posts,
+		navbar: {
+			position: "absolute",
+			variant: "light",
+		},
 	};
 };

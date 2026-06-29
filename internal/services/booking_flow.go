@@ -10,7 +10,7 @@ import (
 
 var ErrSlotNoLongerAvailable = errors.New("slot no longer available")
 
-type AuthorizeBookingPaymentInput struct {
+type StoreCardAndBookInput struct {
 	BookingRequestID  string
 	SourceID          string
 	VerificationToken string
@@ -44,7 +44,11 @@ func (s *BookingFlowService) MarkAdminNotified(ctx context.Context, requestID st
 	return s.store.MarkAdminNotified(ctx, requestID)
 }
 
-func (s *BookingFlowService) AuthorizeAndBook(ctx context.Context, input AuthorizeBookingPaymentInput) (*BookingRequest, error) {
+func (s *BookingFlowService) GetBySquareBookingID(ctx context.Context, bookingID string) (*BookingRequest, error) {
+	return s.store.GetBySquareBookingID(ctx, bookingID)
+}
+
+func (s *BookingFlowService) StoreCardAndBook(ctx context.Context, input StoreCardAndBookInput) (*BookingRequest, error) {
 	req, err := s.store.GetByID(ctx, input.BookingRequestID)
 	if err != nil {
 		return nil, err
@@ -58,28 +62,23 @@ func (s *BookingFlowService) AuthorizeAndBook(ctx context.Context, input Authori
 		return nil, err
 	}
 
-	payment, err := s.square.AuthorizeBookingPayment(ctx, AuthorizeSquareBookingPaymentRequest{
-		BookingRequestID:  req.ID,
-		SourceID:          input.SourceID,
-		VerificationToken: input.VerificationToken,
-		CustomerID:        customerID,
-		PriceCents:        req.PriceCents,
-		Currency:          req.Currency,
-		EmailAddress:      req.EmailAddress,
-		PhoneNumber:       req.PhoneNumber,
-		ServiceName:       req.ServiceName,
-		StartAt:           req.StartAt,
-	})
-	if err != nil {
-		return nil, fmt.Errorf("authorize booking payment: %w", err)
-	}
+	if req.SquareCardID == "" {
+		card, err := s.square.CreateCardOnFile(ctx, CreateCardOnFileRequest{
+			BookingRequestID:  req.ID,
+			SourceID:          input.SourceID,
+			VerificationToken: input.VerificationToken,
+			CustomerID:        customerID,
+			CardholderName:    strings.TrimSpace(req.GivenName + " " + req.FamilyName),
+		})
+		if err != nil {
+			return nil, fmt.Errorf("store card on file: %w", err)
+		}
 
-	if payment.Status != "APPROVED" && payment.Status != "COMPLETED" {
-		return nil, fmt.Errorf("unexpected booking payment status: %s", payment.Status)
-	}
+		if err := s.store.SaveSquareCardID(ctx, req.ID, card.ID); err != nil {
+			return nil, err
+		}
 
-	if err := s.store.MarkPaymentAuthorized(ctx, req.ID, payment.ID, payment.Status, payment.OrderID); err != nil {
-		return nil, err
+		req.SquareCardID = card.ID
 	}
 
 	booking, err := s.square.CreateBookingOnly(ctx, req.ID, CreateBookingRequest{
@@ -96,8 +95,7 @@ func (s *BookingFlowService) AuthorizeAndBook(ctx context.Context, input Authori
 	}, customerID)
 	if err != nil {
 		if isSquareBookingConflict(err) {
-			_ = s.square.CancelPayment(ctx, payment.ID)
-			_ = s.store.MarkFailed(ctx, req.ID, BookingRequestStatusPaymentCanceled, "slot no longer available after payment authorization")
+			_ = s.store.MarkFailed(ctx, req.ID, BookingRequestStatusBookingFailed, "slot no longer available while creating booking")
 			return nil, ErrSlotNoLongerAvailable
 		}
 		return nil, fmt.Errorf("create square booking: %w", err)
@@ -199,7 +197,7 @@ func (s *BookingFlowService) ensureCustomer(ctx context.Context, req *BookingReq
 }
 
 func bookingRequestIDFromReference(reference string) (string, bool) {
-	const prefix = "booking_request:"
+	const prefix = "reference_id:"
 	if !strings.HasPrefix(reference, prefix) {
 		return "", false
 	}

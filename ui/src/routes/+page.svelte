@@ -198,7 +198,7 @@
 			items={pressBrands}
 			direction="right"
 			speed="normal"
-			class="mask-[linear-gradient(to_right,transparent_0%,white_20%,white_100%)]"
+			class="mask-[linear-gradient(to_right,transparent_0%,white_20%,white_100%)] max-w-[unset]"
 		/>
 	</div>
 </section>

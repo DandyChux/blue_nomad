@@ -58,6 +58,14 @@ type SquarePayment struct {
 	} `json:"amount_money"`
 }
 
+type SquareCard struct {
+	ID          string `json:"id"`
+	CustomerID  string `json:"customer_id"`
+	ReferenceID string `json:"reference_id"`
+	CardBrand   string `json:"card_brand"`
+	Last4       string `json:"last_4"`
+}
+
 type AuthorizeSquareBookingPaymentRequest struct {
 	BookingRequestID  string
 	SourceID          string
@@ -69,6 +77,14 @@ type AuthorizeSquareBookingPaymentRequest struct {
 	PhoneNumber       string
 	ServiceName       string
 	StartAt           time.Time
+}
+
+type CreateCardOnFileRequest struct {
+	BookingRequestID  string
+	SourceID          string
+	VerificationToken string
+	CustomerID        string
+	CardholderName    string
 }
 
 // CreateBookingRequest for headless booking
@@ -521,46 +537,47 @@ func (s *SquareClient) CreateBookingCustomer(ctx context.Context, req CreateBook
 	return result.Customer.ID, nil
 }
 
-func (s *SquareClient) AuthorizeBookingPayment(ctx context.Context, req AuthorizeSquareBookingPaymentRequest) (*SquarePayment, error) {
-	payload := map[string]interface{}{
-		"source_id":       req.SourceID,
-		"idempotency_key": generateIdempotencyKey(),
-		"autocomplete":    false,
-		"delay_action":    "CANCEL",
-		"amount_money": map[string]interface{}{
-			"amount":   req.PriceCents,
-			"currency": req.Currency,
-		},
-		"location_id":         s.locationID,
-		"reference_id":        uuid.New().String(),
-		"buyer_email_address": req.EmailAddress,
-		"buyer_phone_number":  req.PhoneNumber,
-		"note":                fmt.Sprintf("Blue Nomad booking request for %s", req.ServiceName),
+func (s *SquareClient) CreateCardOnFile(ctx context.Context, req CreateCardOnFileRequest) (*SquareCard, error) {
+	if req.SourceID == "" {
+		return nil, fmt.Errorf("source id is required")
+	}
+	if req.CustomerID == "" {
+		return nil, fmt.Errorf("customer id is required")
 	}
 
-	if req.CustomerID != "" {
-		payload["customer_id"] = req.CustomerID
+	cardPayload := map[string]any{
+		"customer_id":  req.CustomerID,
+		"reference_id": fmt.Sprintf("booking_request:%s", req.BookingRequestID),
+	}
+	if req.CardholderName != "" {
+		cardPayload["cardholder_name"] = req.CardholderName
+	}
+
+	payload := map[string]any{
+		"idempotency_key": generateIdempotencyKey(),
+		"source_id":       req.SourceID,
+		"card":            cardPayload,
 	}
 	if req.VerificationToken != "" {
 		payload["verification_token"] = req.VerificationToken
 	}
 
-	resp, err := s.http.Post(ctx, "/v2/payments", payload)
+	resp, err := s.http.Post(ctx, "/v2/cards", payload)
 	if err != nil {
-		return nil, fmt.Errorf("square payment authorization failed: %w", err)
+		return nil, fmt.Errorf("create card on file failed: %w", err)
 	}
 
 	var result struct {
-		Payment SquarePayment `json:"payment"`
+		Card SquareCard `json:"card"`
 	}
 	if err := json.Unmarshal(resp.Body, &result); err != nil {
-		return nil, fmt.Errorf("decode square payment authorization response: %w", err)
+		return nil, fmt.Errorf("decode create card response: %w", err)
 	}
-	if result.Payment.ID == "" {
-		return nil, fmt.Errorf("square did not return a payment id")
+	if result.Card.ID == "" {
+		return nil, fmt.Errorf("square did not return a card id")
 	}
 
-	return &result.Payment, nil
+	return &result.Card, nil
 }
 
 func (s *SquareClient) CancelPayment(ctx context.Context, paymentID string) error {

@@ -11,10 +11,6 @@
 			href: "/booking",
 		},
 		{ label: "Shop", href: "/shop" },
-		{
-			label: "Gift Card",
-			href: "https://app.squareup.com/gift/ML665NPQYDHTJ/order",
-		},
 		{ label: "Nomad's Land", href: "/nomadsland" },
 	];
 </script>
@@ -31,11 +27,8 @@
 	import Picture from "./picture.svelte";
 
 	let pathname = $derived(page.url.pathname);
-	let isLightPage = $derived(
-		pathname === "/" ||
-			pathname === "/nomadsland" ||
-			pathname === "/booking",
-	);
+	let position = $derived(page.data.navbar?.position ?? "fixed");
+	let isLightPage = $derived(page.data.navbar?.variant === "light");
 	let scrolled = $state(false);
 	let useLightNav = $derived(isLightPage && !scrolled);
 	let navTextClass = $derived(
@@ -49,7 +42,8 @@
 
 	const cart = getCart();
 
-	const SCROLL_THRESHOLD = 40;
+	// const SCROLL_THRESHOLD = 40;
+	const SCROLL_THRESHOLD = window.innerHeight;
 
 	function handleScroll() {
 		scrolled = window.scrollY > SCROLL_THRESHOLD;
@@ -68,7 +62,9 @@
 <svelte:window onscroll={handleScroll} />
 
 <header
-	class="flex items-center justify-between fixed top-0 w-full bg-transparent backdrop-blur p-4 md:p-12 z-1"
+	class="flex items-center justify-between top-0 w-full bg-transparent backdrop-blur p-4 md:p-6 z-1"
+	class:fixed={position === "fixed"}
+	class:absolute={position === "absolute"}
 	class:scrolled
 >
 	<div class="flex w-full items-center">
@@ -150,7 +146,7 @@
 					>
 						<a
 							href={item.href}
-							class={"font-semibold text-lg font-source-code-pro no-underline"}
+							class={"font-medium text-lg font-source-code-pro no-underline"}
 							rel="nofollow noopener noreferrer"
 							target={isExternal(item.href)
 								? "_blank"

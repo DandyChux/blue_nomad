@@ -83,7 +83,7 @@
 				<Button
 					variant="outline"
 					size="xl"
-					class="h-auto uppercase rounded-full py-2 px-10 mt-4 pointer-events-auto"
+					class="h-auto uppercase rounded-full py-2 px-10 mt-4 pointer-events-auto font-source-code-pro"
 				>
 					<a href="#treatments">
 						Your <br />
@@ -179,7 +179,7 @@
 								<p
 									class="font-normal lowercase text-center font-source-code-pro text-xs opacity-80"
 								>
-									"{testimonial.description}"
+									{testimonial.description}
 								</p>
 							</figcaption>
 						</figure>
@@ -190,7 +190,7 @@
 			<Button
 				variant="outline"
 				size="xl"
-				class="h-auto uppercase rounded-full py-2 px-10 mt-6"
+				class="h-auto uppercase rounded-full py-2 px-10 mt-6 font-source-code-pro"
 				href="#treatments"
 				target="_blank"
 				rel="noopener noreferrer"
