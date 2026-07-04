@@ -7,13 +7,13 @@
 	import { type VariantProps, tv } from "tailwind-variants";
 
 	export const buttonVariants = tv({
-		base: "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+		base: "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
 		variants: {
 			variant: {
 				default:
 					"bg-primary text-primary-foreground hover:bg-primary/80",
 				outline:
-					"border-2 border-input bg-transparent shadow-sm hover:bg-black hover:text-white transform transition-transform duration-300 ease-in-out",
+					"border-2 border-input bg-transparent shadow-sm hover:bg-black hover:text-brand-white transform transition-transform duration-300 ease-in-out",
 				secondary:
 					"bg-secondary text-secondary-foreground hover:bg-secondary/80 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
 				ghost: "hover:bg-transparent hover:text-foreground aria-expanded:bg-transparent aria-expanded:text-foreground",

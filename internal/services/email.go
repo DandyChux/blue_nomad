@@ -52,12 +52,16 @@ func getConfig() EmailConfig {
 }
 
 // SendEmail sends an email message
-func SendEmail(msg *EmailMessage) error {
+func SendEmail(msgs []*EmailMessage) ([]error, error) {
+	if len(msgs) == 0 {
+		return []error{fmt.Errorf("no messages to send")}, nil
+	}
+
 	config := getConfig()
 
 	mailgunApiKey := os.Getenv("MAILGUN_API_KEY")
 	if mailgunApiKey == "" {
-		return fmt.Errorf("missing MAILGUN_API_KEY")
+		return []error{fmt.Errorf("missing MAILGUN_API_KEY")}, nil
 	}
 
 	domain := os.Getenv("MAILGUN_DOMAIN")
@@ -65,61 +69,94 @@ func SendEmail(msg *EmailMessage) error {
 		domain = "mg.bluenomadworld.com"
 	}
 
-	// Process template if specified
-	if msg.TemplateID != "" {
-		emailTemplatesOnce.Do(loadEmailTemplates)
+	// Pre-process templates for all messages
+	for _, msg := range msgs {
+		if msg.TemplateID != "" {
+			emailTemplatesOnce.Do(loadEmailTemplates)
 
-		if tmpl, ok := emailTemplates[msg.TemplateID]; ok {
-			var buf bytes.Buffer
-			if err := tmpl.Execute(&buf, msg.TemplateData); err != nil {
-				return fmt.Errorf("failed to render email template: %w", err)
+			if tmpl, ok := emailTemplates[msg.TemplateID]; ok {
+				var buf bytes.Buffer
+				if err := tmpl.Execute(&buf, msg.TemplateData); err != nil {
+					return []error{fmt.Errorf("failed to render email template: %w", err)}, nil
+				}
+				msg.BodyHTML = buf.String()
 			}
-			msg.BodyHTML = buf.String()
 		}
-	}
 
-	if msg.BodyHTML == "" && msg.BodyText == "" {
-		return fmt.Errorf("no email body provided")
+		if msg.BodyHTML == "" && msg.BodyText == "" {
+			return []error{fmt.Errorf("no email body provided")}, nil
+		}
 	}
 
 	// Initialize the Mailgun client
 	mg := mailgun.NewMailgun(domain, mailgunApiKey)
 
-	mgMessage := mailgun.NewMessage(config.From, msg.Subject, msg.BodyText)
-
-	if msg.BodyHTML != "" {
-		mgMessage.SetHTML(msg.BodyHTML)
-	}
-
-	// Add recipients
-	for _, to := range msg.To {
-		if err := mgMessage.AddRecipient(to); err != nil {
-			return fmt.Errorf("failed to add recipient %s: %w", to, err)
-		}
-	}
-	for _, cc := range msg.Cc {
-		mgMessage.AddCC(cc)
-	}
-	for _, bcc := range msg.Bcc {
-		mgMessage.AddBCC(bcc)
-	}
-
-	// Create contexxt with a timeout for the API call
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
+	// Create a context for the batch operation
+	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
 	defer cancel()
 
-	// Send the message
-	_, id, err := mg.Send(ctx, mgMessage)
-	if err != nil {
-		return fmt.Errorf("failed to send email via Mailgun: %w", err)
+	// Send all messages in parallel
+	var wg sync.WaitGroup
+	errors := make([]error, len(msgs))
+
+	for i, msg := range msgs {
+		wg.Add(1)
+		go func(idx int, m *EmailMessage) {
+			defer wg.Done()
+
+			mgMessage := mailgun.NewMessage(config.From, m.Subject, m.BodyText)
+
+			if m.BodyHTML != "" {
+				mgMessage.SetHTML(m.BodyHTML)
+			}
+
+			// Add recipients
+			for _, to := range m.To {
+				if err := mgMessage.AddRecipient(to); err != nil {
+					errors[idx] = fmt.Errorf("failed to add recipient %s: %w", to, err)
+					return
+				}
+			}
+			for _, cc := range m.Cc {
+				mgMessage.AddCC(cc)
+			}
+			for _, bcc := range m.Bcc {
+				mgMessage.AddBCC(bcc)
+			}
+
+			// Send the message
+			_, id, err := mg.Send(ctx, mgMessage)
+			if err != nil {
+				errors[idx] = fmt.Errorf("failed to send email via Mailgun: %w", err)
+				return
+			}
+
+			log.Printf("Email sent via Mailgun w/ ID: %s", id)
+			errors[idx] = nil
+		}(i, msg)
 	}
 
-	log.Printf("Email sent via Mailgun w/ ID: %s", id)
-	return nil
+	// Wait for all goroutines to complete
+	wg.Wait()
+
+	// Check if all emails failed
+	allFailed := true
+	for _, e := range errors {
+		if e == nil {
+			allFailed = false
+			break
+		}
+	}
+
+	if allFailed {
+		return errors, fmt.Errorf("all emails failed to send")
+	}
+
+	return errors, nil
 }
 
 // SendSubscriptionNotification sends a notification about a new subscription
-func SendSubscriptionNotification(subscriberEmail string) error {
+func SendSubscriptionNotification(subscriberEmail string) ([]error, error) {
 	adminEmail := os.Getenv("ADMIN_EMAIL")
 	if adminEmail == "" {
 		adminEmail = os.Getenv("EMAIL_USERNAME")
@@ -128,39 +165,47 @@ func SendSubscriptionNotification(subscriberEmail string) error {
 		adminEmail = "hello@bluenomad.nyc"
 	}
 
-	return SendEmail(&EmailMessage{
-		To:       []string{adminEmail},
-		Subject:  "New Blue Nomad Subscription",
-		BodyText: fmt.Sprintf("New subscriber: %s", subscriberEmail),
-		BodyHTML: fmt.Sprintf(`
-			<h2>New Subscription</h2>
-			<p>A new user has subscribed to Blue Nomad updates:</p>
-			<p><strong>Email:</strong> %s</p>
-		`, subscriberEmail),
-	})
+	msgs := []*EmailMessage{
+		{
+			To:       []string{adminEmail},
+			Subject:  "New Blue Nomad Subscription",
+			BodyText: fmt.Sprintf("New subscriber: %s", subscriberEmail),
+			BodyHTML: fmt.Sprintf(`
+				<h2>New Subscription</h2>
+				<p>A new user has subscribed to Blue Nomad updates:</p>
+				<p><strong>Email:</strong> %s</p>
+			`, subscriberEmail),
+		},
+	}
+
+	return SendEmail(msgs)
 }
 
 // SendContactForm sends a contact form submission
-func SendContactForm(name, email, subject, message string) error {
+func SendContactForm(name, email, subject, message string) ([]error, error) {
 	adminEmail := os.Getenv("ADMIN_EMAIL")
 	if adminEmail == "" {
 		adminEmail = os.Getenv("EMAIL_USERNAME")
 	}
 	if adminEmail == "" {
-		return fmt.Errorf("no admin email configured")
+		return []error{fmt.Errorf("no admin email configured")}, nil
 	}
 
-	return SendEmail(&EmailMessage{
-		To:         []string{adminEmail},
-		Subject:    fmt.Sprintf("Contact Form: %s", subject),
-		TemplateID: "contact-form",
-		TemplateData: map[string]string{
-			"Name":    name,
-			"Email":   email,
-			"Subject": subject,
-			"Message": message,
+	msgs := []*EmailMessage{
+		{
+			To:         []string{adminEmail},
+			Subject:    fmt.Sprintf("Contact Form: %s", subject),
+			TemplateID: "contact-form",
+			TemplateData: map[string]string{
+				"Name":    name,
+				"Email":   email,
+				"Subject": subject,
+				"Message": message,
+			},
 		},
-	})
+	}
+
+	return SendEmail(msgs)
 }
 
 // loadEmailTemplates loads email templates

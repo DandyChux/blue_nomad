@@ -173,7 +173,7 @@
 			<div class="flex items-center mr-2"><SearchBar /></div>
 			<Button
 				variant="ghost"
-				class="hidden sm:inline-flex text-brand-white hover:text-white hover:bg-black rounded-full hover:cursor-pointer font-source-code-pro"
+				class="hidden sm:inline-flex text-brand-white hover:text-brand-white hover:bg-black rounded-full hover:cursor-pointer font-source-code-pro"
 				href="#subscription-form"
 			>
 				Get Our Newsletter

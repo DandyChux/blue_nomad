@@ -59,13 +59,11 @@ func (h *DiagnosticHandler) Submit(w http.ResponseWriter, r *http.Request) {
 	// Fire the admin notification email asynchronously so SMTP latency
 	// (or outright failure) doesn't block the user's response.
 	go func(req DiagnosticRequest) {
-		if err := h.sendNotificationEmail(&req); err != nil {
+		if _, err := h.sendNotificationEmail(&req); err != nil {
 			slog.Error("failed to send diagnostic email",
 				"error", err,
 				"email", req.Email,
 			)
-			http.Error(w, "Failed to send notification", http.StatusInternalServerError)
-			return
 		}
 	}(req)
 
@@ -80,7 +78,7 @@ func (h *DiagnosticHandler) Submit(w http.ResponseWriter, r *http.Request) {
 
 // ── Email builder ──────────────────────────────────────────────────────────────
 
-func (h *DiagnosticHandler) sendNotificationEmail(req *DiagnosticRequest) error {
+func (h *DiagnosticHandler) sendNotificationEmail(req *DiagnosticRequest) ([]error, error) {
 	// Resolve skin type display value
 	skinType := req.SkinType
 	if skinType == "Other" && req.SkinTypeOther != "" {
@@ -208,10 +206,12 @@ func (h *DiagnosticHandler) sendNotificationEmail(req *DiagnosticRequest) error 
 		buildHTMLList(concerns),
 	)
 
-	return services.SendEmail(&services.EmailMessage{
-		To:       []string{"hello@bluenomad.nyc"},
-		Subject:  fmt.Sprintf("Express Skin Diagnostic — %s", req.FirstName),
-		BodyHTML: htmlBody,
+	return services.SendEmail([]*services.EmailMessage{
+		{
+			To:       []string{"hello@bluenomad.nyc"},
+			Subject:  fmt.Sprintf("Express Skin Diagnostic — %s", req.FirstName),
+			BodyHTML: htmlBody,
+		},
 	})
 }
 

@@ -210,6 +210,15 @@ export const CreateBookingResponseSchema = z.object({
 	message: z.string().optional(),
 });
 
+export const BookingFormSchema = z.object({
+	time: z.string().min(1, "Please select an appointment time."),
+	firstName: z.string().min(1, "First name is required."),
+	lastName: z.string().min(1, "Last name is required."),
+	email: z.email("Please enter a valid email address."),
+	phone: z.string().min(10, "Please enter a valid phone number."),
+	notes: z.string().optional(),
+});
+
 // --- TYPES ---
 export type AvailabilitySlot = z.infer<typeof AvailabilitySlotSchema>;
 export type SearchAvailabilityResponse = z.infer<

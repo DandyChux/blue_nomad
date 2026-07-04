@@ -1,7 +1,13 @@
 import type { PageLoad } from "./$types";
-import type { CatalogItem, CatalogListResponse } from "$lib/schemas";
+import {
+	BookingFormSchema,
+	type CatalogItem,
+	type CatalogListResponse,
+} from "$lib/schemas";
 import { apiClient, ApiError } from "$lib/api";
 import { error } from "@sveltejs/kit";
+import { superValidate } from "sveltekit-superforms";
+import { zod4 } from "sveltekit-superforms/adapters";
 
 export const load: PageLoad = async ({ params }) => {
 	try {
@@ -41,6 +47,7 @@ export const load: PageLoad = async ({ params }) => {
 					"https://via.placeholder.com/800x1000?text=No+Image",
 			},
 			imageUrls,
+			form: await superValidate(zod4(BookingFormSchema)),
 		};
 	} catch (err) {
 		if (err instanceof ApiError && err.isNotFound) {

@@ -205,7 +205,7 @@
 												{#each post.categories as category (category)}
 													<Badge
 														variant="ghost"
-														class="lowercase text-sm text-brand-white hover:text-white"
+														class="lowercase text-sm text-brand-white hover:text-brand-white"
 													>
 														{category}
 													</Badge>

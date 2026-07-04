@@ -112,7 +112,7 @@
 					</p>
 					<Button
 						variant="outline"
-						class="uppercase rounded-full font-source-code-pro border-black hover:bg-black hover:text-white"
+						class="uppercase rounded-full font-source-code-pro border-black hover:bg-black hover:text-brand-white"
 						onclick={() => cart.close()}
 					>
 						Continue Shopping

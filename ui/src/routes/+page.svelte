@@ -33,8 +33,11 @@
 		</p>
 
 		<Button
-			variant="outline"
-			class="uppercase self-start rounded-full h-auto py-2 px-8 border-brand-white md:text-brand-white hover:border-black text-center font-source-code-pro"
+			variant="link"
+			class={buttonVariants({
+				variant: "outline",
+				class: "uppercase self-start rounded-full h-auto py-2 px-8 border-brand-white md:text-brand-white hover:border-black text-center font-source-code-pro",
+			})}
 			size="lg"
 			href="/booking"
 		>

@@ -233,34 +233,35 @@ func (h *WebhookHandler) handlePaymentEvent(_ context.Context, payload SquareWeb
 	return nil
 }
 
-func (h *WebhookHandler) sendBookingRequestNotification(req *services.BookingRequest) error {
+func (h *WebhookHandler) sendBookingRequestNotification(req *services.BookingRequest) ([]error, error) {
 	adminEmail := notificationEmail()
 	if adminEmail == "" {
-		return fmt.Errorf("ADMIN_EMAIL or EMAIL_USERNAME must be configured")
+		return []error{fmt.Errorf("ADMIN_EMAIL or EMAIL_USERNAME must be configured")}, nil
 	}
 
 	formattedDate, formattedTime := formatBookingTime(req.StartAt)
 	formattedAmount := fmt.Sprintf("%.2f", float64(req.PriceCents)/100.0)
 
-	msg := &services.EmailMessage{
-		To:      []string{adminEmail},
-		Subject: fmt.Sprintf("New Blue Nomad Booking: %s at %s", formattedDate, formattedTime),
-		BodyText: fmt.Sprintf(
-			"A new appointment request has been created.\n\nBooking Request ID: %s\nBooking ID: %s\nStatus: %s\nDate: %s\nTime: %s\nService: %s\nPrice: $%s %s\nCustomer: %s %s\nEmail: %s\nPhone: %s\n\nThe customer's card has been saved on file and the Square booking has been created. No payment has been charged online. Final payment should be collected on site in Square.",
-			req.ID,
-			req.SquareBookingID,
-			req.SquareBookingStatus,
-			formattedDate,
-			formattedTime,
-			req.ServiceName,
-			formattedAmount,
-			req.Currency,
-			req.GivenName,
-			req.FamilyName,
-			req.EmailAddress,
-			req.PhoneNumber,
-		),
-		BodyHTML: fmt.Sprintf(`
+	msg := []*services.EmailMessage{
+		{
+			To:      []string{adminEmail},
+			Subject: fmt.Sprintf("New Blue Nomad Booking: %s at %s", formattedDate, formattedTime),
+			BodyText: fmt.Sprintf(
+				"A new appointment request has been created.\n\nBooking Request ID: %s\nBooking ID: %s\nStatus: %s\nDate: %s\nTime: %s\nService: %s\nPrice: $%s %s\nCustomer: %s %s\nEmail: %s\nPhone: %s\n\nThe customer's card has been saved on file and the Square booking has been created. No payment has been charged online. Final payment should be collected on site in Square.",
+				req.ID,
+				req.SquareBookingID,
+				req.SquareBookingStatus,
+				formattedDate,
+				formattedTime,
+				req.ServiceName,
+				formattedAmount,
+				req.Currency,
+				req.GivenName,
+				req.FamilyName,
+				req.EmailAddress,
+				req.PhoneNumber,
+			),
+			BodyHTML: fmt.Sprintf(`
 			<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
 				<h2 style="color: #000; text-transform: uppercase;">New Appointment Request</h2>
 				<p>A new appointment has been created via the Blue Nomad website.</p>
@@ -273,14 +274,36 @@ func (h *WebhookHandler) sendBookingRequestNotification(req *services.BookingReq
 					<p><strong>Client:</strong> %s %s</p>
 					<p><strong>Email:</strong> %s</p>
 				</div>
-				<p>This booking is awaiting manual approval in Square.</p>
 				<p>The customer's card was saved on file during booking.</p>
 				<p><a href="https://squareup.com/dashboard/appointments">Open in Square Appointments</a></p>
 			</div>
-		`, formattedDate, formattedTime, req.ServiceName, req.SquareBookingID, formattedAmount, req.Currency, req.GivenName, req.FamilyName, req.EmailAddress),
+			`, formattedDate, formattedTime, req.ServiceName, req.SquareBookingID, formattedAmount, req.Currency, req.GivenName, req.FamilyName, req.EmailAddress),
+		},
+		{
+			To:       []string{req.EmailAddress},
+			Subject:  fmt.Sprintf("Your booking has been received - %s", req.ServiceName),
+			BodyText: fmt.Sprintf("Thank you for booking with us. Your appointment is confirmed and we'll see you on %s at %s.", formattedDate, formattedTime),
+			BodyHTML: fmt.Sprintf(`
+				<div>
+					<h2>Your appointment is confirmed.</h2>
+					<p>Thank you for booking with us. Your appointment is confirmed and we'll see you soon!</p>
+					<div style="background-color: #f9fafb; padding: 20px; border-radius: 4px; margin: 20px 0;">
+						<p>Date: %s</p>
+						<p>Time: %s</p>
+						<p>Service: %s</p>
+					</div>
+				</div>
+			`, formattedDate, formattedTime, req.ServiceName),
+		},
 	}
 
-	return services.SendEmail(msg)
+	if emailErrs, err := services.SendEmail(msg); err != nil {
+		return []error{fmt.Errorf("send booking update email for booking %s: %w", req.ID, err)}, nil
+	} else if emailErrs != nil {
+		return []error{fmt.Errorf("send booking update email for booking %s: %w", req.ID, emailErrs[0])}, nil
+	}
+
+	return nil, nil
 }
 
 func (h *WebhookHandler) handleBookingCreated(ctx context.Context, payload SquareWebhookPayload) error {
@@ -306,9 +329,13 @@ func (h *WebhookHandler) handleBookingCreated(ctx context.Context, payload Squar
 		return nil
 	}
 
-	if err := h.sendBookingRequestNotification(req); err != nil {
-		return err
+	if errs, err := h.sendBookingRequestNotification(req); err != nil {
+		return errs[0]
 	}
+
+	// if len(errs) > 0 {
+	// 	return errs[0]
+	// }
 
 	return h.flow.MarkAdminNotified(ctx, req.ID)
 }
@@ -353,32 +380,35 @@ func (h *WebhookHandler) handleBookingUpdated(_ context.Context, payload SquareW
 
 		subject := fmt.Sprintf("Booking %s: %s at %s", statusLabel, formattedDate, formattedTime)
 
-		msg := &services.EmailMessage{
-			To:      []string{adminEmail},
-			Subject: subject,
-			BodyText: fmt.Sprintf(
-				"Booking %s\n\nBooking ID: %s\nStatus: %s\nDate: %s\nTime: %s\nDuration: %d minutes\nCustomer ID: %s\nService Variation: %s\nVersion: %d\n\nReview in your Square Dashboard for full details.",
-				statusLabel, booking.ID, booking.Status, formattedDate, formattedTime,
-				durationMin, booking.CustomerID, serviceVariationID, booking.Version,
-			),
-			BodyHTML: fmt.Sprintf(`
-				<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-					<h2 style="color: #000; text-transform: uppercase;">Booking %s</h2>
-					<p>An existing appointment was updated on Square.</p>
-					<div style="background-color: #f9fafb; padding: 20px; border-radius: 4px; margin: 20px 0;">
-						<p><strong>Date:</strong> %s</p>
-						<p><strong>Time:</strong> %s</p>
-						<p><strong>Duration:</strong> %d minutes</p>
-						<p><strong>New Status:</strong> %s</p>
-						<p><strong>Booking ID:</strong> %s</p>
-						<p><strong>Version:</strong> %d</p>
+		msg := []*services.EmailMessage{
+			{
+
+				To:      []string{adminEmail},
+				Subject: subject,
+				BodyText: fmt.Sprintf(
+					"Booking %s\n\nBooking ID: %s\nStatus: %s\nDate: %s\nTime: %s\nDuration: %d minutes\nCustomer ID: %s\nService Variation: %s\nVersion: %d\n\nReview in your Square Dashboard for full details.",
+					statusLabel, booking.ID, booking.Status, formattedDate, formattedTime,
+					durationMin, booking.CustomerID, serviceVariationID, booking.Version,
+				),
+				BodyHTML: fmt.Sprintf(`
+					<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+						<h2 style="color: #000; text-transform: uppercase;">Booking %s</h2>
+						<p>An existing appointment was updated on Square.</p>
+						<div style="background-color: #f9fafb; padding: 20px; border-radius: 4px; margin: 20px 0;">
+							<p><strong>Date:</strong> %s</p>
+							<p><strong>Time:</strong> %s</p>
+							<p><strong>Duration:</strong> %d minutes</p>
+							<p><strong>New Status:</strong> %s</p>
+							<p><strong>Booking ID:</strong> %s</p>
+							<p><strong>Version:</strong> %d</p>
+						</div>
+						<p><a href="https://squareup.com/dashboard/appointments">Open in Square Dashboard</a></p>
 					</div>
-					<p><a href="https://squareup.com/dashboard/appointments">Open in Square Dashboard</a></p>
-				</div>
-			`, statusLabel, formattedDate, formattedTime, durationMin, booking.Status, booking.ID, booking.Version),
+					`, statusLabel, formattedDate, formattedTime, durationMin, booking.Status, booking.ID, booking.Version),
+			},
 		}
 
-		if err := services.SendEmail(msg); err != nil {
+		if _, err := services.SendEmail(msg); err != nil {
 			return fmt.Errorf("send booking update email for booking %s: %w", booking.ID, err)
 		}
 

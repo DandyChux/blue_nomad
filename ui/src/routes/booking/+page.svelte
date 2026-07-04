@@ -172,7 +172,7 @@
 				<span class="pl-8 md:pl-16">Everything Around</span> -->
 			</h1>
 			<p
-				class="text-brand-white/70 md:text-[18px] max-w-xl leading-relaxed font-light text-center"
+				class="text-brand-white/70 md:text-[18px] max-w-xl leading-relaxed font-light text-center lg:text-start"
 				in:fly={{ y: 20, duration: 600, delay: 400 }}
 			>
 				Personalized treatments designed to restore, protect, and
@@ -185,10 +185,10 @@
 				size="xl"
 				class={buttonVariants({
 					variant: "outline",
-					class: "border-brand-white text-brand-white rounded-full mt-10 border self-center px-8 uppercase tracking-wide font-source-code-pro font-light hover:bg-brand-white hover:text-black",
+					class: "border-brand-white text-brand-white rounded-full mt-10 border self-center px-8 uppercase tracking-wide font-source-code-pro hover:bg-brand-white hover:text-black",
 				})}
 			>
-				Explore Treatments
+				Book Core Facial ST
 			</Button>
 		</div>
 	</div>
@@ -208,7 +208,7 @@
 			</Empty.Root>
 		</div>
 	{:else}
-		<div class="flex flex-col lg:flex-row">
+		<div class="flex flex-col lg:flex-row lg:items-center py-12 px-8">
 			{#if coreTreatment}
 				<Card.Root
 					class="relative group w-full p-4 overflow-hidden mx-auto my-10 lg:mx-0 lg:my-0 lg:w-[35%] lg:h-[1100px] lg:rounded-tl-none bg-transparent ring-0 shadow-none"
@@ -238,7 +238,7 @@
 
 					<!-- Mobile only description -->
 					<div
-						class="absolute inset-0 flex flex-col p-6 text-warm-ivory md:p-8 lg:hidden"
+						class="absolute inset-0 flex flex-col p-6 text-brand-white md:p-8 lg:hidden"
 					>
 						<div class="flex items-center">
 							<h2
@@ -258,7 +258,7 @@
 							{coreTreatment.item_data.name}
 						</p>
 						<p
-							class="mb-6 font-source-code-pro font-medium line-clamp-3 text-ellipsis"
+							class="mb-6 font-source-code-pro font-medium line-clamp-4 text-ellipsis"
 						>
 							{coreTreatment.item_data.description ||
 								"A curated experience focused on restoration and results."}

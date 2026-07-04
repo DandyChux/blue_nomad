@@ -99,19 +99,16 @@ func (h *NewsletterHandler) SendMail(w http.ResponseWriter, r *http.Request) {
 		sendTo = os.Getenv("EMAIL_USERNAME")
 	}
 
-	msg := &services.EmailMessage{
-		To:      []string{sendTo},
-		Subject: req.Subject,
+	msg := []*services.EmailMessage{
+		{
+			To:       []string{sendTo},
+			Subject:  req.Subject,
+			BodyHTML: req.HTML,
+			BodyText: req.Text,
+		},
 	}
 
-	if req.HTML != "" {
-		msg.BodyHTML = req.HTML
-		msg.BodyText = req.Text
-	} else {
-		msg.BodyText = req.Text
-	}
-
-	if err := services.SendEmail(msg); err != nil {
+	if _, err := services.SendEmail(msg); err != nil {
 		http.Error(w, "Error sending email", http.StatusInternalServerError)
 		return
 	}

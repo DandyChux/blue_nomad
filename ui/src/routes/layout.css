@@ -258,16 +258,18 @@
 	a {
 		text-decoration: none;
 		text-decoration-line: none;
-		font-weight: 700;
-		font-family: inherit;
-
-		&:hover {
-			text-underline-offset: 0.25rem;
-		}
+		font-weight: 500;
+		font-family: var(--font-source-code-pro);
 	}
 
 	button {
 		font-family: var(--font-source-code-pro);
+		font-weight: 600;
+
+		&:hover {
+			text-decoration: underline;
+			text-underline-offset: 4px;
+		}
 	}
 
 	input {

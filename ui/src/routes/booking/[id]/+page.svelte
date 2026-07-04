@@ -2,9 +2,10 @@
 	import { goto } from "$app/navigation";
 	import { Button } from "$lib/components/ui/button";
 	import { Input } from "$lib/components/ui/input";
-	import { Label } from "$lib/components/ui/label";
 	import { Calendar } from "$lib/components/ui/calendar";
+	import * as Form from "$lib/components/ui/form";
 	import Picture from "$lib/components/picture.svelte";
+
 	import { generateSrcSet } from "$lib/utils";
 	import { apiClient, ApiError } from "$lib/api";
 	import {
@@ -13,16 +14,25 @@
 		type DateValue,
 	} from "@internationalized/date";
 	import { fade } from "svelte/transition";
-	import type {
-		AvailabilitySlot,
-		SearchAvailabilityResponse,
+	import { onMount } from "svelte";
+
+	import {
+		superForm,
+		type SuperValidated,
+		type Infer,
+	} from "sveltekit-superforms";
+	import { zod4Client } from "sveltekit-superforms/adapters";
+	import {
+		BookingFormSchema,
+		type AvailabilitySlot,
+		type SearchAvailabilityResponse,
 	} from "$lib/schemas";
 	import {
 		loadSquare,
 		type SquareCard,
 		type SquarePayments,
 	} from "$lib/square-payments";
-	import { onMount } from "svelte";
+	import { Label } from "$lib/components/ui/label";
 
 	interface PaymentConfig {
 		application_id: string;
@@ -41,58 +51,39 @@
 		booking_status?: string;
 	}
 
-	let { data } = $props();
+	let {
+		data,
+	}: {
+		data: {
+			form: SuperValidated<Infer<typeof BookingFormSchema>>;
+			service: any;
+			imageUrls: string[];
+		};
+	} = $props();
 
-	// Booking flow state
-	const booking = $state({
-		step: 1 as 1 | 2 | 3 | 4,
-		isLoading: false,
-		error: "",
-		slots: [] as AvailabilitySlot[],
-		date: undefined as DateValue | undefined,
-		time: "",
-		selectedSlot: undefined as AvailabilitySlot | undefined,
-		customer: {
-			first: "",
-			last: "",
-			email: "",
-			phone: "",
+	// ── Superforms Setup ────────────────────────────────────────────────
+	const form = superForm(data.form, {
+		SPA: true,
+		validators: zod4Client(BookingFormSchema),
+		async onUpdate({ form }) {
+			if (form.valid) {
+				await submitBookingAndPayment(form.data);
+			}
 		},
 	});
 
-	function normalizePhone(raw: string): string {
-		const trimmed = raw.trim();
-		if (!trimmed) return "";
+	const { form: formData, enhance, submitting } = form;
 
-		if (trimmed.startsWith("+")) {
-			const digits = "+" + trimmed.slice(1).replace(/\D/g, "");
-			if (/^\+\d{9,16}$/.test(digits)) return digits;
-			return "";
-		}
+	// ── Booking Flow & UI State ─────────────────────────────────────────
+	let step = $state<1 | 2 | 3>(1);
+	let isFetchingTimes = $state(false);
+	let timeError = $state("");
+	let slots = $state<AvailabilitySlot[]>([]);
+	let selectedDate = $state<DateValue | undefined>();
+	let selectedSlot = $state<AvailabilitySlot | undefined>();
+	let activeImageIndex = $state(0);
 
-		const digits = trimmed.replace(/\D/g, "");
-
-		// US 10-digit
-		if (digits.length === 10) {
-			return `+1${digits}`;
-		}
-
-		// US 11-digit starting with 1
-		if (digits.length === 11 && digits.startsWith("1")) {
-			return `+${digits}`;
-		}
-
-		return "";
-	}
-
-	const normalizedPhone = $derived(normalizePhone(booking.customer.phone));
-
-	const phoneValidationMessage = $derived(
-		booking.customer.phone && !normalizedPhone
-			? "Enter a valid mobile number"
-			: "",
-	);
-
+	// Derived service data
 	const service = $derived(data.service);
 	const itemData = $derived(service.item_data);
 	const imageUrls = $derived(data.imageUrls);
@@ -105,25 +96,46 @@
 	);
 	const price = $derived((priceCents / 100).toFixed(0));
 	const selectedDateLabel = $derived(
-		booking.time
-			? new Date(booking.time).toLocaleDateString(undefined, {
+		$formData.time
+			? new Date($formData.time).toLocaleDateString(undefined, {
 					weekday: "long",
 					month: "long",
 					day: "numeric",
 				})
 			: "",
 	);
+
+	// Phone validation helper
+	function normalizePhone(raw: string): string {
+		const trimmed = raw.trim();
+		if (!trimmed) return "";
+		if (trimmed.startsWith("+")) {
+			const digits = "+" + trimmed.slice(1).replace(/\D/g, "");
+			if (/^\+\d{9,16}$/.test(digits)) return digits;
+			return "";
+		}
+		const digits = trimmed.replace(/\D/g, "");
+		if (digits.length === 10) return `+1${digits}`;
+		if (digits.length === 11 && digits.startsWith("1")) return `+${digits}`;
+		return "";
+	}
+
+	const normalizedPhone = $derived(normalizePhone($formData.phone));
+	const phoneValidationMessage = $derived(
+		$formData.phone && !normalizedPhone
+			? "Enter a valid mobile number"
+			: "",
+	);
 	const canContinueFromDetails = $derived(
 		Boolean(
-			booking.customer.first &&
-			booking.customer.last &&
-			booking.customer.email &&
-			normalizedPhone &&
-			booking.time,
+			$formData.firstName &&
+			$formData.lastName &&
+			$formData.email &&
+			normalizedPhone,
 		),
 	);
 
-	let activeImageIndex = $state(0);
+	// ── Payment State ───────────────────────────────────────────────────
 	let cardContainer = $state<HTMLDivElement | null>(null);
 	let squareCard: SquareCard | null = null;
 	let squarePayments: SquarePayments | null = null;
@@ -132,7 +144,6 @@
 		config: null as PaymentConfig | null,
 		configLoading: true,
 		initializing: false,
-		submitting: false,
 		cardReady: false,
 		error: "",
 		requestId: "",
@@ -145,51 +156,45 @@
 			minute: "2-digit",
 		});
 
+	// ── Lifecycle & Effects ─────────────────────────────────────────────
 	onMount(() => {
 		void loadPaymentConfig();
-
 		return () => {
 			void destroyCard();
 		};
 	});
 
 	$effect(() => {
-		if (booking.date) {
-			void loadAvailability(booking.date);
-		}
+		if (selectedDate) void loadAvailability(selectedDate);
 	});
 
 	$effect(() => {
 		if (
-			booking.step !== 3 ||
+			step !== 3 ||
 			!payment.config ||
 			!cardContainer ||
 			payment.initializing ||
 			payment.cardReady ||
 			squareCard
-		) {
+		)
 			return;
-		}
-
 		void initializeCard();
 	});
 
 	$effect(() => {
-		if (booking.step === 3) return;
+		if (step === 3) return;
 		if (!squareCard) return;
 		void destroyCard();
 	});
 
 	$effect(() => {
-		if (booking.step) {
-			window.scrollTo({ top: 0, behavior: "smooth" });
-		}
+		if (step) window.scrollTo({ top: 0, behavior: "smooth" });
 	});
 
+	// ── API & Actions ───────────────────────────────────────────────────
 	async function loadPaymentConfig() {
 		payment.configLoading = true;
 		payment.error = "";
-
 		try {
 			payment.config =
 				await apiClient.get<PaymentConfig>("/booking/config");
@@ -204,11 +209,12 @@
 	}
 
 	async function loadAvailability(date: DateValue) {
-		booking.time = "";
-		booking.selectedSlot = undefined;
-		booking.isLoading = true;
-		booking.error = "";
-		resetPendingRequest();
+		$formData.time = "";
+		selectedSlot = undefined;
+		isFetchingTimes = true;
+		timeError = "";
+		payment.requestId = "";
+		payment.error = "";
 
 		try {
 			const res = await apiClient.post<SearchAvailabilityResponse>(
@@ -219,55 +225,28 @@
 					end_at: `${date.toString()}T23:59:59Z`,
 				},
 			);
-			booking.slots = res.availabilities || [];
+			slots = res.availabilities || [];
 		} catch (err) {
-			booking.error =
+			timeError =
 				err instanceof ApiError
 					? err.userMessage
 					: "Error fetching times.";
-			booking.slots = [];
+			slots = [];
 		} finally {
-			booking.isLoading = false;
+			isFetchingTimes = false;
 		}
 	}
 
 	function selectSlot(slot: AvailabilitySlot) {
-		booking.time = slot.start_at;
-		booking.selectedSlot = slot;
-		booking.error = "";
-		resetPendingRequest();
-	}
-
-	function goToDetails() {
-		if (!booking.time) return;
-		booking.step = 2;
-	}
-
-	function goBackToCalendar() {
-		booking.step = 1;
-		resetPendingRequest();
-	}
-
-	function goToPayment() {
-		if (!canContinueFromDetails) return;
-		booking.error = "";
-		payment.error = "";
-		booking.step = 3;
-	}
-
-	function goBackToDetails() {
-		booking.step = 2;
-		resetPendingRequest();
-	}
-
-	function resetPendingRequest() {
+		$formData.time = slot.start_at;
+		selectedSlot = slot;
+		timeError = "";
 		payment.requestId = "";
 		payment.error = "";
 	}
 
 	async function initializeCard() {
 		if (!payment.config || !cardContainer) return;
-
 		payment.initializing = true;
 		payment.error = "";
 
@@ -292,27 +271,26 @@
 
 	async function destroyCard() {
 		payment.cardReady = false;
-
 		if (squareCard?.destroy) {
 			try {
 				await squareCard.destroy();
 			} catch {
-				// noop
+				/* noop */
 			}
 		}
-
 		squareCard = null;
 		squarePayments = null;
 	}
 
-	async function ensureBookingRequest() {
+	async function ensureBookingRequest(
+		validData: Infer<typeof BookingFormSchema>,
+	) {
 		if (payment.requestId) return payment.requestId;
 
 		const teamMemberId =
-			booking.selectedSlot?.appointment_segments?.[0]?.team_member_id;
+			selectedSlot?.appointment_segments?.[0]?.team_member_id;
 		const serviceVariationVersion =
-			booking.selectedSlot?.appointment_segments?.[0]
-				?.service_variation_version;
+			selectedSlot?.appointment_segments?.[0]?.service_variation_version;
 
 		if (!teamMemberId || !serviceVariationVersion) {
 			throw new Error(
@@ -326,10 +304,10 @@
 				service_variation_id: variation?.id,
 				team_member_id: teamMemberId,
 				service_variation_version: serviceVariationVersion,
-				start_at: booking.time,
-				given_name: booking.customer.first,
-				family_name: booking.customer.last,
-				email_address: booking.customer.email,
+				start_at: validData.time,
+				given_name: validData.firstName,
+				family_name: validData.lastName,
+				email_address: validData.email,
 				phone_number: normalizedPhone,
 				service_name: itemData.name,
 				price_cents: priceCents,
@@ -340,20 +318,19 @@
 		return result.request_id;
 	}
 
-	async function submitBooking() {
+	async function submitBookingAndPayment(
+		validData: Infer<typeof BookingFormSchema>,
+	) {
 		if (!squareCard || !squarePayments) {
 			payment.error =
 				"Secure card form is not ready yet. Please try again.";
 			return;
 		}
 
-		booking.isLoading = true;
-		payment.submitting = true;
-		booking.error = "";
 		payment.error = "";
 
 		try {
-			const requestId = await ensureBookingRequest();
+			const requestId = await ensureBookingRequest(validData);
 			const tokenResult = await squareCard.tokenize();
 
 			if (tokenResult.status !== "OK" || !tokenResult.token) {
@@ -372,9 +349,9 @@
 						currencyCode: "USD",
 						intent: "STORE",
 						billingContact: {
-							givenName: booking.customer.first,
-							familyName: booking.customer.last,
-							email: booking.customer.email,
+							givenName: validData.firstName,
+							familyName: validData.lastName,
+							email: validData.email,
 							phone: normalizedPhone,
 						},
 					},
@@ -390,19 +367,27 @@
 				},
 			);
 
-			saveConfirmationSummary();
+			localStorage.setItem(
+				"bn-booking",
+				JSON.stringify({
+					name: validData.firstName,
+					service: itemData.name,
+					date: selectedDateLabel,
+					time: formatTime(validData.time),
+				}),
+			);
+
 			await goto("/booking/confirmed");
 		} catch (err) {
 			if (err instanceof ApiError) {
 				payment.error = err.isConflict
 					? "That time slot is no longer available. Please choose another."
 					: err.userMessage;
-
 				if (err.isConflict) {
 					payment.requestId = "";
-					booking.time = "";
-					booking.selectedSlot = undefined;
-					booking.step = 1;
+					$formData.time = "";
+					selectedSlot = undefined;
+					step = 1;
 				}
 			} else {
 				payment.error =
@@ -410,22 +395,7 @@
 						? err.message
 						: "Could not complete booking. Please try again.";
 			}
-		} finally {
-			booking.isLoading = false;
-			payment.submitting = false;
 		}
-	}
-
-	function saveConfirmationSummary() {
-		localStorage.setItem(
-			"bn-booking",
-			JSON.stringify({
-				name: booking.customer.first,
-				service: itemData.name,
-				date: selectedDateLabel,
-				time: formatTime(booking.time),
-			}),
-		);
 	}
 </script>
 
@@ -492,19 +462,17 @@
 			{/if}
 		</div>
 
-		<div class="flex flex-col gap-8 lg:py-8">
+		<form method="POST" use:enhance class="flex flex-col gap-8 lg:py-8">
 			<div class="space-y-6 border-b border-border pb-8">
 				<h1 class="uppercase font-light leading-[0.95]">
 					{itemData.name}
 				</h1>
-
 				<div
 					class="flex gap-8 font-source-code-pro text-[11px] uppercase tracking-[0.2em]"
 				>
 					<span>{duration.toFixed(0)} Min</span>
 					<span>${price}</span>
 				</div>
-
 				{#if itemData.description}
 					<p
 						class="text-base leading-relaxed text-black font-spectral"
@@ -517,10 +485,10 @@
 			<div
 				class="font-source-code-pro text-[10px] uppercase tracking-widest text-foreground/80"
 			>
-				Step 0{booking.step} — 03
+				Step 0{step} — 03
 			</div>
 
-			{#if booking.step === 1}
+			{#if step === 1}
 				<div class="space-y-6" in:fade>
 					<h2 class="uppercase text-2xl tracking-tighter font-light">
 						Select a Date
@@ -531,13 +499,13 @@
 					>
 						<Calendar
 							type="single"
-							bind:value={booking.date}
+							bind:value={selectedDate}
 							minValue={minDate}
 							class="border-0 shadow-none bg-transparent"
 						/>
 					</div>
 
-					{#if booking.date}
+					{#if selectedDate}
 						<div class="space-y-4" in:fade>
 							<Label
 								class="text-[10px] font-source-code-pro uppercase tracking-widest text-foreground/80"
@@ -545,7 +513,7 @@
 								Available Times
 							</Label>
 
-							{#if booking.isLoading}
+							{#if isFetchingTimes}
 								<div class="grid grid-cols-3 gap-3">
 									{#each Array.from( { length: 6 } ) as _, index (index)}
 										<div
@@ -553,7 +521,13 @@
 										></div>
 									{/each}
 								</div>
-							{:else if booking.slots.length === 0}
+							{:else if timeError}
+								<p
+									class="text-center text-xs font-source-code-pro text-red-500 py-8"
+								>
+									{timeError}
+								</p>
+							{:else if slots.length === 0}
 								<p
 									class="text-center text-xs font-source-code-pro uppercase tracking-widest text-foreground/80 py-8"
 								>
@@ -561,9 +535,10 @@
 								</p>
 							{:else}
 								<div class="grid grid-cols-3 gap-3">
-									{#each booking.slots as slot (slot.start_at)}
+									{#each slots as slot (slot.start_at)}
 										<button
-											class={`py-4 border font-source-code-pro text-[11px] tracking-wider transition-all duration-300 ${booking.time === slot.start_at ? "bg-foreground text-background border-foreground" : "border-border hover:border-foreground text-foreground bg-transparent"}`}
+											type="button"
+											class={`py-4 border font-source-code-pro text-[11px] tracking-wider transition-all duration-300 ${$formData.time === slot.start_at ? "bg-foreground text-background border-foreground" : "border-border hover:border-foreground text-foreground bg-transparent"}`}
 											onclick={() => selectSlot(slot)}
 										>
 											{formatTime(slot.start_at)}
@@ -574,20 +549,31 @@
 						</div>
 					{/if}
 
+					<input
+						type="hidden"
+						name="time"
+						bind:value={$formData.time}
+					/>
+
 					<Button
+						type="button"
 						class="w-full uppercase tracking-widest font-source-code-pro text-sm rounded-2xl"
 						variant="outline"
 						size="xl"
-						disabled={!booking.time}
-						onclick={goToDetails}
+						disabled={!$formData.time}
+						onclick={() => (step = 2)}
 					>
 						Continue
 					</Button>
 				</div>
-			{:else if booking.step === 2}
+			{:else if step === 2}
 				<div class="space-y-8" in:fade>
 					<button
-						onclick={goBackToCalendar}
+						type="button"
+						onclick={() => {
+							step = 1;
+							payment.requestId = "";
+						}}
 						class="font-source-code-pro text-[10px] uppercase tracking-widest text-foreground/80 hover:text-foreground transition-colors"
 					>
 						&larr; Back to Calendar
@@ -596,89 +582,139 @@
 					<h2 class="uppercase text-2xl tracking-tighter font-light">
 						Your Details
 					</h2>
-
 					<p
 						class="font-source-code-pro text-[11px] uppercase tracking-[0.2em] text-foreground/80"
 					>
-						{selectedDateLabel} &mdash; {formatTime(booking.time)}
+						{selectedDateLabel} &mdash; {formatTime($formData.time)}
 					</p>
 
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-						<div class="space-y-2">
-							<Label
-								class="text-[10px] font-source-code-pro uppercase tracking-widest text-foreground/80"
-							>
-								First Name
-							</Label>
-							<Input
-								bind:value={booking.customer.first}
-								class="rounded-none border-0 border-b border-border bg-transparent px-0 h-12 focus-visible:ring-0 focus-visible:border-foreground shadow-none text-lg"
+						<Form.Field {form} name="firstName">
+							<Form.Control>
+								{#snippet children({ props })}
+									<Form.Label
+										class="text-[10px] font-source-code-pro uppercase tracking-widest text-foreground/80"
+										>First Name</Form.Label
+									>
+									<Input
+										{...props}
+										bind:value={$formData.firstName}
+										class="rounded-none border-0 border-b border-border bg-transparent px-0 h-12 focus-visible:ring-0 focus-visible:border-foreground shadow-none text-lg"
+									/>
+								{/snippet}
+							</Form.Control>
+							<Form.FieldErrors
+								class="text-xs font-source-code-pro uppercase"
 							/>
-						</div>
-						<div class="space-y-2">
-							<Label
-								class="text-[10px] font-source-code-pro uppercase tracking-widest text-foreground/80"
-							>
-								Last Name
-							</Label>
-							<Input
-								bind:value={booking.customer.last}
-								class="rounded-none border-0 border-b border-border bg-transparent px-0 h-12 focus-visible:ring-0 focus-visible:border-foreground shadow-none text-lg"
+						</Form.Field>
+
+						<Form.Field {form} name="lastName">
+							<Form.Control>
+								{#snippet children({ props })}
+									<Form.Label
+										class="text-[10px] font-source-code-pro uppercase tracking-widest text-foreground/80"
+										>Last Name</Form.Label
+									>
+									<Input
+										{...props}
+										bind:value={$formData.lastName}
+										class="rounded-none border-0 border-b border-border bg-transparent px-0 h-12 focus-visible:ring-0 focus-visible:border-foreground shadow-none text-lg"
+									/>
+								{/snippet}
+							</Form.Control>
+							<Form.FieldErrors
+								class="text-xs font-source-code-pro uppercase"
 							/>
-						</div>
+						</Form.Field>
 					</div>
 
-					<div class="space-y-2">
-						<Label
-							class="text-[10px] font-source-code-pro uppercase tracking-widest text-foreground/80"
-						>
-							Email Address
-						</Label>
-						<Input
-							type="email"
-							bind:value={booking.customer.email}
-							class="rounded-none border-0 border-b border-border bg-transparent px-0 h-12 focus-visible:ring-0 focus-visible:border-foreground shadow-none text-lg"
+					<Form.Field {form} name="email">
+						<Form.Control>
+							{#snippet children({ props })}
+								<Form.Label
+									class="text-[10px] font-source-code-pro uppercase tracking-widest text-foreground/80"
+									>Email Address</Form.Label
+								>
+								<Input
+									{...props}
+									type="email"
+									bind:value={$formData.email}
+									class="rounded-none border-0 border-b border-border bg-transparent px-0 h-12 focus-visible:ring-0 focus-visible:border-foreground shadow-none text-lg"
+								/>
+							{/snippet}
+						</Form.Control>
+						<Form.FieldErrors
+							class="text-xs font-source-code-pro uppercase"
 						/>
-					</div>
+					</Form.Field>
 
-					<div class="space-y-2">
-						<Label
-							class="text-[10px] font-source-code-pro uppercase tracking-widest text-foreground/80"
-						>
-							Phone Number
-						</Label>
-						<Input
-							type="tel"
-							inputmode="tel"
-							autocomplete="tel"
-							bind:value={booking.customer.phone}
-							required
-							placeholder="(555) 555-5555"
-							class="rounded-none border-0 border-b border-border bg-transparent px-0 h-12 focus-visible:ring-0 focus-visible:border-foreground shadow-none text-lg"
+					<Form.Field {form} name="phone">
+						<Form.Control>
+							{#snippet children({ props })}
+								<Form.Label
+									class="text-[10px] font-source-code-pro uppercase tracking-widest text-foreground/80"
+									>Phone Number</Form.Label
+								>
+								<Input
+									{...props}
+									type="tel"
+									inputmode="tel"
+									autocomplete="tel"
+									placeholder="(555) 555-5555"
+									bind:value={$formData.phone}
+									class="rounded-none border-0 border-b border-border bg-transparent px-0 h-12 focus-visible:ring-0 focus-visible:border-foreground shadow-none text-lg"
+								/>
+								{#if phoneValidationMessage}
+									<p
+										class="text-destructive text-xs font-source-code-pro uppercase tracking-wide mt-2"
+									>
+										{phoneValidationMessage}
+									</p>
+								{/if}
+							{/snippet}
+						</Form.Control>
+						<Form.FieldErrors
+							class="text-xs font-source-code-pro uppercase"
 						/>
-						{#if phoneValidationMessage}
-							<p
-								class="text-destructuive text-xs font-source-code-pro uppercase tracking-wide"
-							>
-								{phoneValidationMessage}
-							</p>
-						{/if}
-					</div>
+					</Form.Field>
+
+					<Form.Field {form} name="notes">
+						<Form.Control>
+							{#snippet children({ props })}
+								<Form.Label
+									class="text-[10px] font-source-code-pro uppercase tracking-widest text-foreground/80"
+									>Notes (Discount code, referral, or any
+									details we should be aware of)</Form.Label
+								>
+								<Input
+									{...props}
+									bind:value={$formData.notes}
+									placeholder="Add any notes..."
+									class="rounded-none border-0 border-b border-border bg-transparent px-0 h-12 focus-visible:ring-0 focus-visible:border-foreground shadow-none text-lg"
+								/>
+							{/snippet}
+						</Form.Control>
+						<Form.FieldErrors
+							class="text-xs font-source-code-pro uppercase"
+						/>
+					</Form.Field>
 
 					<Button
+						type="button"
 						class="w-full uppercase tracking-widest font-source-code-pro text-sm rounded-2xl"
 						variant="outline"
 						size="xl"
-						onclick={goToPayment}
 						disabled={!canContinueFromDetails}
+						onclick={() => (step = 3)}
 					>
 						Continue to Payment
 					</Button>
 				</div>
-			{:else if booking.step === 3}
+			{:else if step === 3}
 				<div class="space-y-8" in:fade>
 					<button
-						onclick={goBackToDetails}
+						type="button"
+						onclick={() => (step = 2)}
 						class="font-source-code-pro text-[10px] uppercase tracking-widest text-foreground/80 hover:text-foreground transition-colors"
 					>
 						&larr; Back to Details
@@ -701,22 +737,13 @@
 							class="flex justify-between py-2 border-b border-border"
 						>
 							<span class="text-foreground/80">Date</span>
-							<span
-								>{new Date(booking.time).toLocaleDateString(
-									undefined,
-									{
-										weekday: "short",
-										month: "long",
-										day: "numeric",
-									},
-								)}</span
-							>
+							<span>{selectedDateLabel}</span>
 						</div>
 						<div
 							class="flex justify-between py-2 border-b border-border"
 						>
 							<span class="text-foreground/80">Time</span>
-							<span>{formatTime(booking.time)}</span>
+							<span>{formatTime($formData.time)}</span>
 						</div>
 						<div
 							class="flex justify-between py-2 border-b border-border"
@@ -738,7 +765,6 @@
 						>
 							Payment Details
 						</h3>
-
 						<p class="text-sm leading-relaxed text-foreground/70">
 							Enter your card details below to save a payment
 							method on file for your appointment. Your card is
@@ -750,7 +776,7 @@
 							<div
 								class="h-20 border border-border/60 animate-pulse"
 							></div>
-						{:else if payment.error && !payment.cardReady && !payment.submitting}
+						{:else if payment.error && !payment.cardReady && !$submitting}
 							<p class="text-red-500 text-sm">{payment.error}</p>
 						{:else}
 							<div
@@ -769,35 +795,34 @@
 							Cancellation Policy
 						</h3>
 						<p class="text-sm leading-relaxed text-foreground/70">
-							Cancellations or reschedules must be made at least
-							<strong class="text-foreground">24 hours</strong> before
-							your appointment. Late cancellations or no-shows may be
-							subject to a fee equal to the full service price. By continuing,
-							you agree to these terms.
+							Cancellations or reschedules must be made at least <strong
+								class="text-foreground">24 hours</strong
+							> before your appointment. Late cancellations or no-shows
+							may be subject to a fee equal to the full service price.
+							By continuing, you agree to these terms.
 						</p>
 					</div>
 
-					{#if payment.error && (payment.cardReady || payment.submitting)}
+					{#if payment.error && (payment.cardReady || $submitting)}
 						<p class="text-red-500 text-sm font-source-code-pro">
 							{payment.error}
 						</p>
 					{/if}
 
 					<Button
-						class="w-full uppercase rounded-none h-16 bg-foreground text-background tracking-widest font-source-code-pro text-sm disabled:opacity-20 transition-opacity"
-						onclick={submitBooking}
-						disabled={booking.isLoading ||
+						type="submit"
+						disabled={$submitting ||
 							payment.configLoading ||
 							payment.initializing ||
-							payment.submitting ||
 							!payment.cardReady}
+						class="w-full uppercase rounded-none h-16 bg-foreground text-background tracking-widest font-source-code-pro text-sm disabled:opacity-20 transition-opacity"
 					>
-						{payment.submitting
+						{$submitting
 							? "Securing Appointment..."
 							: "Secure Appointment"}
 					</Button>
 				</div>
 			{/if}
-		</div>
+		</form>
 	</div>
 </section>
