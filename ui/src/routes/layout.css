@@ -257,8 +257,7 @@
 
 	a {
 		text-decoration: none;
-		text-decoration-line: none;
-		font-weight: 600;
+		font-weight: 700;
 		font-family: var(--font-source-code-pro);
 	}
 

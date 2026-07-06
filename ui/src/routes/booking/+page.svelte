@@ -372,7 +372,14 @@
 					</p>
 				</div>
 
-				<div class="relative col-start-1 row-start-2">
+				<div
+					class="relative group hover:ring-2 ring-card rounded-[15px] col-start-1 row-start-2"
+				>
+					<a
+						class="absolute inset-0"
+						href={`/booking/${coreTreatment?.id}`}
+					/>
+
 					<span
 						class="absolute top-2 lg:top-6 w-full text-[12px] lg:text-base text-center uppercase font-source-code-pro font-medium"
 					>
@@ -381,7 +388,7 @@
 					<Picture
 						src="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/Treatment%20After%20(Former).webp"
 						alt="Before facial skin therapy result"
-						class="aspect-[0.85] w-full rounded-[15px] shadow-[0_0_0_1px_rgba(255,255,255,0.28)_inset] object-cover"
+						class="aspect-3/4 w-full rounded-[15px] shadow-[0_0_0_1px_rgba(255,255,255,0.28)_inset] object-cover"
 						loading="eager"
 						width={720}
 						height={950}
@@ -399,7 +406,7 @@
 						]}
 					/>
 					<span
-						class="absolute bottom-0 text-[12px] lg:text-base p-2 lg:hidden w-full text-center uppercase font-source-code-pro font-medium bg-card text-brand-white rounded-b-[15px]"
+						class="absolute bottom-0 text-[12px] lg:text-base p-2 w-full text-center uppercase font-source-code-pro font-medium bg-card text-brand-white rounded-b-[15px] lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300"
 					>
 						{getDuration(coreTreatment)} Min — ${getPrice(
 							coreTreatment,
@@ -407,7 +414,14 @@
 					</span>
 				</div>
 
-				<div class="relative col-start-2 row-start-2">
+				<div
+					class="relative group hover:ring-2 ring-card rounded-[15px] col-start-2 row-start-2"
+				>
+					<a
+						class="absolute inset-0"
+						href={`/booking/${coreTreatment?.id}`}
+					/>
+
 					<span
 						class="absolute top-2 text-[12px] lg:text-base lg:top-6 w-full text-center uppercase font-source-code-pro font-medium"
 					>
@@ -416,7 +430,7 @@
 					<Picture
 						src="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/Treatment%20After%20Final.webp"
 						alt="After 10 days facial skin therapy result"
-						class="aspect-[0.85] w-full rounded-[15px] shadow-[0_0_0_1px_rgba(255,255,255,0.28)_inset] object-cover"
+						class="aspect-3/4 w-full rounded-[15px] shadow-[0_0_0_1px_rgba(255,255,255,0.28)_inset] object-cover"
 						loading="eager"
 						width={720}
 						height={950}
@@ -434,7 +448,7 @@
 						]}
 					/>
 					<span
-						class="absolute bottom-0 text-[12px] lg:text-base p-2 lg:hidden w-full text-center uppercase font-source-code-pro font-medium bg-card text-brand-white rounded-b-[15px]"
+						class="absolute bottom-0 text-[12px] lg:text-base p-2 w-full text-center uppercase font-source-code-pro font-medium bg-card text-brand-white rounded-b-[15px] lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300"
 					>
 						Book Now
 					</span>
@@ -443,8 +457,8 @@
 				<p
 					class="font-source-code-pro text-[12px] font-semibold leading-[1.2em] tracking-[1.6px] md:text-[16px] lg:col-start-1 lg:row-start-3"
 				>
-					Our core Facial Skin Therapy, a personalized facial designed
-					to improve skin health and appearance.
+					Our core Facial Skin Therapy is a personalized treatment
+					that improves skin health and clarity.
 				</p>
 
 				<div class="col-start-2 row-start-3 justify-self-end">
@@ -498,8 +512,10 @@
 						</span>
 					{/if}
 
-					<Card.Content class="rounded-lg lg:bg-card p-2">
-						<div class="relative aspect-4/5 overflow-hidden">
+					<Card.Content
+						class="relative rounded-lg lg:bg-card p-2 border-2 border-transparent group-hover:border-card"
+					>
+						<div class="aspect-4/5 overflow-hidden">
 							<Picture
 								src={service.image_url || ""}
 								alt={service.item_data.name}
@@ -521,6 +537,12 @@
 									: []}
 							/>
 						</div>
+
+						<span
+							class="hidden lg:block absolute bottom-0 text-[12px] lg:text-base p-2 w-full text-center uppercase font-source-code-pro font-medium bg-card text-brand-white rounded-b-[15px] lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300"
+						>
+							Book Treatment
+						</span>
 					</Card.Content>
 
 					<Card.Footer
@@ -537,7 +559,7 @@
 							</span>
 						</div>
 						<h2
-							class="text-[14px] lg:text-[32px] uppercase order-1 lg:order-2 tracking-tight line-clamp-1 text-ellipsis"
+							class="text-[14px] lg:text-[32px] order-1 lg:order-2 tracking-tight line-clamp-1 text-ellipsis"
 						>
 							{service.item_data.name}
 						</h2>

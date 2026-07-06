@@ -129,7 +129,7 @@
 				{#each footerLinks as link (link.label)}
 					<a
 						href={link.href}
-						class="uppercase text-lg md:text-xl font-bold"
+						class="uppercase text-lg md:text-xl font-bold font-harmony"
 						target={isExternal(link.href) ? "_blank" : undefined}
 						rel="noopener noreferrer nofollow"
 					>

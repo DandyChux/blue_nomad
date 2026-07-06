@@ -175,11 +175,13 @@
 							</div>
 
 							<figcaption
-								class="font-bold uppercase text-center font-source-code-pro text-sm"
+								class="font-bold text-center font-source-code-pro text-sm"
 							>
-								{testimonial.name}, {testimonial.profession}
+								<span class="uppercase">
+									{testimonial.name}, {testimonial.profession}
+								</span>
 								<p
-									class="font-normal lowercase text-center font-source-code-pro text-xs opacity-80"
+									class="font-normal text-center font-source-code-pro text-xs opacity-80"
 								>
 									{testimonial.description}
 								</p>
