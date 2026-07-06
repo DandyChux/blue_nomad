@@ -233,7 +233,7 @@ func (h *WebhookHandler) handlePaymentEvent(_ context.Context, payload SquareWeb
 	return nil
 }
 
-func (h *WebhookHandler) sendBookingRequestNotification(req *services.BookingRequest) ([]error, error) {
+func (h *WebhookHandler) sendBookingNotification(req *services.BookingRequest) ([]error, error) {
 	adminEmail := notificationEmail()
 	if adminEmail == "" {
 		return []error{fmt.Errorf("ADMIN_EMAIL or EMAIL_USERNAME must be configured")}, nil
@@ -247,8 +247,7 @@ func (h *WebhookHandler) sendBookingRequestNotification(req *services.BookingReq
 			To:      []string{adminEmail},
 			Subject: fmt.Sprintf("New Blue Nomad Booking: %s at %s", formattedDate, formattedTime),
 			BodyText: fmt.Sprintf(
-				"A new appointment request has been created.\n\nBooking Request ID: %s\nBooking ID: %s\nStatus: %s\nDate: %s\nTime: %s\nService: %s\nPrice: $%s %s\nCustomer: %s %s\nEmail: %s\nPhone: %s\n\nThe customer's card has been saved on file and the Square booking has been created. No payment has been charged online. Final payment should be collected on site in Square.",
-				req.ID,
+				"A new appointment has been created.\n\nBooking ID: %s\nStatus: %s\nDate: %s\nTime: %s\nService: %s\nPrice: $%s %s\nCustomer: %s %s\nEmail: %s\nPhone: %s\n\nThe customer's card has been saved on file and the Square booking has been created. No payment has been charged online. Final payment should be collected on site in Square.",
 				req.SquareBookingID,
 				req.SquareBookingStatus,
 				formattedDate,
@@ -329,7 +328,7 @@ func (h *WebhookHandler) handleBookingCreated(ctx context.Context, payload Squar
 		return nil
 	}
 
-	if errs, err := h.sendBookingRequestNotification(req); err != nil {
+	if errs, err := h.sendBookingNotification(req); err != nil {
 		return errs[0]
 	}
 

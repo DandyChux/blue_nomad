@@ -138,7 +138,7 @@
 	<Button
 		class={buttonVariants({
 			variant: "outline",
-			class: "uppercase mt-4 rounded-full text-center font-bold h-auto font-source-code-pro",
+			class: "uppercase mt-4 rounded-full text-center h-auto font-source-code-pro",
 			size: "xl",
 		})}
 		variant="link"

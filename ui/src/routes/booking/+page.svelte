@@ -5,6 +5,7 @@
 	import * as Empty from "$lib/components/ui/empty";
 	import * as Item from "$lib/components/ui/item";
 	import * as Card from "$lib/components/ui/card";
+	import * as Carousel from "$lib/components/ui/carousel";
 	import Picture from "$lib/components/picture.svelte";
 	import Rating from "$lib/components/rating.svelte";
 	import { generateSrcSet, debounce, cn } from "$lib/utils";
@@ -18,7 +19,11 @@
 	import { trackEvent } from "$lib/analytics.svelte.js";
 
 	let { data } = $props();
+
 	const services = $derived(data.services as CatalogItem[]);
+
+	let width = $state(0);
+	let height = $state(0);
 
 	// --- URL-Based State ---
 	let searchQuery = $derived(page.url.searchParams.get("q") ?? "");
@@ -66,18 +71,6 @@
 		),
 	);
 
-	// Helpers
-	const getDuration = (s: CatalogItem) =>
-		(
-			(s.item_data.variations?.[0]?.item_variation_data
-				?.service_duration || 0) / 60000
-		).toFixed(0);
-	const getPrice = (s: CatalogItem) =>
-		(
-			(s.item_data.variations?.[0]?.item_variation_data?.price_money
-				?.amount || 0) / 100
-		).toFixed(0);
-
 	// Search bar visibility toggle
 	let showSearch = $state(false);
 
@@ -86,17 +79,20 @@
 	const testimonials = [
 		{
 			quote: "Calming, relaxing, informative, honest. Highly recommend! My skin feels and looks great.",
-			author: "Anna, BK",
+			author: "Anna",
+			location: "Brooklyn",
 			rating: 5,
 		},
 		{
 			quote: "Come here for a bespoke and private treatment in a space that feels like…a new home.",
-			author: "Siba, Bed-Stuy",
+			author: "Siba",
+			location: "Bed-Stuy",
 			rating: 5,
 		},
 		{
 			quote: "What an incredible experience! 10/10 recommend!!! I'm hooked.",
-			author: "Ron, West Village",
+			author: "Ron",
+			location: "West Village",
 			rating: 5,
 		},
 	];
@@ -119,11 +115,36 @@
 		observer.observe(testimonialsEl);
 		return () => observer.disconnect();
 	});
+
+	// Helpers
+	const getDuration = (s: CatalogItem) =>
+		(
+			(s.item_data.variations?.[0]?.item_variation_data
+				?.service_duration || 0) / 60000
+		).toFixed(0);
+	const getPrice = (s: CatalogItem) =>
+		(
+			(s.item_data.variations?.[0]?.item_variation_data?.price_money
+				?.amount || 0) / 100
+		).toFixed(0);
+
+	const isNew = (createdAt: string, daysThreshold = 14) => {
+		const createdDate = new Date(createdAt);
+
+		const now = new Date();
+
+		const msInADay = 24 * 60 * 60 * 1000;
+		const cutoffTime = now.getTime() - daysThreshold * msInADay;
+
+		return createdDate.getTime() > cutoffTime;
+	};
 </script>
 
 <svelte:head>
 	<title>Treatments | Blue Nomad</title>
 </svelte:head>
+
+<svelte:window bind:innerWidth={width} bind:innerHeight={height} />
 
 <section class="min-h-screen w-full flex flex-col p-0">
 	<!-- ======================== -->
@@ -182,10 +203,10 @@
 			<Button
 				variant="link"
 				href={`/booking/${featuredTreatmentId}`}
-				size="xl"
 				class={buttonVariants({
 					variant: "outline",
 					class: "border-brand-white text-brand-white rounded-full mt-10 border self-center px-8 uppercase tracking-wide font-source-code-pro hover:bg-brand-white hover:text-black",
+					size: "lg",
 				})}
 			>
 				Book Core Facial ST
@@ -208,7 +229,7 @@
 			</Empty.Root>
 		</div>
 	{:else}
-		<div class="flex flex-col lg:flex-row lg:items-center py-12 px-8">
+		<!-- <div class="flex flex-col lg:flex-row lg:items-center py-12 px-8">
 			{#if coreTreatment}
 				<Card.Root
 					class="relative group w-full p-4 overflow-hidden mx-auto my-10 lg:mx-0 lg:my-0 lg:w-[35%] lg:h-[1100px] lg:rounded-tl-none bg-transparent ring-0 shadow-none"
@@ -234,9 +255,6 @@
 							: []}
 					/>
 
-					<!-- <div class="absolute inset-0 bg-black/10" /> -->
-
-					<!-- Mobile only description -->
 					<div
 						class="absolute inset-0 flex flex-col p-6 text-brand-white md:p-8 lg:hidden"
 					>
@@ -330,30 +348,23 @@
 					</div>
 				</div>
 			{/if}
-		</div>
+		</div> -->
 
 		<div
 			class="relative overflow-hidden px-6 py-10 md:px-10 md:py-14 lg:px-16 lg:py-20"
 		>
-			<!-- <div
-				aria-hidden="true"
-				class="pointer-events-none absolute inset-x-[18%] bottom-10 h-28 rounded-full blur-3xl"
-			></div> -->
-
 			<div
 				class="mx-auto grid max-w-[1380px] grid-cols-2 items-start gap-x-4 gap-y-4 md:gap-x-8 lg:gap-x-10 lg:gap-y-8"
 			>
 				<div class="col-start-1 row-start-1 justify-self-start">
-					<p
-						class="text-[36px] leading-none uppercase tracking-[-0.06em] lg:text-[48px]"
-					>
+					<p class="text-[36px] leading-none lg:text-[48px]">
 						Before
 					</p>
 				</div>
 
 				<div class="justify-self-end lg:col-start-2 lg:row-start-1">
 					<p
-						class="text-left font-source-code-pro text-[12px] font-semibold uppercase leading-[1.35] tracking-[0.2em] lg:text-right lg:text-[1.5rem]"
+						class="text-left font-source-code-pro text-[12px] font-medium uppercase leading-[1.35] tracking-[0.2em] lg:text-right lg:text-[1.5rem]"
 					>
 						10 days after
 						<br />
@@ -361,61 +372,83 @@
 					</p>
 				</div>
 
-				<Picture
-					src="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/Treatment%20After%20(Former).webp"
-					alt="Before facial skin therapy result"
-					class="col-start-1 row-start-2 aspect-[0.85] w-full rounded-[15px] object-cover shadow-[0_0_0_1px_rgba(255,255,255,0.28)_inset]"
-					loading="eager"
-					width={720}
-					height={950}
-					sizes="(max-width: 1023px) 50vw, 50vw"
-					sources={[
-						{
-							type: "image/webp",
-							srcset: generateSrcSet(
-								"https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/Treatment%20After%20(Former).webp",
-								[480, 768, 1024, 1440],
-								"webp",
-								85,
-							),
-						},
-					]}
-				/>
+				<div class="relative col-start-1 row-start-2">
+					<span
+						class="absolute top-2 lg:top-6 w-full text-[12px] lg:text-base text-center uppercase font-source-code-pro font-medium"
+					>
+						Core Treatment
+					</span>
+					<Picture
+						src="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/Treatment%20After%20(Former).webp"
+						alt="Before facial skin therapy result"
+						class="aspect-[0.85] w-full rounded-[15px] shadow-[0_0_0_1px_rgba(255,255,255,0.28)_inset] object-cover"
+						loading="eager"
+						width={720}
+						height={950}
+						sizes="(max-width: 1023px) 50vw, 50vw"
+						sources={[
+							{
+								type: "image/webp",
+								srcset: generateSrcSet(
+									"https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/Treatment%20After%20(Former).webp",
+									[480, 768, 1024, 1440],
+									"webp",
+									85,
+								),
+							},
+						]}
+					/>
+					<span
+						class="absolute bottom-0 text-[12px] lg:text-base p-2 lg:hidden w-full text-center uppercase font-source-code-pro font-medium bg-card text-brand-white rounded-b-[15px]"
+					>
+						{getDuration(coreTreatment)} Min — ${getPrice(
+							coreTreatment,
+						)}
+					</span>
+				</div>
 
-				<Picture
-					src="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/Treatment%20After%20Final.webp"
-					alt="After 10 days facial skin therapy result"
-					class="col-start-2 row-start-2 aspect-[0.85] w-full rounded-[15px] object-cover shadow-[0_0_0_1px_rgba(255,255,255,0.28)_inset]"
-					loading="eager"
-					width={720}
-					height={950}
-					sizes="(max-width: 1023px) 50vw, 50vw"
-					sources={[
-						{
-							type: "image/webp",
-							srcset: generateSrcSet(
-								"https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/Treatment%20After%20Final.webp",
-								[480, 768, 1024, 1440],
-								"webp",
-								85,
-							),
-						},
-					]}
-				/>
+				<div class="relative col-start-2 row-start-2">
+					<span
+						class="absolute top-2 text-[12px] lg:text-base lg:top-6 w-full text-center uppercase font-source-code-pro font-medium"
+					>
+						Core Treatment
+					</span>
+					<Picture
+						src="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/Treatment%20After%20Final.webp"
+						alt="After 10 days facial skin therapy result"
+						class="aspect-[0.85] w-full rounded-[15px] shadow-[0_0_0_1px_rgba(255,255,255,0.28)_inset] object-cover"
+						loading="eager"
+						width={720}
+						height={950}
+						sizes="(max-width: 1023px) 50vw, 50vw"
+						sources={[
+							{
+								type: "image/webp",
+								srcset: generateSrcSet(
+									"https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/Treatment%20After%20Final.webp",
+									[480, 768, 1024, 1440],
+									"webp",
+									85,
+								),
+							},
+						]}
+					/>
+					<span
+						class="absolute bottom-0 text-[12px] lg:text-base p-2 lg:hidden w-full text-center uppercase font-source-code-pro font-medium bg-card text-brand-white rounded-b-[15px]"
+					>
+						Book Now
+					</span>
+				</div>
 
 				<p
-					class="max-w-[31rem] font-source-code-pro text-[12px] font-semibold leading-[1.65] tracking-[0.18em] md:text-[1.05rem] lg:col-start-1 lg:row-start-3"
+					class="font-source-code-pro text-[12px] font-semibold leading-[1.2em] tracking-[1.6px] md:text-[16px] lg:col-start-1 lg:row-start-3"
 				>
 					Our core Facial Skin Therapy, a personalized facial designed
 					to improve skin health and appearance.
 				</p>
 
 				<div class="col-start-2 row-start-3 justify-self-end">
-					<p
-						class="text-[36px] leading-none uppercase tracking-[-0.06em] lg:text-[48px]"
-					>
-						After
-					</p>
+					<p class="text-[36px] leading-none lg:text-[48px]">After</p>
 				</div>
 
 				<Button
@@ -439,20 +472,12 @@
 			</div>
 		</div>
 
-		<!-- Press Brands -->
-		<InfiniteMovingCards
-			items={pressBrands}
-			direction="right"
-			speed="normal"
-			class="mask-[linear-gradient(to_right,transparent_0%,white_20%,white_100%)] w-full max-w-[unset] my-16 hidden lg:block"
-		/>
-
 		<span
 			class="text-[32px] lg:text-[44px] uppercase text-center font-medium"
 			>also available</span
 		>
 		<div
-			class="grid auto-rows-fr grid-cols-1 gap-[1px] lg:grid-cols-4 lg:gap-4 px-4"
+			class="grid auto-rows-fr grid-cols-1 gap-px lg:grid-cols-4 lg:gap-4 px-4"
 			in:fade
 		>
 			{#each remaining as service (service.id)}
@@ -464,6 +489,14 @@
 						aria-label={`Book ${service.item_data.name}`}
 						class="absolute inset-0 z-10"
 					></a>
+
+					{#if isNew(service.created_at)}
+						<span
+							class="absolute top-0 left-0 bg-background text-foreground lg:bg-card lg:text-brand-white uppercase rounded-sm z-10 py-2 px-8 font-source-code-pro font-semibold"
+						>
+							NEW
+						</span>
+					{/if}
 
 					<Card.Content class="rounded-lg lg:bg-card p-2">
 						<div class="relative aspect-4/5 overflow-hidden">
@@ -512,42 +545,86 @@
 				</Card.Root>
 			{/each}
 		</div>
+
+		<!-- Press Brands (desktop) -->
+		{#if width >= 1024}
+			<InfiniteMovingCards
+				items={pressBrands}
+				direction="right"
+				speed="normal"
+				class="mask-[linear-gradient(to_right,transparent_0%,white_20%,white_100%)] w-full max-w-[unset] my-16"
+			/>
+		{/if}
 	{/if}
 
-	<!-- Press Brands -->
-	<InfiniteMovingCards
-		items={pressBrands}
-		direction="right"
-		speed="normal"
-		class="mask-[linear-gradient(to_right,transparent_0%,white_20%,white_100%)] w-full max-w-[unset] my-16 lg:hidden"
-	/>
+	<!-- Press Brands (mobile) -->
+	{#if width < 1024}
+		<InfiniteMovingCards
+			items={pressBrands}
+			direction="right"
+			speed="normal"
+			class="mask-[linear-gradient(to_right,transparent_0%,white_20%,white_100%)] w-full max-w-[unset] my-16"
+		/>
+	{/if}
 
 	<!-- Testimonials -->
-	<div
-		class="w-full mb-8 lg:my-12 px-6 md:px-12 lg:px-16 overflow-hidden"
-		bind:this={testimonialsEl}
-	>
-		<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-16">
-			{#if testimonialsVisible}
+	{#if width >= 1024}
+		<Carousel.Root
+			class="max-w-[750px] mb-8 lg:my-12 px-6 md:px-12 lg:px-16 lg:mx-auto"
+			opts={{
+				loop: true,
+			}}
+		>
+			<Carousel.Content>
 				{#each testimonials as testimonial, i}
-					<div
-						class="flex flex-col items-center text-center gap-6 font-source-code-pro"
-						in:fly={{ y: 40, duration: 600, delay: i * 250 }}
-					>
-						<p class="text-lg lg:text-xl leading-relaxed">
-							{testimonial.quote}
-						</p>
-						<span
-							class=" text-sm font-bold uppercase tracking-[0.2em]"
+					<Carousel.Item>
+						<div
+							class="flex flex-col lg:flex-row font-source-code-pro"
+							in:fly={{ y: 40, duration: 600, delay: i * 250 }}
 						>
-							{testimonial.author}
-						</span>
-						<Rating value={testimonial.rating} />
-					</div>
+							<div class="flex flex-col basis-[40%]">
+								<p class=" text-sm font-bold tracking-[0.2em]">
+									<span class="uppercase"
+										>{testimonial.author}</span
+									>, {testimonial.location}
+								</p>
+								<span
+									class="font-source-code-pro text-foreground/70 text-xs"
+									>Verified Nomad</span
+								>
+							</div>
+							<div class="flex flex-col gap-4 basis-[60%]">
+								<Rating value={testimonial.rating} />
+								<p
+									class="text-lg leading-relaxed tracking-widest font-medium"
+								>
+									{testimonial.quote}
+								</p>
+							</div>
+						</div>
+					</Carousel.Item>
 				{/each}
-			{/if}
+			</Carousel.Content>
+			<Carousel.Previous class="left-4" />
+			<Carousel.Next class="right-4" />
+		</Carousel.Root>
+	{:else if width < 1024}
+		<div class="flex flex-col space-y-12 items-center px-4 mb-40">
+			{#each testimonials as testimonial}
+				<div
+					class="flex flex-col items-center text-center gap-6 font-source-code-pro"
+				>
+					<p class="lg:text-xl text-center tracking-wide">
+						{testimonial.quote}
+					</p>
+					<p class=" text-sm font-bold tracking-[0.2em]">
+						<span class="uppercase">{testimonial.author}</span>, {testimonial.location}
+					</p>
+					<Rating value={testimonial.rating} class="mt-6" />
+				</div>
+			{/each}
 		</div>
-	</div>
+	{/if}
 
 	<div class="relative w-full py-8 px-12 lg:p-20">
 		<div class="absolute inset-0 m-0 -z-10">
@@ -559,7 +636,7 @@
 		</div>
 
 		<div
-			class="w-full flex flex-col lg:flex-row space-y-8 lg:space-y-0 lg:space-x-20 text-center"
+			class="w-full flex flex-col lg:flex-row space-y-8 lg:space-y-0 lg:space-x-6 text-center"
 		>
 			<Item.Root
 				variant="outline"

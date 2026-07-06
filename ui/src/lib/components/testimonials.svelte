@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Button } from "./ui/button";
+	import { Button, buttonVariants } from "./ui/button";
 	import { generateSrcSet, roundTo } from "$lib/utils";
 
 	type TestimonialProps = {
@@ -81,14 +81,16 @@
 				</p>
 
 				<Button
-					variant="outline"
-					size="xl"
-					class="h-auto uppercase rounded-full py-2 px-10 mt-4 pointer-events-auto font-source-code-pro"
+					variant="link"
+					href="#treatments"
+					class={buttonVariants({
+						class: "h-auto uppercase rounded-full py-2 px-10 mt-4 pointer-events-auto font-source-code-pro",
+						variant: "outline",
+						size: "xl",
+					})}
 				>
-					<a href="#treatments">
-						Your <br />
-						Turn
-					</a>
+					Your <br />
+					Turn
 				</Button>
 			</div>
 

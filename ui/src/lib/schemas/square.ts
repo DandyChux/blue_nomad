@@ -77,6 +77,7 @@ export const CatalogImageDataSchema = z.object({
 // The top-level object returned in the `objects` array
 const BaseCatalogObjectSchema = z.object({
 	id: z.string(),
+	created_at: z.string(),
 	updated_at: z.string(),
 	version: z.number(),
 	is_deleted: z.boolean().optional(),

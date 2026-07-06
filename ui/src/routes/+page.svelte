@@ -36,7 +36,7 @@
 			variant="link"
 			class={buttonVariants({
 				variant: "outline",
-				class: "uppercase self-start rounded-full h-auto py-2 px-8 border-brand-white md:text-brand-white hover:border-black text-center font-source-code-pro",
+				class: "uppercase self-start rounded-full h-auto py-2 px-8 border-brand-white text-brand-white hover:border-black text-center font-source-code-pro",
 			})}
 			size="lg"
 			href="/booking"
@@ -87,7 +87,7 @@
 			href="/about"
 			class={buttonVariants({
 				variant: "outline",
-				class: "uppercase rounded-full h-auto text-center font-source-code-pro tracking-tight",
+				class: "uppercase rounded-full h-auto text-center tracking-tight",
 				size: "xl",
 			})}
 		>
@@ -108,7 +108,7 @@
 	<Button
 		class={buttonVariants({
 			variant: "outline",
-			class: "uppercase mt-10 lg:mt-36 rounded-full text-center font-bold h-auto place-self-center font-source-code-pro",
+			class: "uppercase mt-10 lg:mt-36 rounded-full text-center h-auto place-self-center",
 			size: "xl",
 		})}
 		variant="link"
