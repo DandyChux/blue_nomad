@@ -142,6 +142,7 @@
 
 <svelte:head>
 	<title>Treatments | Blue Nomad</title>
+	<link rel="preload" href="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/videos/Blue%20Nomad%20-%20Treatment%20V1.webm" />
 </svelte:head>
 
 <svelte:window bind:innerWidth={width} bind:innerHeight={height} />
@@ -153,7 +154,6 @@
 	<div class="relative w-full h-[85vh] overflow-hidden bg-black">
 		<!-- Video Background -->
 		<Video
-			poster="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/hero-poster.jpg"
 			class="absolute inset-0 w-full h-full object-cover opacity-60"
 			sources={[
 				{
@@ -388,7 +388,7 @@
 					<Picture
 						src="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/Treatment%20After%20(Former).webp"
 						alt="Before facial skin therapy result"
-						class="aspect-3/4 w-full rounded-[15px] shadow-[0_0_0_1px_rgba(255,255,255,0.28)_inset] object-cover"
+						class="aspect-[0.85] w-full rounded-[15px] shadow-[0_0_0_1px_rgba(255,255,255,0.28)_inset] object-cover"
 						loading="eager"
 						width={720}
 						height={950}
@@ -430,7 +430,7 @@
 					<Picture
 						src="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/Treatment%20After%20Final.webp"
 						alt="After 10 days facial skin therapy result"
-						class="aspect-3/4 w-full rounded-[15px] shadow-[0_0_0_1px_rgba(255,255,255,0.28)_inset] object-cover"
+						class="aspect-[0.85] w-full rounded-[15px] shadow-[0_0_0_1px_rgba(255,255,255,0.28)_inset] object-cover"
 						loading="eager"
 						width={720}
 						height={950}
