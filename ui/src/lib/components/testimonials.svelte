@@ -143,7 +143,7 @@
 		</div>
 	{:else}
 		<!-- Mobile Layout -->
-		<div class="flex flex-col items-center gap-4 mt-16 md:hidden relative">
+		<div class="flex flex-col items-center gap-4 mt-16 lg:hidden relative">
 			<div class="flex flex-col items-center mb-4">
 				<h2 class="uppercase text-xl lg:text-2xl font-medium">
 					Earned Love

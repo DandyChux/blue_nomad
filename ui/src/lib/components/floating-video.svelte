@@ -54,12 +54,12 @@
 	<div class="fixed bottom-4 left-4 z-50">
 		<div
 			class="relative group transition-all duration-500 ease-out
-				{expanded ? 'w-[min(520px,88vw)]' : 'w-36 md:w-44'}"
+				{expanded ? 'w-[min(520px,88vw)]' : 'w-36 lg:w-44'}"
 		>
 			<!-- Close / dismiss button -->
 			<button
 				class="absolute -top-2 -right-2 z-20 h-6 w-6 bg-black hover:bg-transparent hover:text-black border-2 border-black text-white items-center justify-center text-xs font-source-code-pro hover:cursor-pointer transition-colors rounded-full
-					{expanded ? 'flex' : 'flex md:hidden md:group-hover:flex'}"
+					{expanded ? 'flex' : 'flex lg:hidden lg:group-hover:flex'}"
 				onclick={close}
 				aria-label="Close video"
 			>

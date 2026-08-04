@@ -183,6 +183,9 @@ func main() {
 
 	// ── Root mux ───────────────────────────────────────────
 	rootMux := http.NewServeMux()
+
+	rootMux.HandleFunc("GET /feed.xml", shopHandler.GetProductFeed)
+
 	rootMux.Handle("/api/", http.StripPrefix("/api", api))
 	rootMux.Handle("/", middleware.StaticCacheMiddleware(newSPAFileServer(staticDir)))
 

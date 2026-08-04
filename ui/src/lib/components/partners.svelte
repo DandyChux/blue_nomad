@@ -68,7 +68,7 @@
 
 <svelte:window bind:innerWidth bind:innerHeight />
 
-<div class="mt-8 pt-12 md:px-4 lg:px-8 w-full md:flex-col">
+<div class="mt-8 pt-12 md:px-4 lg:px-8 w-full lg:flex-col">
 	<div class="lg:mb-32">
 		<p class="lg:text-2xl uppercase text-end">
 			Some Favorites From Near &amp; Far:
@@ -161,7 +161,7 @@
 	</div>
 
 	<!-- Stacked layout for mobile -->
-	<div class="flex flex-col items-center gap-4 mt-10 md:hidden">
+	<div class="flex flex-col items-center gap-4 mt-10 lg:hidden">
 		<div>
 			<Picture
 				src={centralLogo.src}

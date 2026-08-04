@@ -26,7 +26,7 @@
 	<div class="fixed bottom-0 right-2 z-50">
 		<div class="relative group">
 			<button
-				class="absolute -top-2 -left-2 h-6 w-6 rounded-full bg-black hover:bg-transparent hover:text-black border-2 border-black text-white items-center justify-center text-xs flex md:hidden md:group-hover:flex hover:cursor-pointer"
+				class="absolute -top-2 -left-2 h-6 w-6 rounded-full bg-black hover:bg-transparent hover:text-black border-2 border-black text-white items-center justify-center text-xs flex lg:hidden md:group-hover:flex hover:cursor-pointer"
 				onclick={handleClose}
 				aria-label="Close booking button"
 			>

@@ -181,7 +181,7 @@
 	<!-- Contact Section -->
 	<div class="mt-auto flex flex-col w-full px-8 md:px-12 lg:px-20">
 		<h2 class="uppercase text-xl">Contact Us</h2>
-		<div class="flex flex-col md:flex-row gap-10">
+		<div class="flex flex-col lg:flex-row gap-10">
 			<span class="uppercase font-source-code-pro font-bold text-lg">
 				646-566-1183 / hello@bluenomad.nyc
 			</span>

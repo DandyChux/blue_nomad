@@ -142,7 +142,7 @@
 		</blockquote>
 
 		<!-- Mobile blockquote -->
-		<blockquote class="md:hidden uppercase text-base lg:text-5xl">
+		<blockquote class="lg:hidden uppercase text-base lg:text-5xl">
 			<p>I seek out brands</p>
 			<p class="pl-[5%] lg:pl-[10%]">
 				From diverse origins, curating those
@@ -159,7 +159,7 @@
 		</blockquote>
 
 		<figcaption
-			class="flex flex-col-reverse md:flex-row gap-2 place-self-end mt-4 lg:mt-0"
+			class="flex flex-col-reverse lg:flex-row gap-2 place-self-end mt-4 lg:mt-0"
 		>
 			<div class="place-self-end flex flex-col">
 				<p class="text-xl lg:text-2xl self-end">Onyedikachi</p>
@@ -192,7 +192,7 @@
 	class="min-h-[unset] items-center p-2 relative lg:py-20 lg:flex-col overflow-hidden flex flex-col md:block"
 >
 	<h1
-		class="uppercase md:absolute md:left-0 md:top-1/2 md:-translate-y-1/2 md:z-20 text-3xl md:text-4xl md:flex md:items-center md:h-full pl-4 md:pl-8"
+		class="uppercase md:absolute md:left-0 md:top-1/2 md:-translate-y-1/2 md:z-20 text-3xl md:text-4xl lg:flex lg:items-center lg:h-full pl-4 md:pl-8"
 	>
 		As Seen In
 	</h1>

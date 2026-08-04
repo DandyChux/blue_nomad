@@ -86,7 +86,7 @@
 				{#snippet child({ props })}
 					<Button
 						variant="ghost"
-						class="self-start w-auto h-fit ml-auto md:hidden"
+						class="self-start w-auto h-fit ml-auto lg:hidden"
 						{...props}
 					>
 						<MenuIcon
@@ -101,7 +101,7 @@
 			</Sheet.Trigger>
 			<Sheet.Content
 				side="left"
-				class="md:hidden shadow-none bg-black text-white border-none pl-4"
+				class="lg:hidden shadow-none bg-black text-white border-none pl-4"
 			>
 				<Sheet.Header>
 					<Sheet.Title class="sr-only">Navigation Menu</Sheet.Title>
@@ -133,7 +133,7 @@
 				loading="eager"
 			/>
 		</a>
-		<nav class="hidden md:flex ml-auto">
+		<nav class="hidden lg:flex ml-auto">
 			<ul
 				class={cn(
 					"flex gap-8 *:uppercase text-black transition-colors duration-300",

@@ -126,7 +126,7 @@
 
 	<!-- Category filters -->
 	<div
-		class="flex flex-col md:flex-row items-center md:justify-center my-6 mx-auto space-x-6"
+		class="flex flex-col lg:flex-row items-center lg:justify-center my-6 mx-auto space-x-6"
 	>
 		<div class="flex flex-wrap items-center justify-center gap-2">
 			{#each allCategories as category (category)}

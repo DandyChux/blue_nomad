@@ -220,10 +220,32 @@ func (h *WebhookHandler) ProcessQueuedWebhook(ctx context.Context, provider stri
 		return h.handleBookingCreated(ctx, payload)
 	case "booking.updated":
 		return h.handleBookingUpdated(ctx, payload)
+	case "catalog.version.updated":
+		return h.handleCatalogChanged(ctx, payload)
 	default:
 		slog.Debug("Unhandled queued Square event ignored", "type", payload.Type, "event_id", payload.EventID)
 		return nil
 	}
+}
+
+func (h *WebhookHandler) handleCatalogChanged(
+	_ context.Context,
+	payload SquareWebhookPayload,
+) error {
+	slog.Info(
+		"Square catalog changed",
+		"event_type", payload.Type,
+		"event_id", payload.EventID,
+	)
+
+	// h.sanity.InvalidateCache()
+
+	h.mu.Lock()
+	h.lastInvalidAt = time.Now().UTC()
+	h.lastEvent = payload.Type
+	h.mu.Unlock()
+
+	return nil
 }
 
 func (h *WebhookHandler) handlePaymentEvent(_ context.Context, payload SquareWebhookPayload) error {

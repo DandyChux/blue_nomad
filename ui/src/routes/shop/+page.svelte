@@ -113,7 +113,7 @@
 		</p>
 
 		<div
-			class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 my-6 lg:my-4"
+			class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 my-6 lg:my-4"
 		>
 			<!-- Left: Category Filters -->
 			<div class="flex flex-wrap items-center gap-3">
@@ -179,7 +179,7 @@
 			</div>
 		{:else}
 			<div
-				class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-[1px] bg-transparent"
+				class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-[1px] bg-transparent"
 			>
 				{#each paginatedProducts as product (product.id)}
 					{@const itemData = product.item_data}
