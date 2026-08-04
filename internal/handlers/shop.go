@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"bytes"
 	"encoding/json"
 	"encoding/xml"
 	"errors"
@@ -19,21 +20,76 @@ type ShopHandler struct {
 	square *services.SquareClient
 }
 
-type productFeed struct {
-	XMLName  xml.Name      `xml:"products"`
-	Products []feedProduct `xml:"product"`
+type googleProductFeed struct {
+	XMLName xml.Name          `xml:"rss"`
+	Version string            `xml:"version,attr"`
+	Channel googleFeedChannel `xml:"channel"`
 }
 
-type feedProduct struct {
-	ID          string `xml:"id"`
-	Name        string `xml:"name"`
-	Description string `xml:"description,omitempty"`
-	Price       string `xml:"price,omitempty"`
-	Currency    string `xml:"currency,omitempty"`
-	URL         string `xml:"url"`
-	ImageURL    string `xml:"image_url,omitempty"`
+type googleFeedChannel struct {
+	Title       string              `xml:"title"`
+	Link        string              `xml:"link"`
+	Description string              `xml:"description"`
+	Items       []googleFeedProduct `xml:"item"`
 }
 
+type googleFeedProduct struct {
+	ID           string `xml:"id"`
+	Title        string `xml:"title"`
+	Description string `xml:"description"`
+	Link         string `xml:"link"`
+	ImageLink    string `xml:"image_link,omitempty"`
+	Availability string `xml:"availability"`
+	Price        string `xml:"price"`
+	Condition    string `xml:"condition"`
+}
+
+func (p googleFeedProduct) MarshalXML(
+	encoder *xml.Encoder,
+	start xml.StartElement,
+) error {
+	start.Name.Local = "item"
+
+	if err := encoder.EncodeToken(start); err != nil {
+		return err
+	}
+
+	const googleNamespace = "http://base.google.com/ns/1.0"
+
+	fields := []struct {
+		name  string
+		value string
+		omit  bool
+	}{
+		{"id", p.ID, false},
+		{"title", p.Title, false},
+		{"description", p.Description, false},
+		{"link", p.Link, false},
+		{"image_link", p.ImageLink, p.ImageLink == ""},
+		{"availability", p.Availability, false},
+		{"price", p.Price, false},
+		{"condition", p.Condition, false},
+	}
+
+	for _, field := range fields {
+		if field.omit {
+			continue
+		}
+
+		element := xml.StartElement{
+			Name: xml.Name{
+				Space: googleNamespace,
+				Local: field.name,
+			},
+		}
+
+		if err := encoder.EncodeElement(field.value, element); err != nil {
+			return err
+		}
+	}
+
+	return encoder.EncodeToken(start.End())
+}
 
 func NewShopHandler(square *services.SquareClient) *ShopHandler {
 	return &ShopHandler{square: square}
@@ -50,6 +106,35 @@ func (h *ShopHandler) GetCatalog(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(data)
+}
+
+func (h *ShopHandler) GetProductImage(
+	w http.ResponseWriter,
+	r *http.Request,
+) {
+	imageID := r.PathValue("imageID")
+	if imageID == "" {
+		http.Error(w, "Missing image ID", http.StatusBadRequest)
+		return
+	}
+
+	image, err := h.square.GetCatalogImage(r.Context(), imageID)
+	if err != nil {
+		slog.Warn(
+			"failed to fetch Square catalog image",
+			"image_id", imageID,
+			"error", err,
+		)
+		http.NotFound(w, r)
+		return
+	}
+
+	http.Redirect(
+		w,
+		r,
+		image.ImageData.URL,
+		http.StatusTemporaryRedirect,
+	)
 }
 
 // CreateCheckoutLink handles incoming cart payloads and returns a Square hosted checkout URL.
@@ -101,12 +186,20 @@ func (h *ShopHandler) CreateCheckoutLink(w http.ResponseWriter, r *http.Request)
 	})
 }
 
-// GetProductFeed dynamically generates the public XML product feed.
+// GetProductFeed dynamically generates a Google Merchant Center-compatible
+// RSS 2.0 product feed.
 func (h *ShopHandler) GetProductFeed(w http.ResponseWriter, r *http.Request) {
 	data, err := h.square.GetCatalogItems(r.Context())
 	if err != nil {
-		slog.Error("failed to fetch square catalog for product feed", "error", err)
-		http.Error(w, "Failed to generate product feed", http.StatusBadGateway)
+		slog.Error(
+			"failed to fetch square catalog for product feed",
+			"error", err,
+		)
+		http.Error(
+			w,
+			"Failed to generate product feed",
+			http.StatusBadGateway,
+		)
 		return
 	}
 
@@ -115,14 +208,12 @@ func (h *ShopHandler) GetProductFeed(w http.ResponseWriter, r *http.Request) {
 			Type     string `json:"type"`
 			ID       string `json:"id"`
 			ItemData struct {
-				Name             string `json:"name"`
-				Description      string `json:"description"`
-				ProductType      string `json:"product_type"`
-				ImageIDs         []string `json:"image_ids"`
-				Variations       []struct {
-					ID         string `json:"id"`
+				Name        string `json:"name"`
+				Description string `json:"description"`
+				ProductType string `json:"product_type"`
+				ImageIDs    []string `json:"image_ids"`
+				Variations  []struct {
 					ItemVariationData struct {
-						Name string `json:"name"`
 						PriceMoney struct {
 							Amount   int64  `json:"amount"`
 							Currency string `json:"currency"`
@@ -134,8 +225,15 @@ func (h *ShopHandler) GetProductFeed(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := json.Unmarshal(data, &catalog); err != nil {
-		slog.Error("failed to decode square catalog for product feed", "error", err)
-		http.Error(w, "Failed to generate product feed", http.StatusInternalServerError)
+		slog.Error(
+			"failed to decode square catalog for product feed",
+			"error", err,
+		)
+		http.Error(
+			w,
+			"Failed to generate product feed",
+			http.StatusInternalServerError,
+		)
 		return
 	}
 
@@ -145,65 +243,105 @@ func (h *ShopHandler) GetProductFeed(w http.ResponseWriter, r *http.Request) {
 	}
 	baseURL = strings.TrimRight(baseURL, "/")
 
-	feed := productFeed{
-		Products: make([]feedProduct, 0, len(catalog.Objects)),
+	feed := googleProductFeed{
+		Version: "2.0",
+		Channel: googleFeedChannel{
+			Title:       "Blue Nomad Shop",
+			Link:        baseURL + "/shop",
+			Description: "Blue Nomad product feed",
+			Items:       make([]googleFeedProduct, 0),
+		},
 	}
 
 	for _, object := range catalog.Objects {
-		if object.Type != "ITEM" || object.ItemData.ProductType == "APPOINTMENTS_SERVICE" {
+		if object.Type != "ITEM" ||
+			object.ItemData.ProductType == "APPOINTMENTS_SERVICE" {
 			continue
 		}
 
-		product := feedProduct{
-			ID:          object.ID,
-			Name:        object.ItemData.Name,
-			Description: object.ItemData.Description,
-			URL:         baseURL + "/shop",
+		if object.ItemData.Name == "" {
+			continue
+		}
+
+		product := googleFeedProduct{
+			ID:           object.ID,
+			Title:        object.ItemData.Name,
+			Description:  object.ItemData.Description,
+			Link:         baseURL + "/shop/" + url.PathEscape(object.ID),
+			Availability: "in stock",
+			Condition:    "new",
 		}
 
 		if len(object.ItemData.Variations) > 0 {
-			variation := object.ItemData.Variations[0]
-			price := variation.ItemVariationData.PriceMoney
+			priceMoney := object.ItemData.Variations[0].
+				ItemVariationData.PriceMoney
 
-			product.Price = fmt.Sprintf("%.2f", float64(price.Amount)/100)
-			product.Currency = price.Currency
+			currency := strings.ToUpper(priceMoney.Currency)
+			if currency == "" {
+				currency = "USD"
+			}
+
+			product.Price = fmt.Sprintf(
+				"%.2f %s",
+				float64(priceMoney.Amount)/100,
+				currency,
+			)
 		}
 
 		if len(object.ItemData.ImageIDs) > 0 {
-			product.ImageURL = baseURL + "/api/shop/images/" +
+			product.ImageLink = baseURL + "/api/shop/images/" +
 				url.PathEscape(object.ItemData.ImageIDs[0])
 		}
 
-		feed.Products = append(feed.Products, product)
+		feed.Channel.Items = append(feed.Channel.Items, product)
 	}
 
 	output, err := xml.MarshalIndent(feed, "", "  ")
 	if err != nil {
 		slog.Error("failed to encode product feed", "error", err)
-		http.Error(w, "Failed to generate product feed", http.StatusInternalServerError)
+		http.Error(
+			w,
+			"Failed to generate product feed",
+			http.StatusInternalServerError,
+		)
 		return
 	}
+
+	// encoding/xml does not add the g namespace declaration automatically
+	// for custom namespaced elements, so prepend it explicitly.
+	output = bytes.Replace(
+		output,
+		[]byte(`<rss version="2.0">`),
+		[]byte(`<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">`),
+		1,
+	)
 
 	w.Header().Set("Content-Type", "application/xml; charset=utf-8")
 	w.Header().Set("Cache-Control", "public, max-age=300")
 	w.WriteHeader(http.StatusOK)
+
 	_, _ = w.Write([]byte(xml.Header))
 	_, _ = w.Write(output)
 }
 
 func requestBaseURL(r *http.Request) string {
 	scheme := "http"
+
 	if r.TLS != nil {
 		scheme = "https"
 	}
 
 	if forwardedProto := r.Header.Get("X-Forwarded-Proto"); forwardedProto != "" {
-		scheme = strings.TrimSpace(strings.Split(forwardedProto, ",")[0])
+		scheme = strings.TrimSpace(
+			strings.Split(forwardedProto, ",")[0],
+		)
 	}
 
 	host := r.Host
 	if forwardedHost := r.Header.Get("X-Forwarded-Host"); forwardedHost != "" {
-		host = strings.TrimSpace(strings.Split(forwardedHost, ",")[0])
+		host = strings.TrimSpace(
+			strings.Split(forwardedHost, ",")[0],
+		)
 	}
 
 	return scheme + "://" + host

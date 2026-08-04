@@ -7,6 +7,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"os"
 	"strconv"
 	"strings"
@@ -64,6 +65,14 @@ type SquareCard struct {
 	ReferenceID string `json:"reference_id"`
 	CardBrand   string `json:"card_brand"`
 	Last4       string `json:"last_4"`
+}
+
+type SquareCatalogImage struct {
+	ID        string `json:"id"`
+	Type      string `json:"type"`
+	ImageData struct {
+		URL string `json:"url"`
+	} `json:"image_data"`
 }
 
 type AuthorizeSquareBookingPaymentRequest struct {
@@ -161,6 +170,39 @@ func (s *SquareClient) GetCatalogItems(ctx context.Context) (json.RawMessage, er
 	}
 
 	return json.Marshal(map[string]any{"objects": filtered})
+}
+
+// GetCatalogImage fetches a Square catalog image by ID.
+func (s *SquareClient) GetCatalogImage(
+	ctx context.Context,
+	imageID string,
+) (*SquareCatalogImage, error) {
+	if imageID == "" {
+		return nil, fmt.Errorf("image ID is required")
+	}
+
+	resp, err := s.http.Get(
+		ctx,
+		"/v2/catalog/object/"+url.PathEscape(imageID),
+		map[string]string{"include_related_objects": "true"},
+	)
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch Square image: %w", err)
+	}
+
+	var result struct {
+		Object SquareCatalogImage `json:"object"`
+	}
+
+	if err := json.Unmarshal(resp.Body, &result); err != nil {
+		return nil, fmt.Errorf("failed to decode Square image: %w", err)
+	}
+
+	if result.Object.ImageData.URL == "" {
+		return nil, fmt.Errorf("Square image %q has no public URL", imageID)
+	}
+
+	return &result.Object, nil
 }
 
 // GetBookingServices fetches all appointment services from the catalog

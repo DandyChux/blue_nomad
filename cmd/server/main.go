@@ -165,6 +165,7 @@ func main() {
 
 	// Shop
 	api.HandleFunc("GET /shop/catalog", shopHandler.GetCatalog)
+	api.HandleFunc("GET /shop/images/{imageID}", shopHandler.GetProductImage)
 	api.HandleFunc("POST /checkout", shopHandler.CreateCheckoutLink)
 
 	// Booking
