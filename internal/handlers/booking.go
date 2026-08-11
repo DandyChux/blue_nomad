@@ -88,7 +88,7 @@ func (h *BookingHandler) CreateRequest(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Missing required booking details", http.StatusBadRequest)
 		return
 	}
-	if req.ServiceName == "" || req.PriceCents <= 0 {
+	if req.ServiceName == "" || req.PriceCents < 0 {
 		http.Error(w, "Missing service name or price", http.StatusBadRequest)
 		return
 	}

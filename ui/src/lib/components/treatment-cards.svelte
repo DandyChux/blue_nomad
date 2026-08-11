@@ -46,7 +46,7 @@
 			hoverImage:
 				"https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/Ego/Ego.webp",
 			membersOnly: true,
-			link: "/booking/NOOA4AKCT4RI77UR56IEL432",
+			link: "/booking/2BZBFRDWP6J42MLFCG7GIUOE",
 		},
 	];
 </script>
