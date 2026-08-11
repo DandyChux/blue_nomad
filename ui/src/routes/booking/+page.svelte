@@ -142,7 +142,10 @@
 
 <svelte:head>
 	<title>Treatments | Blue Nomad</title>
-	<link rel="preload" href="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/videos/Blue%20Nomad%20-%20Treatment%20V1.webm" />
+	<link
+		rel="preload"
+		href="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/videos/Blue%20Nomad%20-%20Treatment%20V1.webm"
+	/>
 </svelte:head>
 
 <svelte:window bind:innerWidth={width} bind:innerHeight={height} />
@@ -491,12 +494,16 @@
 			>also available</span
 		>
 		<div
-			class="grid auto-rows-fr grid-cols-1 gap-px lg:grid-cols-4 lg:gap-4 px-4"
+			class="mx-auto grid w-full max-w-[1600px] auto-rows-fr grid-cols-1 justify-center gap-px px-4 sm:grid-cols-2 lg:gap-4"
+			class:lg:grid-cols-1={remaining.length === 1}
+			class:lg:grid-cols-2={remaining.length === 2}
+			class:lg:grid-cols-3={remaining.length === 3}
+			class:lg:grid-cols-4={remaining.length >= 4}
 			in:fade
 		>
 			{#each remaining as service (service.id)}
 				<Card.Root
-					class="group relative flex h-full min-w-0 flex-col bg-background lg:bg-transparent shadow-none ring-0 py-0 rounded-none gap-0 my-2 lg:rounded-lg"
+					class="group relative flex h-full w-full min-w-0 flex-col bg-background lg:bg-transparent shadow-none ring-0 py-0 rounded-none gap-0 my-2 lg:rounded-lg"
 				>
 					<a
 						href="/booking/{service.id}"
@@ -682,7 +689,7 @@
 				<Item.Actions class="place-self-center">
 					<Button
 						variant="link"
-						href="/booking/NOOA4AKCT4RI77UR56IEL432"
+						href="mailto:memberships@bluenomad.nyc?subject=Membership Inquiry&body=I'm interested in joining the Blue Nomad membership program."
 						class={buttonVariants({
 							variant: "outline",
 							class: "uppercase border-warm-ivory text-warm-ivory rounded-full px-8",

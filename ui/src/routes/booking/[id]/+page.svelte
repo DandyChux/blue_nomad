@@ -471,7 +471,7 @@
 					class="flex gap-8 font-source-code-pro text-[11px] uppercase tracking-[0.2em]"
 				>
 					<span>{duration.toFixed(0)} Min</span>
-					<span>${price}</span>
+					<span>{Number(price) > 0 ? `$${Number(price)}` : ""}</span>
 				</div>
 				{#if itemData.description}
 					<p
