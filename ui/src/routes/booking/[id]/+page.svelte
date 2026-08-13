@@ -95,6 +95,7 @@
 		variation?.item_variation_data?.price_money?.amount || 0,
 	);
 	const price = $derived((priceCents / 100).toFixed(0));
+	const isPaidService = $derived(priceCents > 0);
 	const selectedDateLabel = $derived(
 		$formData.time
 			? new Date($formData.time).toLocaleDateString(undefined, {
@@ -158,7 +159,12 @@
 
 	// ── Lifecycle & Effects ─────────────────────────────────────────────
 	onMount(() => {
-		void loadPaymentConfig();
+		if (isPaidService) {
+			void loadPaymentConfig();
+		} else {
+			payment.configLoading = false;
+		}
+
 		return () => {
 			void destroyCard();
 		};
@@ -170,14 +176,17 @@
 
 	$effect(() => {
 		if (
+			!isPaidService ||
 			step !== 3 ||
 			!payment.config ||
 			!cardContainer ||
 			payment.initializing ||
 			payment.cardReady ||
 			squareCard
-		)
+		) {
 			return;
+		}
+
 		void initializeCard();
 	});
 
@@ -321,7 +330,7 @@
 	async function submitBookingAndPayment(
 		validData: Infer<typeof BookingFormSchema>,
 	) {
-		if (!squareCard || !squarePayments) {
+		if (isPaidService && (!squareCard || !squarePayments)) {
 			payment.error =
 				"Secure card form is not ready yet. Please try again.";
 			return;
@@ -331,41 +340,46 @@
 
 		try {
 			const requestId = await ensureBookingRequest(validData);
-			const tokenResult = await squareCard.tokenize();
 
-			if (tokenResult.status !== "OK" || !tokenResult.token) {
-				throw new Error(
-					tokenResult.errors?.[0]?.message ||
-						"Your card details could not be verified.",
-				);
-			}
+			if (isPaidService && squareCard && squarePayments) {
+				const tokenResult = await squareCard.tokenize();
 
-			let verificationToken: string | undefined;
-			if (squarePayments.verifyBuyer) {
-				const verificationResult = await squarePayments.verifyBuyer(
-					tokenResult.token,
-					{
-						amount: (priceCents / 100).toFixed(2),
-						currencyCode: "USD",
-						intent: "STORE",
-						billingContact: {
-							givenName: validData.firstName,
-							familyName: validData.lastName,
-							email: validData.email,
-							phone: normalizedPhone,
+				if (tokenResult.status !== "OK" || !tokenResult.token) {
+					throw new Error(
+						tokenResult.errors?.[0]?.message ||
+							"Your card details could not be verified.",
+					);
+				}
+
+				let verificationToken: string | undefined;
+
+				if (squarePayments.verifyBuyer) {
+					const verificationResult = await squarePayments.verifyBuyer(
+						tokenResult.token,
+						{
+							amount: (priceCents / 100).toFixed(2),
+							currencyCode: "USD",
+							intent: "STORE",
+							billingContact: {
+								givenName: validData.firstName,
+								familyName: validData.lastName,
+								email: validData.email,
+								phone: normalizedPhone,
+							},
 						},
+					);
+
+					verificationToken = verificationResult.token;
+				}
+
+				await apiClient.post<StoreCardAndBookResponse>(
+					`/booking/requests/${requestId}/store-card`,
+					{
+						source_id: tokenResult.token,
+						verification_token: verificationToken,
 					},
 				);
-				verificationToken = verificationResult.token;
 			}
-
-			await apiClient.post<StoreCardAndBookResponse>(
-				`/booking/requests/${requestId}/store-card`,
-				{
-					source_id: tokenResult.token,
-					verification_token: verificationToken,
-				},
-			);
 
 			localStorage.setItem(
 				"bn-booking",
@@ -523,7 +537,7 @@
 								</div>
 							{:else if timeError}
 								<p
-									class="text-center text-xs font-source-code-pro text-red-500 py-8"
+									class="text-center text-xs font-source-code-pro text-destructive py-8"
 								>
 									{timeError}
 								</p>
@@ -757,34 +771,66 @@
 						</div>
 					</div>
 
-					<div
-						class="space-y-3 border border-border/50 p-6 bg-black/5 dark:bg-white/5"
-					>
-						<h3
-							class="font-source-code-pro text-[10px] uppercase tracking-widest text-foreground/80"
+					{#if isPaidService}
+						<div
+							class="space-y-3 border border-border/50 p-6 bg-black/5 dark:bg-white/5"
 						>
-							Payment Details
-						</h3>
-						<p class="text-sm leading-relaxed text-foreground/70">
-							Enter your card details below to save a payment
-							method on file for your appointment. Your card is
-							not charged online. Final payment is collected on
-							site after your treatment.
-						</p>
+							<h3
+								class="font-source-code-pro text-[10px] uppercase tracking-widest text-foreground/80"
+							>
+								Payment Details
+							</h3>
 
-						{#if payment.configLoading}
-							<div
-								class="h-20 border border-border/60 animate-pulse"
-							></div>
-						{:else if payment.error && !payment.cardReady && !$submitting}
-							<p class="text-red-500 text-sm">{payment.error}</p>
-						{:else}
-							<div
-								bind:this={cardContainer}
-								class="min-h-[110px] border border-border bg-background px-4 py-3"
-							></div>
-						{/if}
-					</div>
+							<p
+								class="text-sm leading-relaxed text-foreground/70"
+							>
+								Enter your card details below to save a payment
+								method on file for your appointment. Your card
+								is not charged online. Final payment is
+								collected on site after your treatment.
+							</p>
+
+							{#if payment.configLoading}
+								<div
+									class="h-20 border border-border/60 animate-pulse"
+								></div>
+							{:else if payment.error && !payment.cardReady && !$submitting}
+								<p class="text-destructive text-sm">
+									{payment.error}
+								</p>
+							{:else}
+								<div
+									bind:this={cardContainer}
+									class="min-h-[110px] border border-border bg-background px-4 py-3"
+								></div>
+							{/if}
+						</div>
+					{:else}
+						<div
+							class="space-y-3 border border-border/50 p-6 bg-black/5 dark:bg-white/5"
+						>
+							<h3
+								class="font-source-code-pro text-[10px] uppercase tracking-widest text-foreground/80"
+							>
+								No Payment Required
+							</h3>
+
+							<p
+								class="text-sm leading-relaxed text-foreground/70"
+							>
+								This service is complimentary. No payment
+								details are needed.
+							</p>
+						</div>
+					{/if}
+
+					{#if payment.error && (payment.cardReady || $submitting)}
+						<p
+							class="text-destructive text-sm font-source-code-pro"
+						>
+							{payment.error}
+						</p>
+					{/if}
 
 					<div
 						class="space-y-3 border border-border/50 p-6 bg-black/5 dark:bg-white/5"
@@ -804,7 +850,9 @@
 					</div>
 
 					{#if payment.error && (payment.cardReady || $submitting)}
-						<p class="text-red-500 text-sm font-source-code-pro">
+						<p
+							class="text-destructive text-sm font-source-code-pro"
+						>
 							{payment.error}
 						</p>
 					{/if}
@@ -812,14 +860,17 @@
 					<Button
 						type="submit"
 						disabled={$submitting ||
-							payment.configLoading ||
-							payment.initializing ||
-							!payment.cardReady}
+							(isPaidService &&
+								(payment.configLoading ||
+									payment.initializing ||
+									!payment.cardReady))}
 						class="w-full uppercase rounded-none h-16 bg-foreground text-background tracking-widest font-source-code-pro text-sm disabled:opacity-20 transition-opacity"
 					>
 						{$submitting
 							? "Securing Appointment..."
-							: "Secure Appointment"}
+							: isPaidService
+								? "Secure Appointment"
+								: "Confirm Appointment"}
 					</Button>
 				</div>
 			{/if}
