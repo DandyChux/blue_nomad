@@ -174,6 +174,7 @@ func main() {
 	api.HandleFunc("POST /booking/availability", bookingHandler.GetAvailability)
 	api.HandleFunc("POST /booking/request", bookingHandler.CreateRequest)
 	api.HandleFunc("POST /booking/requests/{id}/store-card", bookingHandler.StoreCardAndBook)
+	api.HandleFunc("POST /booking/requests/{id}/book-member", bookingHandler.BookFreeService)
 
 	// ── Static frontend files ───────────────────────────────────────────
 	staticDir := os.Getenv("STATIC_DIR")

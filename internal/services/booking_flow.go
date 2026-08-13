@@ -48,6 +48,70 @@ func (s *BookingFlowService) GetBySquareBookingID(ctx context.Context, bookingID
 	return s.store.GetBySquareBookingID(ctx, bookingID)
 }
 
+func (s *BookingFlowService) BookFreeService(
+	ctx context.Context,
+	requestID string,
+) (*BookingRequest, error) {
+	req, err := s.store.GetByID(ctx, requestID)
+	if err != nil {
+		return nil, err
+	}
+
+	if req.Status == BookingRequestStatusBookingCreated {
+		return req, nil
+	}
+
+	if req.PriceCents != 0 {
+		return nil, fmt.Errorf(
+			"booking request %s is not free: price_cents=%d",
+			req.ID,
+			req.PriceCents,
+		)
+	}
+
+	booking, err := s.square.CreateBookingOnly(
+		ctx,
+		req.ID,
+		CreateBookingRequest{
+			ServiceVariationID:      req.ServiceVariationID,
+			TeamMemberID:            req.TeamMemberID,
+			ServiceVariationVersion: req.ServiceVariationVersion,
+			StartAt:                 req.StartAt.Format(time.RFC3339),
+			GivenName:               req.GivenName,
+			FamilyName:              req.FamilyName,
+			EmailAddress:            req.EmailAddress,
+			PhoneNumber:             req.PhoneNumber,
+			ServiceName:             req.ServiceName,
+			PriceCents:              req.PriceCents,
+		},
+		"",
+	)
+	if err != nil {
+		if isSquareBookingConflict(err) {
+			_ = s.store.MarkFailed(
+				ctx,
+				req.ID,
+				BookingRequestStatusBookingFailed,
+				"slot no longer available while creating free booking",
+			)
+			return nil, ErrSlotNoLongerAvailable
+		}
+
+		return nil, fmt.Errorf("create free square booking: %w", err)
+	}
+
+	if err := s.store.MarkBookingCreated(
+		ctx,
+		req.ID,
+		booking.ID,
+		booking.Status,
+	); err != nil {
+		return nil, err
+	}
+
+	return s.store.GetByID(ctx, req.ID)
+}
+
 func (s *BookingFlowService) StoreCardAndBook(ctx context.Context, input StoreCardAndBookInput) (*BookingRequest, error) {
 	req, err := s.store.GetByID(ctx, input.BookingRequestID)
 	if err != nil {

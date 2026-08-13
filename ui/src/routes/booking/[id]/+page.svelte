@@ -341,8 +341,13 @@
 		try {
 			const requestId = await ensureBookingRequest(validData);
 
-			if (isPaidService && squareCard && squarePayments) {
-				const tokenResult = await squareCard.tokenize();
+			if (!isPaidService) {
+				await apiClient.post(
+					`/booking/requests/${requestId}/book-free`,
+					{},
+				);
+			} else {
+				const tokenResult = await squareCard!.tokenize();
 
 				if (tokenResult.status !== "OK" || !tokenResult.token) {
 					throw new Error(
@@ -353,10 +358,9 @@
 
 				let verificationToken: string | undefined;
 
-				if (squarePayments.verifyBuyer) {
-					const verificationResult = await squarePayments.verifyBuyer(
-						tokenResult.token,
-						{
+				if (squarePayments!.verifyBuyer) {
+					const verificationResult =
+						await squarePayments!.verifyBuyer(tokenResult.token, {
 							amount: (priceCents / 100).toFixed(2),
 							currencyCode: "USD",
 							intent: "STORE",
@@ -366,13 +370,12 @@
 								email: validData.email,
 								phone: normalizedPhone,
 							},
-						},
-					);
+						});
 
 					verificationToken = verificationResult.token;
 				}
 
-				await apiClient.post<StoreCardAndBookResponse>(
+				await apiClient.post(
 					`/booking/requests/${requestId}/store-card`,
 					{
 						source_id: tokenResult.token,

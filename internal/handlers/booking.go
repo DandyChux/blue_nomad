@@ -156,3 +156,50 @@ func (h *BookingHandler) StoreCardAndBook(w http.ResponseWriter, r *http.Request
 		"booking_status": result.SquareBookingStatus,
 	})
 }
+
+func (h *BookingHandler) BookFreeService(
+	w http.ResponseWriter,
+	r *http.Request,
+) {
+	requestID := r.PathValue("id")
+	if requestID == "" {
+		http.Error(w, "Missing booking request id", http.StatusBadRequest)
+		return
+	}
+
+	result, err := h.flow.BookFreeService(r.Context(), requestID)
+	if err != nil {
+		switch {
+		case err == services.ErrBookingRequestNotFound:
+			http.Error(w, "Booking request not found", http.StatusNotFound)
+
+		case err == services.ErrSlotNoLongerAvailable:
+			http.Error(
+				w,
+				"That time slot is no longer available. Please pick another.",
+				http.StatusConflict,
+			)
+
+		default:
+			slog.Error(
+				"failed to create free booking",
+				"error", err,
+				"request_id", requestID,
+			)
+			http.Error(
+				w,
+				fmt.Sprintf("failed to create free booking: %v", err),
+				http.StatusUnprocessableEntity,
+			)
+		}
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]any{
+		"request_id":     result.ID,
+		"booking_id":     result.SquareBookingID,
+		"status":         result.Status,
+		"booking_status": result.SquareBookingStatus,
+	})
+}
