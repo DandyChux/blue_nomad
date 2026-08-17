@@ -69,6 +69,11 @@ func (s *BookingFlowService) BookFreeService(
 		)
 	}
 
+	customerID, err := s.ensureCustomer(ctx, req)
+	if err != nil {
+		return nil, fmt.Errorf("create square customer for free booking: %w", err)
+	}
+
 	booking, err := s.square.CreateBookingOnly(
 		ctx,
 		req.ID,
@@ -84,7 +89,7 @@ func (s *BookingFlowService) BookFreeService(
 			ServiceName:             req.ServiceName,
 			PriceCents:              req.PriceCents,
 		},
-		"",
+		customerID,
 	)
 	if err != nil {
 		if isSquareBookingConflict(err) {
