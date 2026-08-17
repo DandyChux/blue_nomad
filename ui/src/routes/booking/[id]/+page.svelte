@@ -343,7 +343,7 @@
 
 			if (!isPaidService) {
 				await apiClient.post(
-					`/booking/requests/${requestId}/book-free`,
+					`/booking/requests/${requestId}/book-member`,
 					{},
 				);
 			} else {
@@ -724,7 +724,9 @@
 						disabled={!canContinueFromDetails}
 						onclick={() => (step = 3)}
 					>
-						Continue to Payment
+						{isPaidService
+							? "Continue to Confirmation"
+							: "Continue to Payment"}
 					</Button>
 				</div>
 			{:else if step === 3}
