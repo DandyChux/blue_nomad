@@ -9,6 +9,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -199,28 +200,45 @@ func (s *BookingRequestStore) GetBySquareBookingID(ctx context.Context, bookingI
 	return req, nil
 }
 
-func (s *BookingRequestStore) SaveSquareCustomerID(ctx context.Context, id, customerID string) error {
-	_, err := s.db.Exec(ctx, `
+func (s *BookingRequestStore) SaveSquareCustomerID(
+	ctx context.Context,
+	id, customerID string,
+) error {
+	result, err := s.db.Exec(ctx, `
 		UPDATE booking_requests
-		SET square_customer_id = $2,
-		    updated_at = NOW()
+		SET
+			square_customer_id = $2,
+			updated_at = NOW()
 		WHERE id = $1
 	`, id, customerID)
 	if err != nil {
 		return fmt.Errorf("save square customer id: %w", err)
 	}
+
+	if result.RowsAffected() != 1 {
+		return fmt.Errorf("save square customer id: booking request %q not found", id)
+	}
+
 	return nil
 }
 
-func (s *BookingRequestStore) SaveSquareCardID(ctx context.Context, id, cardID string) error {
-	_, err := s.db.Exec(ctx, `
-	UPDATE booking_requests
-	SET square_card_id = $2,
-		updated_at = NOW()
-	WHERE id = $1
+func (s *BookingRequestStore) SaveSquareCardID(
+	ctx context.Context,
+	id, cardID string,
+) error {
+	result, err := s.db.Exec(ctx, `
+		UPDATE booking_requests
+		SET
+			square_card_id = $2,
+			updated_at = NOW()
+		WHERE id = $1
 	`, id, cardID)
 	if err != nil {
 		return fmt.Errorf("save square card id: %w", err)
+	}
+
+	if result.RowsAffected() != 1 {
+		return fmt.Errorf("save square card id: booking request %q not found", id)
 	}
 
 	return nil
@@ -230,7 +248,7 @@ func (s *BookingRequestStore) MarkPaymentAuthorized(
 	ctx context.Context,
 	id, paymentID, paymentStatus, orderID string,
 ) error {
-	_, err := s.db.Exec(ctx, `
+	result, err := s.db.Exec(ctx, `
 		UPDATE booking_requests
 		SET
 			square_payment_id = $2,
@@ -245,8 +263,22 @@ func (s *BookingRequestStore) MarkPaymentAuthorized(
 		WHERE id = $1
 	`, id, paymentID, paymentStatus, orderID)
 	if err != nil {
+		var constraintErr *pgconn.PgError
+		if errors.As(err, &constraintErr) {
+			return fmt.Errorf(
+				"mark payment authorized: database constraint %s: %w",
+				constraintErr.ConstraintName,
+				err,
+			)
+		}
+
 		return fmt.Errorf("mark payment authorized: %w", err)
 	}
+
+	if result.RowsAffected() != 1 {
+		return fmt.Errorf("mark payment authorized: booking request %q not found", id)
+	}
+
 	return nil
 }
 
@@ -254,7 +286,7 @@ func (s *BookingRequestStore) MarkBookingCreated(
 	ctx context.Context,
 	id, bookingID, bookingStatus string,
 ) error {
-	_, err := s.db.Exec(ctx, `
+	result, err := s.db.Exec(ctx, `
 		UPDATE booking_requests
 		SET
 			status = 'booking_created',
@@ -266,8 +298,22 @@ func (s *BookingRequestStore) MarkBookingCreated(
 		WHERE id = $1
 	`, id, bookingID, bookingStatus)
 	if err != nil {
+		var constraintErr *pgconn.PgError
+		if errors.As(err, &constraintErr) {
+			return fmt.Errorf(
+				"mark booking created: database constraint %s: %w",
+				constraintErr.ConstraintName,
+				err,
+			)
+		}
+
 		return fmt.Errorf("mark booking created: %w", err)
 	}
+
+	if result.RowsAffected() != 1 {
+		return fmt.Errorf("mark booking created: booking request %q not found", id)
+	}
+
 	return nil
 }
 

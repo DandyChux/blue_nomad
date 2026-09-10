@@ -25,6 +25,7 @@
 	import {
 		BookingFormSchema,
 		type AvailabilitySlot,
+		type BookingSummary,
 		type SearchAvailabilityResponse,
 	} from "$lib/schemas";
 	import {
@@ -341,11 +342,15 @@
 		try {
 			const requestId = await ensureBookingRequest(validData);
 
+			let bookingId: string | undefined;
+
 			if (!isPaidService) {
-				await apiClient.post(
+				const result = await apiClient.post<StoreCardAndBookResponse>(
 					`/booking/requests/${requestId}/book-member`,
 					{},
 				);
+
+				bookingId = result.booking_id;
 			} else {
 				const tokenResult = await squareCard!.tokenize();
 
@@ -375,24 +380,36 @@
 					verificationToken = verificationResult.token;
 				}
 
-				await apiClient.post(
+				const result = await apiClient.post<StoreCardAndBookResponse>(
 					`/booking/requests/${requestId}/store-card`,
 					{
 						source_id: tokenResult.token,
 						verification_token: verificationToken,
 					},
 				);
+
+				bookingId = result.booking_id;
 			}
 
-			localStorage.setItem(
-				"bn-booking",
-				JSON.stringify({
-					name: validData.firstName,
-					service: itemData.name,
-					date: selectedDateLabel,
-					time: formatTime(validData.time),
-				}),
-			);
+			if (!bookingId) {
+				throw new Error(
+					"Booking was created without a Square booking ID.",
+				);
+			}
+
+			const summary: BookingSummary = {
+				requestId,
+				bookingId,
+				serviceId: variation?.id ?? "",
+				name: validData.firstName,
+				service: itemData.name,
+				price: priceCents / 100,
+				currency: "USD",
+				date: selectedDateLabel,
+				time: formatTime(validData.time),
+			};
+
+			localStorage.setItem("bn_booking", JSON.stringify(summary));
 
 			await goto("/booking/confirmed");
 		} catch (err) {
@@ -400,6 +417,7 @@
 				payment.error = err.isConflict
 					? "That time slot is no longer available. Please choose another."
 					: err.userMessage;
+
 				if (err.isConflict) {
 					payment.requestId = "";
 					$formData.time = "";

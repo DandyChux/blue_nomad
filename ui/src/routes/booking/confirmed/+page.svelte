@@ -3,25 +3,44 @@
 	import { fly } from "svelte/transition";
 	import { Button } from "$lib/components/ui/button";
 	import { pageTitle } from "../../+layout.svelte";
+	import type { BookingSummary } from "$lib/schemas";
 
-	// let summary = $state<{
-	// 	name: string;
-	// 	service: string;
-	// 	date: string;
-	// 	time: string;
-	// } | null>(null);
+	let summary = $state<BookingSummary | null>(null);
 
-	// onMount(() => {
-	// 	try {
-	// 		const stored = localStorage.getItem("bn_booking");
-	// 		if (stored) {
-	// 			summary = JSON.parse(stored);
-	// 			localStorage.removeItem("bn_booking");
-	// 		}
-	// 	} catch {
-	// 		// noop
-	// 	}
-	// });
+	onMount(() => {
+		try {
+			const stored = localStorage.getItem("bn_booking");
+			if (!stored) return;
+
+			const parsed = JSON.parse(stored) as BookingSummary;
+			summary = parsed;
+
+			window.dataLayer = window.dataLayer || [];
+
+			window.dataLayer.push({ ecommerce: null });
+
+			window.dataLayer.push({
+				event: "booking",
+				bookingInfo: {
+					currrency: summary.currency,
+					value: summary.price,
+					transaction_id: summary.bookingId,
+					items: [
+						{
+							item_id: summary.serviceId,
+							item_name: summary.service,
+							quantity: 1,
+							price: summary.price,
+						},
+					],
+				},
+			});
+
+			localStorage.removeItem("bn_booking");
+		} catch {
+			// Ignore malformed or unavailable local storage data
+		}
+	});
 </script>
 
 <svelte:head>
