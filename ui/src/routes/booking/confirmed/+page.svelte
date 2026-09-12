@@ -4,6 +4,7 @@
 	import { Button } from "$lib/components/ui/button";
 	import { pageTitle } from "../../+layout.svelte";
 	import type { BookingSummary } from "$lib/schemas";
+	import { trackEvent } from "$lib/analytics.svelte";
 
 	let summary = $state<BookingSummary | null>(null);
 
@@ -33,6 +34,18 @@
 							price: summary.price,
 						},
 					],
+				},
+			});
+
+			trackEvent("Booking Confirmed", {
+				props: {
+					bookingId: summary.bookingId ?? "",
+					serviceId: summary.serviceId,
+					service: summary.service,
+					price: summary.price,
+					currency: summary.currency,
+					date: summary.date,
+					time: summary.time,
 				},
 			});
 
