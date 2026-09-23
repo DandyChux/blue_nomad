@@ -388,26 +388,30 @@
 					>
 						Core Treatment
 					</span>
-					<Picture
-						src="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/Treatment%20After%20(Former).webp"
-						alt="Before facial skin therapy result"
-						class="aspect-[0.85] w-full rounded-[15px] shadow-[0_0_0_1px_rgba(255,255,255,0.28)_inset] object-cover"
-						loading="eager"
-						width={720}
-						height={950}
-						sizes="(max-width: 1023px) 50vw, 50vw"
-						sources={[
-							{
-								type: "image/webp",
-								srcset: generateSrcSet(
-									"https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/Treatment%20After%20(Former).webp",
-									[480, 768, 1024, 1440],
-									"webp",
-									85,
-								),
-							},
-						]}
-					/>
+					<div
+						class="aspect-[0.85] w-full overflow-hidden rounded-[15px] shadow-[0_0_0_1px_rgba(255,255,255,0.28)_inset]"
+					>
+						<Picture
+							src="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/Treatment%20After%20(Former).webp"
+							alt="Before facial skin therapy result"
+							class="size-full object-cover object-[center_75%]"
+							loading="eager"
+							width={720}
+							height={950}
+							sizes="(max-width: 1023px) 50vw, 50vw"
+							sources={[
+								{
+									type: "image/webp",
+									srcset: generateSrcSet(
+										"https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/Treatment%20After%20(Former).webp",
+										[480, 768, 1024, 1440],
+										"webp",
+										85,
+									),
+								},
+							]}
+						/>
+					</div>
 					<span
 						class="absolute bottom-0 text-[12px] lg:text-base p-2 w-full text-center uppercase font-source-code-pro font-medium bg-card text-brand-white rounded-b-[15px] lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300"
 					>
@@ -430,26 +434,30 @@
 					>
 						Core Treatment
 					</span>
-					<Picture
-						src="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/Treatment%20After%20Final.webp"
-						alt="After 10 days facial skin therapy result"
-						class="aspect-[0.85] w-full rounded-[15px] shadow-[0_0_0_1px_rgba(255,255,255,0.28)_inset] object-cover"
-						loading="eager"
-						width={720}
-						height={950}
-						sizes="(max-width: 1023px) 50vw, 50vw"
-						sources={[
-							{
-								type: "image/webp",
-								srcset: generateSrcSet(
-									"https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/Treatment%20After%20Final.webp",
-									[480, 768, 1024, 1440],
-									"webp",
-									85,
-								),
-							},
-						]}
-					/>
+					<div
+						class="aspect-[0.85] w-full overflow-hidden rounded-[15px] shadow-[0_0_0_1px_rgba(255,255,255,0.28)_inset]"
+					>
+						<Picture
+							src="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/Treatment%20(After).webp"
+							alt="After 10 days facial skin therapy result"
+							class="size-full scale-175 object-cover object-[20px_80%]"
+							loading="eager"
+							width={720}
+							height={950}
+							sizes="(max-width: 1023px) 50vw, 50vw"
+							sources={[
+								{
+									type: "image/webp",
+									srcset: generateSrcSet(
+										"https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/Treatment%20(After).webp",
+										[480, 768, 1024, 1440],
+										"webp",
+										85,
+									),
+								},
+							]}
+						/>
+					</div>
 					<span
 						class="absolute bottom-0 text-[12px] lg:text-base p-2 w-full text-center uppercase font-source-code-pro font-medium bg-card text-brand-white rounded-b-[15px] lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300"
 					>
@@ -494,7 +502,7 @@
 			>also available</span
 		>
 		<div
-			class="mx-auto grid w-full max-w-[1600px] auto-rows-fr grid-cols-1 justify-center gap-px px-4 sm:grid-cols-2 lg:gap-4"
+			class="mx-auto grid w-full max-w-400 auto-rows-fr grid-cols-1 justify-center gap-px px-4 sm:grid-cols-2 lg:gap-4"
 			class:lg:grid-cols-1={remaining.length === 1}
 			class:lg:grid-cols-2={remaining.length === 2}
 			class:lg:grid-cols-3={remaining.length === 3}
