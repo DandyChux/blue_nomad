@@ -119,7 +119,7 @@
 				New York, NY 10010
 			</address>
 			<p class="uppercase font-bold font-source-code-pro">
-				Mon-Sat 11AM to 8PM
+				Tue-Sat 11AM to 8PM
 			</p>
 		</div>
 

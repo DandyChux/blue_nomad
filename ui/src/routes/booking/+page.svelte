@@ -232,132 +232,11 @@
 			</Empty.Root>
 		</div>
 	{:else}
-		<!-- <div class="flex flex-col lg:flex-row lg:items-center py-12 px-8">
-			{#if coreTreatment}
-				<Card.Root
-					class="relative group w-full p-4 overflow-hidden mx-auto my-10 lg:mx-0 lg:my-0 lg:w-[35%] lg:h-[1100px] lg:rounded-tl-none bg-transparent ring-0 shadow-none"
-				>
-					<Picture
-						src={coreTreatment.image_url || ""}
-						alt={coreTreatment.item_data.name}
-						class="size-full object-cover object-top"
-						loading="eager"
-						sizes="(max-width: 768px) 100vw, 50vw"
-						sources={coreTreatment.image_url
-							? [
-									{
-										type: "image/webp",
-										srcset: generateSrcSet(
-											coreTreatment.image_url,
-											[400, 600],
-											"webp",
-											85,
-										),
-									},
-								]
-							: []}
-					/>
-
-					<div
-						class="absolute inset-0 flex flex-col p-6 text-brand-white md:p-8 lg:hidden"
-					>
-						<div class="flex items-center">
-							<h2
-								class="font-source-code-pro text-[12px] uppercase font-semibold tracking-wider underline-offset-8 underline"
-							>
-								Core Treatment
-							</h2>
-							<p class="uppercase font-semibold ml-auto">
-								{getDuration(coreTreatment)} Min — ${getPrice(
-									coreTreatment,
-								)}
-							</p>
-						</div>
-						<p
-							class="uppercase text-[36px] lg:text-[44px] tracking-tighter font-light leading-[0.95] my-4"
-						>
-							{coreTreatment.item_data.name}
-						</p>
-						<p
-							class="mb-6 font-source-code-pro font-medium line-clamp-4 text-ellipsis"
-						>
-							{coreTreatment.item_data.description ||
-								"A curated experience focused on restoration and results."}
-						</p>
-
-						<Button
-							variant="link"
-							href={`/booking/${coreTreatment.id}`}
-							class={buttonVariants({
-								variant: "outline",
-								class: "rounded-full uppercase border-inherit text-inherit mt-[75%] font-source-code-pro w-fit mx-auto",
-								size: "xl",
-							})}
-							onclick={() =>
-								trackEvent("Clicked Treatment", {
-									props: {
-										treatment: coreTreatment.item_data.name,
-									},
-								})}
-						>
-							Book Now
-						</Button>
-					</div>
-				</Card.Root>
-				<div
-					class="float-right flex-1 px-4 lg:px-8 py-28 lg:py-40 hidden lg:block"
-				>
-					<h2
-						class="font-source-code-pro text-[18px] uppercase font-semibold tracking-wider underline-offset-8 block mb-12 underline"
-					>
-						Core Treatment
-					</h2>
-					<p
-						class="uppercase text-4xl lg:text-7xl tracking-tighter font-light leading-[0.95] my-4"
-					>
-						{coreTreatment.item_data.name}
-					</p>
-					<p
-						class="text-lg leading-relaxed mb-6 font-source-code-pro font-medium w-9/10 tracking-widest"
-					>
-						{coreTreatment.item_data.description ||
-							"A curated experience focused on restoration and results."}
-					</p>
-					<div class="space-y-6 font-source-code-pro">
-						<p
-							class="text-base uppercase tracking-widest font-semibold"
-						>
-							{getDuration(coreTreatment)} Min — ${getPrice(
-								coreTreatment,
-							)}
-						</p>
-						<Button
-							variant="link"
-							href={`/booking/${coreTreatment.id}`}
-							class={buttonVariants({
-								variant: "outline",
-								class: "rounded-full uppercase font-source-code-pro",
-								size: "xl",
-							})}
-							onclick={() =>
-								trackEvent("Clicked Treatment", {
-									props: {
-										treatment: coreTreatment.item_data.name,
-									},
-								})}
-						>
-							Book Now
-						</Button>
-					</div>
-				</div>
-			{/if}
-		</div> -->
-
 		<div
 			class="relative overflow-hidden px-6 py-10 md:px-10 md:py-14 lg:px-16 lg:py-20"
 		>
 			<div
-				class="mx-auto grid max-w-[1380px] grid-cols-2 items-start gap-x-4 gap-y-4 md:gap-x-8 lg:gap-x-10 lg:gap-y-8"
+				class="mx-auto grid max-w-[1200px] grid-cols-2 items-start gap-x-4 gap-y-4 md:gap-x-8 lg:gap-x-10 lg:gap-y-8"
 			>
 				<div class="col-start-1 row-start-1 justify-self-start">
 					<p class="text-[36px] leading-none lg:text-[48px]">
@@ -389,7 +268,7 @@
 						Core Treatment
 					</span>
 					<div
-						class="aspect-[0.85] w-full overflow-hidden rounded-[15px] shadow-[0_0_0_1px_rgba(255,255,255,0.28)_inset]"
+						class="aspect-[0.85] w-auto lg:h-[600px] mx-auto overflow-hidden rounded-[15px] shadow-[0_0_0_1px_rgba(255,255,255,0.28)_inset]"
 					>
 						<Picture
 							src="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/Treatment%20After%20(Former).webp"
@@ -435,7 +314,7 @@
 						Core Treatment
 					</span>
 					<div
-						class="aspect-[0.85] w-full overflow-hidden rounded-[15px] shadow-[0_0_0_1px_rgba(255,255,255,0.28)_inset]"
+						class="aspect-[0.85] w-auto lg:h-[600px] mx-auto overflow-hidden rounded-[15px] shadow-[0_0_0_1px_rgba(255,255,255,0.28)_inset]"
 					>
 						<Picture
 							src="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/studio/Treatment%20(After).webp"

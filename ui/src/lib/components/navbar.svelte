@@ -16,7 +16,7 @@
 </script>
 
 <script lang="ts">
-	import { icons, MenuIcon } from "@lucide/svelte";
+	import { MenuIcon } from "@lucide/svelte";
 	import { Button } from "$lib/components/ui/button";
 	import * as Sheet from "$lib/components/ui/sheet";
 	import { cn, generateSrcSet } from "$lib/utils";
@@ -108,17 +108,19 @@
 				</Sheet.Header>
 				<nav class="flex flex-col gap-4 mt-8">
 					{#each navLinks as item (item.label)}
-						<a
-							href={item.href}
-							rel="nofollow noopener noreferrer"
-							target={isExternal(item.href)
-								? "_blank"
-								: undefined}
-							class="font-source-code-pro uppercase text-lg"
-							onclick={() => trackClick(item.label)}
-						>
-							{item.label}
-						</a>
+						<Sheet.Close>
+							<a
+								href={item.href}
+								rel="nofollow noopener noreferrer"
+								target={isExternal(item.href)
+									? "_blank"
+									: undefined}
+								class="font-source-code-pro uppercase text-lg"
+								onclick={() => trackClick(item.label)}
+							>
+								{item.label}
+							</a>
+						</Sheet.Close>
 					{/each}
 				</nav>
 			</Sheet.Content>
@@ -162,39 +164,6 @@
 			</ul>
 		</nav>
 	</div>
-
-	<!-- <div class="flex max-w-[500px] w-auto items-center justify-end">
-		{#if pathname === "/shop"}
-			<Button onclick={() => cart.toggle()} variant="outline">
-				Cart ({cart.items.length})
-			</Button>
-		{/if}
-		{#if pathname === "/nomadsland"}
-			<div class="flex items-center mr-2"><SearchBar /></div>
-			<Button
-				variant="ghost"
-				class="hidden sm:inline-flex text-brand-white hover:text-brand-white hover:bg-black rounded-full hover:cursor-pointer font-source-code-pro"
-				href="#subscription-form"
-			>
-				Get Our Newsletter
-			</Button>
-		{:else if pathname === "/"}
-			<a href="/" class="no-underline block">
-				<img
-					src="https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/blue-nomad-light.png"
-					srcset={generateSrcSet(
-						"https://blue-nomad.nyc3.cdn.digitaloceanspaces.com/logos/blue-nomad-light.png",
-						[400, 800, 1200, 1600],
-						"webp",
-						85,
-					)}
-					alt="Blue Nomad Logo"
-					class="w-full h-auto sm:max-w-[300px]"
-					sizes="(max-width: 640px) 100vw, (max-width: 1024px) 70vw, (max-width: 1280px) 50vw, 33vw"
-				/>
-			</a>
-		{/if}
-	</div> -->
 </header>
 
 <style>
